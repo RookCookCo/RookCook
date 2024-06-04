@@ -3,13 +3,6 @@ Rookie Cookbook
 
 GitHub: https://github.com/RitaLei123/RookCook 
 
-Members (RCOS 4 Credits)
-Rita Lei - leir@rpi.edu
-Nicole Wu - wun@rpi.edu
-Andrew Tarnavsky - tarnaa@rpi.edu
-Ricky Wang - wangr17@rpi.edu
-Jimmy Wang - wangj60@rpi.edu
-
 Overview
 RookCook is an innovative online platform designed to revolutionize home cooking by providing personalized recipe suggestions based on the ingredients and kitchen tools users have available. Our mission is to make cooking more accessible, efficient, and enjoyable for everyone, regardless of their culinary expertise or dietary preferences.
 
