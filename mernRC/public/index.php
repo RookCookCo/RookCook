@@ -13,7 +13,7 @@
     <main>
         <section>
             <h2>About Me</h2>
-            <p><?php echo "This was Nicole's Idea so she should do all the work. Thank You :D"; ?></p>
+            <p><?php echo "This was Nicole's Idea so she should do all the work. Thank You"; ?></p>
         </section>
         <section>
             <h2>Latest Updates</h2>
