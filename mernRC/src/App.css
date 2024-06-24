@@ -1,18 +1,19 @@
 /* App.css */
 .App {
+  font-family: Georgia, serif;
+  font-size: 18px;
   text-align: center;
-  color: white; /* Ensure text is visible on dark background */
+  color: black; /* Ensure text is visible on dark background */
 }
 
 .App-header {
-  width: 100%;
+  width: 96%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
   background-color: rgba(255, 255, 255, 0.8); /* Optional: a semi-transparent background for the header */
   position: absolute; /* Positioning the header at the top */
-  top: 0;
 }
 
 .top-bar {
@@ -20,6 +21,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+.site-logo {
+  width: 20%;
+  height: auto;
 }
 
 .search-box {
@@ -30,10 +34,12 @@
 }
 
 .search-box input {
+  font-family: Georgia, serif;
+  font-size: 15px;
   margin-left: 10px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 2px 5px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
   width: 300px; /* Adjust width as needed */
 }
 
@@ -43,9 +49,12 @@
 }
 
 .auth-buttons button {
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  font-family: Georgia, serif;
+  font-size: 15px;
+  text-align: center;
+  padding: 2px 5px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
   background-color: #fff;
   cursor: pointer;
 }
