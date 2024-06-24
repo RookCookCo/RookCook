@@ -1,7 +1,6 @@
 // App.js
 import React from 'react';
 import background from './background.png';
-
 import './App.css';
 
 function App() {
@@ -16,7 +15,6 @@ function App() {
     return (
         <div className="App" style={appStyle}>
             <header className="App-header">
-                
                 <div className="search-box">
                     <label htmlFor="search">Quick recipe search: </label>
                     <input type="text" id="search" name="search" />
