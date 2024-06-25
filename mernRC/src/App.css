@@ -4,6 +4,7 @@
   font-size: 18px;
   text-align: center;
   color: black; /* Ensure text is visible on dark background */
+  position: relative; /* Add this to use absolute positioning for the button */
 }
 
 .App-header {
@@ -17,8 +18,9 @@
 }
 
 .site-logo {
-  width: 20%;
+  width: 50px; /* Adjust width as needed */
   height: auto;
+  margin-right: 10px; /* Space between the logo and search label */
 }
 
 .search-box {
@@ -56,4 +58,45 @@
 
 .auth-buttons button:hover {
   background-color: #f0f0f0;
+}
+
+.add-ingredient-button {
+  position: absolute;
+  top: 37%; /* Adjust to move the button lower */
+  right: 13%; /* Adjust to move the button more to the left */
+  font-size: 24px;
+  padding: 10px;
+  border: none;
+  background-color: #8e8e8e; /* Tomato color */
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.ingredient-form {
+  position: absolute;
+  top: 47%; /* Adjust these values as needed */
+  right: 8%; /* Adjust these values as needed */
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+}
+
+.ingredient-form input {
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.ingredient-form button {
+  padding: 5px;
+  border: none;
+  background-color: #ff6347; /* Tomato color */
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
 }
