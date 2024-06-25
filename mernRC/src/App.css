@@ -63,21 +63,22 @@
 
 .add-ingredient-button {
   position: absolute;
-  top: 37%; /* Adjust to move the button lower */
-  right: 13%; /* Adjust to move the button more to the left */
-  font-size: 24px;
-  padding: 10px;
+  height: 50px;
+  width: 50px;
+  top: 52%; /* Adjust to move the button lower */
+  right: 12%; /* Adjust to move the button more to the left */
+  font-size: 40px;
   border: none;
-  background-color: #8e8e8e; /* Tomato color */
+  background-color: #8e8e8e;
   color: white;
-  border-radius: 50%;
+  border-radius: 100%;
   cursor: pointer;
 }
 
 .ingredient-form {
   position: absolute;
-  top: 47%; /* Adjust these values as needed */
-  right: 8%; /* Adjust these values as needed */
+  top: 63%; /* Adjust these values as needed */
+  right: 6.5%; /* Adjust these values as needed */
   display: flex;
   flex-direction: column;
   background-color: white;
