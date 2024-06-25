@@ -1,7 +1,7 @@
 // App.js
 import React, { useState } from 'react';
 import background from './background.png';
-import logo from './RookCook.png';
+import logo from './logo.png';
 import './App.css';
 
 function App() {

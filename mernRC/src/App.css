@@ -18,9 +18,10 @@
 }
 
 .site-logo {
-  width: 50px; /* Adjust width as needed */
+  width: 70px; /* Adjust width as needed */
   height: auto;
-  margin-right: 10px; /* Space between the logo and search label */
+  position: absolute;
+  left: 5px;
 }
 
 .search-box {
