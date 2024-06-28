@@ -15,6 +15,8 @@
   padding: 10px 20px;
   background-color: rgba(255, 255, 255, 0.8); /* Optional: a semi-transparent background for the header */
   position: absolute; /* Positioning the header at the top */
+  top: 0;
+  left: 0; /* Ensure header is aligned to the left */
 }
 
 .site-logo {
@@ -29,6 +31,7 @@
   align-items: center;
   justify-content: center;
   flex-grow: 1;
+  margin-left: 70px; /* Adjust to accommodate logo width */
 }
 
 .search-box input {
@@ -69,36 +72,79 @@
   right: 12%; /* Adjust to move the button more to the left */
   font-size: 40px;
   border: none;
-  background-color: #8e8e8e;
+  background-color: #8e8e8e; /* Adjust color as needed */
   color: white;
   border-radius: 100%;
   cursor: pointer;
 }
 
-.ingredient-form {
+.ingredient-panel {
   position: absolute;
-  top: 63%; /* Adjust these values as needed */
-  right: 6.5%; /* Adjust these values as needed */
-  display: flex;
-  flex-direction: column;
+  top: 20%; /* Adjust this value to position the panel lower */
+  left: 20%;
+  right: 20%;
+  bottom: 20%;
   background-color: white;
-  padding: 10px;
   border: 2px solid #ccc;
-  border-radius: 5px;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
 }
 
-.ingredient-form input {
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.add-section, .edit-section, .inventory-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-section select, .edit-section ul, .inventory-list ul {
   margin-bottom: 10px;
+}
+
+.inventory-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.inventory-list li {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  margin-bottom: 5px;
 }
 
-.ingredient-form button {
-  padding: 5px;
-  border: none;
-  background-color: #ff6347; /* Tomato color */
-  color: white;
+.search-results {
+  margin-top: 20px;
+}
+
+.search-results div {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
   border-radius: 5px;
+  text-align: center;
   cursor: pointer;
+}
+
+.meal-details {
+  margin-top: 20px;
+}
+
+.meal-details img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
 }
