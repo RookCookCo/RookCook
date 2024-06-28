@@ -66,14 +66,15 @@
 
 .add-ingredient-button {
   position: absolute;
-  top: 37%; /* Adjust to move the button lower */
-  right: 13%; /* Adjust to move the button more to the left */
-  font-size: 24px;
-  padding: 10px;
+  height: 50px;
+  width: 50px;
+  top: 52%; /* Adjust to move the button lower */
+  right: 12%; /* Adjust to move the button more to the left */
+  font-size: 40px;
   border: none;
   background-color: #8e8e8e; /* Adjust color as needed */
   color: white;
-  border-radius: 50%;
+  border-radius: 100%;
   cursor: pointer;
 }
 
