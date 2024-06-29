@@ -148,3 +148,72 @@
   object-fit: cover;
   border-radius: 5px;
 }
+
+/* Styles for the login panel */
+.login-panel {
+  position: absolute;
+  top: 30%; /* Adjust as needed */
+  left: 30%; /* Adjust as needed */
+  width: 40%; /* Adjust as needed */
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-panel .panel-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.login-panel form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.login-field label {
+  margin-right: 10px;
+}
+
+.login-field input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-links {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.login-confirm-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #8e8e8e;
+  color: white;
+  cursor: pointer;
+}
+
+.login-confirm-button:hover {
+  background-color: #7a7a7a;
+}
