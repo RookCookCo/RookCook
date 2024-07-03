@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import background from './background.png';
 import logo from './logo.png';
 import './App.css';
+import { auth, provider, signInWithPopup, signOut } from './firebase';
 
 function App() {
     const [showPanel, setShowPanel] = useState(false);
@@ -12,9 +13,7 @@ function App() {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [mealDetails, setMealDetails] = useState(null);
-    const [showLogin, setShowLogin] = useState(false); // New state for login panel
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -74,12 +73,22 @@ function App() {
         setMealDetails(data.meals[0]);
     };
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        // Add login logic here
-        console.log("Username:", username);
-        console.log("Password:", password);
-        setShowLogin(false); // Close login panel after login attempt
+    const handleGoogleLogin = async () => {
+        try {
+            const result = await signInWithPopup(auth, provider);
+            setUser(result.user);
+        } catch (error) {
+            console.error('Error during sign-in:', error);
+        }
+    };
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+            setUser(null);
+        } catch (error) {
+            console.error('Error during sign-out:', error);
+        }
     };
 
     return (
@@ -100,8 +109,17 @@ function App() {
                     </form>
                 </div>
                 <div className="auth-buttons">
-                    <button onClick={() => setShowLogin(true)}>Login</button>
-                    <button>Sign up</button>
+                    {user ? (
+                        <>
+                            <span>{user.displayName}</span>
+                            <button onClick={handleLogout}>Logout</button>
+                        </>
+                    ) : (
+                        <>
+                            <button onClick={handleGoogleLogin}>Login with Google</button>
+                            <button onClick={handleGoogleLogin}>Sign up with Google</button>
+                        </>
+                    )}
                 </div>
             </header>
             <button className="add-ingredient-button" onClick={() => { setShowPanel(true); setPanelMode('add'); }}>+</button>
@@ -136,40 +154,6 @@ function App() {
                             ))}
                         </ul>
                     </div>
-                </div>
-            )}
-            {showLogin && (
-                <div className="login-panel">
-                    <div className="panel-header">
-                        <button onClick={() => setShowLogin(false)}>Close</button>
-                    </div>
-                    <form onSubmit={handleLogin}>
-                        <div className="login-field">
-                            <label htmlFor="username">Username:</label>
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                            />
-                        </div>
-                        <div className="login-field">
-                            <label htmlFor="password">Password:</label>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
-                        <div className="login-links">
-                            <button type="button" className="link-button">Forget Username?</button>
-                            <button type="button" className="link-button">Forget Password?</button>
-                        </div>
-                        <button type="submit" className="login-confirm-button">Login</button>
-                    </form>
                 </div>
             )}
             <div className="search-results">
