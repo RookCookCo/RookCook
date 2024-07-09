@@ -205,6 +205,26 @@
   cursor: pointer;
 }
 
+.login-google {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.login-google button {
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.login-google button:hover {
+  background-color: #357ae8;
+}
+
 .login-confirm-button {
   padding: 10px 20px;
   border: none;
@@ -215,5 +235,22 @@
 }
 
 .login-confirm-button:hover {
+  background-color: #7a7a7a;
+}
+
+.generate-recipe-button {
+  position: absolute;
+  bottom: 20px; /* Adjust as needed */
+  right: 12%; /* Adjust as needed */
+  font-size: 18px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #8e8e8e; /* Adjust color as needed */
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.generate-recipe-button:hover {
   background-color: #7a7a7a;
 }

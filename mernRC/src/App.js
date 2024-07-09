@@ -3,6 +3,7 @@ import background from './background.png';
 import logo from './logo.png';
 import './App.css';
 import { auth, provider, signInWithPopup, signOut } from './firebase';
+import axios from 'axios';
 
 function App() {
     const [showPanel, setShowPanel] = useState(false);
@@ -13,7 +14,10 @@ function App() {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [mealDetails, setMealDetails] = useState(null);
-    const [user, setUser] = useState(null);
+    const [showLogin, setShowLogin] = useState(false); // New state for login panel
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [user, setUser] = useState(null); // Add this line
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -91,6 +95,23 @@ function App() {
         }
     };
 
+    const generateRecipe = async () => {
+        try {
+            const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${inventory.join(',')}`);
+            setSearchResults(response.data.meals || []);
+        } catch (error) {
+            console.error('Error generating recipe:', error);
+        }
+    };
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        // Add login logic here
+        console.log("Username:", username);
+        console.log("Password:", password);
+        setShowLogin(false); // Close login panel after login attempt
+    };
+
     return (
         <div className="App" style={appStyle}>
             <header className="App-header">
@@ -116,8 +137,8 @@ function App() {
                         </>
                     ) : (
                         <>
-                            <button onClick={handleGoogleLogin}>Login with Google</button>
-                            <button onClick={handleGoogleLogin}>Sign up with Google</button>
+                            <button onClick={() => setShowLogin(true)}>Login</button>
+                            <button>Sign up</button>
                         </>
                     )}
                 </div>
@@ -156,6 +177,43 @@ function App() {
                     </div>
                 </div>
             )}
+            {showLogin && (
+                <div className="login-panel">
+                    <div className="panel-header">
+                        <button onClick={() => setShowLogin(false)}>Close</button>
+                    </div>
+                    <form onSubmit={handleLogin}>
+                        <div className="login-field">
+                            <label htmlFor="username">Username:</label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                        </div>
+                        <div className="login-field">
+                            <label htmlFor="password">Password:</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                        <div className="login-links">
+                            <button type="button" className="link-button">Forget Username?</button>
+                            <button type="button" className="link-button">Forget Password?</button>
+                        </div>
+                        <div className="login-google">
+                            <button type="button" onClick={handleGoogleLogin}>Sign in with Google</button>
+                        </div>
+                        <button type="submit" className="login-confirm-button">Login</button>
+                    </form>
+                </div>
+            )}
             <div className="search-results">
                 {searchResults.map((meal) => (
                     <div key={meal.idMeal} onClick={() => handleMealClick(meal.idMeal)}>
@@ -180,6 +238,7 @@ function App() {
                     <p>{mealDetails.strInstructions}</p>
                 </div>
             )}
+            <button className="generate-recipe-button" onClick={generateRecipe}>Generate Recipe</button>
         </div>
     );
 }
