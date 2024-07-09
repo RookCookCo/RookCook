@@ -1,11 +1,14 @@
 /* App.css */
 .App {
+  font-family: Georgia, serif;
+  font-size: 18px;
   text-align: center;
-  color: white; /* Ensure text is visible on dark background */
+  color: black; /* Ensure text is visible on dark background */
+  position: relative; /* Add this to use absolute positioning for the button */
 }
 
 .App-header {
-  width: 100%;
+  width: 96%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,13 +16,14 @@
   background-color: rgba(255, 255, 255, 0.8); /* Optional: a semi-transparent background for the header */
   position: absolute; /* Positioning the header at the top */
   top: 0;
+  left: 0; /* Ensure header is aligned to the left */
 }
 
-.top-bar {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.site-logo {
+  width: 70px; /* Adjust width as needed */
+  height: auto;
+  position: absolute;
+  left: 5px;
 }
 
 .search-box {
@@ -27,13 +31,16 @@
   align-items: center;
   justify-content: center;
   flex-grow: 1;
+  margin-left: 70px; /* Adjust to accommodate logo width */
 }
 
 .search-box input {
+  font-family: Georgia, serif;
+  font-size: 15px;
   margin-left: 10px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 2px 5px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
   width: 300px; /* Adjust width as needed */
 }
 
@@ -43,13 +50,170 @@
 }
 
 .auth-buttons button {
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  font-family: Georgia, serif;
+  font-size: 15px;
+  text-align: center;
+  padding: 2px 5px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
   background-color: #fff;
   cursor: pointer;
 }
 
 .auth-buttons button:hover {
   background-color: #f0f0f0;
+}
+
+.add-ingredient-button {
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  top: 52%; /* Adjust to move the button lower */
+  right: 12%; /* Adjust to move the button more to the left */
+  font-size: 40px;
+  border: none;
+  background-color: #8e8e8e; /* Adjust color as needed */
+  color: white;
+  border-radius: 100%;
+  cursor: pointer;
+}
+
+.ingredient-panel {
+  position: absolute;
+  top: 20%; /* Adjust this value to position the panel lower */
+  left: 20%;
+  right: 20%;
+  bottom: 20%;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.add-section, .edit-section, .inventory-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-section select, .edit-section ul, .inventory-list ul {
+  margin-bottom: 10px;
+}
+
+.inventory-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.inventory-list li {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.search-results {
+  margin-top: 20px;
+}
+
+.search-results div {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.meal-details {
+  margin-top: 20px;
+}
+
+.meal-details img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+/* Styles for the login panel */
+.login-panel {
+  position: absolute;
+  top: 30%; /* Adjust as needed */
+  left: 30%; /* Adjust as needed */
+  width: 40%; /* Adjust as needed */
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-panel .panel-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.login-panel form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.login-field label {
+  margin-right: 10px;
+}
+
+.login-field input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-links {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.login-confirm-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #8e8e8e;
+  color: white;
+  cursor: pointer;
+}
+
+.login-confirm-button:hover {
+  background-color: #7a7a7a;
 }
