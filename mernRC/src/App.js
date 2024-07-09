@@ -18,6 +18,8 @@ function App() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null); // Add this line
+    const [ingredientSearchQuery, setIngredientSearchQuery] = useState(''); // New state for ingredient search
+    const [showIngredientList, setShowIngredientList] = useState(false); // New state to show/hide ingredient list
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -53,10 +55,11 @@ function App() {
         height: '97vh',
     };
 
-    const handleAddIngredient = () => {
-        if (selectedIngredient && !inventory.includes(selectedIngredient)) {
-            setInventory([...inventory, selectedIngredient]);
+    const handleAddIngredient = (ingredient) => {
+        if (ingredient && !inventory.includes(ingredient)) {
+            setInventory([...inventory, ingredient]);
             setSelectedIngredient('');
+            setShowIngredientList(false);
         }
     };
 
@@ -112,6 +115,23 @@ function App() {
         setShowLogin(false); // Close login panel after login attempt
     };
 
+    const handleOutsideClick = (e) => {
+        if (e.target.closest('.ingredient-search')) return;
+        setShowIngredientList(false);
+    };
+
+    useEffect(() => {
+        if (showIngredientList) {
+            document.addEventListener('click', handleOutsideClick);
+        } else {
+            document.removeEventListener('click', handleOutsideClick);
+        }
+
+        return () => {
+            document.removeEventListener('click', handleOutsideClick);
+        };
+    }, [showIngredientList]);
+
     return (
         <div className="App" style={appStyle}>
             <header className="App-header">
@@ -152,14 +172,32 @@ function App() {
                         <button onClick={() => setPanelMode('edit')}>Edit</button>
                     </div>
                     {panelMode === 'add' && (
-                        <div className="add-section">
-                            <select value={selectedIngredient} onChange={(e) => setSelectedIngredient(e.target.value)}>
-                                <option value="">Select Ingredient</option>
-                                {allIngredients.filter(ingredient => !inventory.includes(ingredient)).map((ingredient) => (
-                                    <option key={ingredient} value={ingredient}>{ingredient}</option>
-                                ))}
-                            </select>
-                            <button onClick={handleAddIngredient}>Add to Inventory</button>
+                        <div className="add-section ingredient-search">
+                            <input
+                                type="text"
+                                placeholder="Search for an ingredient..."
+                                value={ingredientSearchQuery}
+                                onClick={() => setShowIngredientList(true)}
+                                onChange={(e) => setIngredientSearchQuery(e.target.value)}
+                            />
+                            {showIngredientList && (
+                                <select
+                                    size={allIngredients.length > 10 ? 10 : allIngredients.length}
+                                    value={selectedIngredient}
+                                    onChange={(e) => handleAddIngredient(e.target.value)}
+                                >
+                                    {allIngredients
+                                        .filter(ingredient =>
+                                            !inventory.includes(ingredient) &&
+                                            ingredient.toLowerCase().startsWith(ingredientSearchQuery.toLowerCase())
+                                        )
+                                        .map((ingredient, index) => (
+                                            <option key={index} value={ingredient}>
+                                                {ingredient}
+                                            </option>
+                                        ))}
+                                </select>
+                            )}
                         </div>
                     )}
                     <div className="inventory-list">
