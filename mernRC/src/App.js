@@ -184,7 +184,15 @@ function App() {
                                 <select
                                     size={allIngredients.length > 10 ? 10 : allIngredients.length}
                                     value={selectedIngredient}
-                                    onChange={(e) => handleAddIngredient(e.target.value)}
+                                    onChange={(e) => {
+                                        setSelectedIngredient(e.target.value);
+                                        handleAddIngredient(e.target.value);
+                                    }}
+                                    onClick={(e) => {
+                                        if (e.target.tagName === 'OPTION') {
+                                            handleAddIngredient(e.target.value);
+                                        }
+                                    }}
                                 >
                                     {allIngredients
                                         .filter(ingredient =>
