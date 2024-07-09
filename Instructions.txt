@@ -1,0 +1,36 @@
+Instructions
+
+On Your Local Development Machine
+
+1. Navigate to Your RookCook Project mernRC Directory
+   cd /[path to project]/RookCook/mernRC
+
+2. npm start
+
+Note: Install Dependencies and Build ( First Time Do This Before npm start )
+   npm install    # Install dependencies if any
+   npm run build  # Build assets (if applicable)
+
+Deploying to Web Server
+
+1. SSH into Your Server
+   ssh RCSID@rookcook.cs.rpi.edu
+       ^^^^^
+2. Navigate to Your Website's Directory
+   pwd     # View Path
+   ls -la  # View current directory
+   cd /[path to project]/RookCook
+
+3. Pull the Latest Changes
+
+   git pull origin main
+
+   Pull the latest changes from your Git repository (make sure you have Git installed on your server):
+
+4. Restart Services (if necessary)
+   Depending on your setup, you may need to restart services like Nginx to apply the changes:
+
+   sudo systemctl restart nginx
+
+5. Exit SSH
+   exit
