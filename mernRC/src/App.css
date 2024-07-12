@@ -63,6 +63,23 @@
 .auth-buttons button:hover {
   background-color: #f0f0f0;
 }
+.panel-header {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensures the panel header covers the entire height */
+  justify-content: space-around; /* Distributes buttons evenly along the column */
+}
+
+.panel-header button {
+  flex: 1; /* Allows buttons to take up equal space vertically */
+  padding: 12px; /* Increased padding for larger appearance */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.panel-header button:hover {
+  background-color: #ddd;
+}
 
 
 .add-ingredient-button {
