@@ -40,7 +40,9 @@ function App() {
                         }
                     }
                 }
-                setAllIngredients([...ingredientsSet]);
+                // Convert set to array and sort alphabetically
+                const sortedIngredients = Array.from(ingredientsSet).sort((a, b) => a.localeCompare(b));
+                setAllIngredients(sortedIngredients);
             }
         };
 
@@ -132,6 +134,12 @@ function App() {
         };
     }, [showIngredientList]);
 
+    const filteredIngredients = allIngredients.filter(
+        (ingredient) =>
+            !inventory.includes(ingredient) &&
+            ingredient.toLowerCase().startsWith(ingredientSearchQuery.toLowerCase())
+    );
+
     return (
         <div className="App" style={appStyle}>
             <header className="App-header">
@@ -179,10 +187,11 @@ function App() {
                                 value={ingredientSearchQuery}
                                 onClick={() => setShowIngredientList(true)}
                                 onChange={(e) => setIngredientSearchQuery(e.target.value)}
+                                style={{ width: '152px' }} // Adjust the width value as per your requirement
                             />
-                            {showIngredientList && (
+                            {showIngredientList && filteredIngredients.length > 0 && (
                                 <select
-                                    size={allIngredients.length > 10 ? 10 : allIngredients.length}
+                                    size={Math.min(10, filteredIngredients.length)}
                                     value={selectedIngredient}
                                     onChange={(e) => {
                                         setSelectedIngredient(e.target.value);
@@ -193,17 +202,13 @@ function App() {
                                             handleAddIngredient(e.target.value);
                                         }
                                     }}
+                                    style={{ height: 'auto', maxHeight: '200px', overflowY: 'auto' }} // Adjust the height dynamically
                                 >
-                                    {allIngredients
-                                        .filter(ingredient =>
-                                            !inventory.includes(ingredient) &&
-                                            ingredient.toLowerCase().startsWith(ingredientSearchQuery.toLowerCase())
-                                        )
-                                        .map((ingredient, index) => (
-                                            <option key={index} value={ingredient}>
-                                                {ingredient}
-                                            </option>
-                                        ))}
+                                    {filteredIngredients.map((ingredient, index) => (
+                                        <option key={index} value={ingredient}>
+                                            {ingredient}
+                                        </option>
+                                    ))}
                                 </select>
                             )}
                         </div>
@@ -249,42 +254,45 @@ function App() {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
-                        <div className="login-links">
-                            <button type="button" className="link-button">Forget Username?</button>
-                            <button type="button" className="link-button">Forget Password?</button>
+                        <div className="login-buttons">
+                            <button type="submit">Login</button>
+                            <button type="button" onClick={handleGoogleLogin}>Login with Google</button>
                         </div>
-                        <div className="login-google">
-                            <button type="button" onClick={handleGoogleLogin}>Sign in with Google</button>
-                        </div>
-                        <button type="submit" className="login-confirm-button">Login</button>
                     </form>
                 </div>
             )}
-            <div className="search-results">
-                {searchResults.map((meal) => (
-                    <div key={meal.idMeal} onClick={() => handleMealClick(meal.idMeal)}>
-                        <h3>{meal.strMeal}</h3>
-                        <img src={meal.strMealThumb} alt={meal.strMeal} />
+            <div className="recipe-section">
+                <button onClick={generateRecipe}>Generate Recipe</button>
+                {searchResults.length > 0 && (
+                    <div className="search-results">
+                        <h2>Search Results:</h2>
+                        <ul>
+                            {searchResults.map((meal) => (
+                                <li key={meal.idMeal} onClick={() => handleMealClick(meal.idMeal)}>
+                                    {meal.strMeal}
+                                </li>
+                            ))}
+                        </ul>
                     </div>
-                ))}
+                )}
             </div>
             {mealDetails && (
                 <div className="meal-details">
                     <h2>{mealDetails.strMeal}</h2>
                     <img src={mealDetails.strMealThumb} alt={mealDetails.strMeal} />
-                    <h3>Ingredients</h3>
-                    <ul>
-                        {Array.from({ length: 20 }, (_, i) => mealDetails[`strIngredient${i + 1}`])
-                            .filter(ingredient => ingredient)
-                            .map((ingredient, index) => (
-                                <li key={index}>{ingredient}</li>
-                            ))}
-                    </ul>
-                    <h3>Instructions</h3>
                     <p>{mealDetails.strInstructions}</p>
+                    <h3>Ingredients:</h3>
+                    <ul>
+                        {Array.from({ length: 20 }, (_, i) => i + 1)
+                            .map(i => mealDetails[`strIngredient${i}`] && (
+                                <li key={i}>
+                                    {mealDetails[`strIngredient${i}`]} - {mealDetails[`strMeasure${i}`]}
+                                </li>
+                            ))
+                        }
+                    </ul>
                 </div>
             )}
-            <button className="generate-recipe-button" onClick={generateRecipe}>Generate Recipe</button>
         </div>
     );
 }
