@@ -21,9 +21,6 @@ function App() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState(''); // New state for confirm password
     const [user, setUser] = useState(null); // User state
-    const [ingredientSearchQuery, setIngredientSearchQuery] = useState(''); // New state for ingredient search
-    const [showIngredientList, setShowIngredientList] = useState(false); // New state to show/hide ingredient list
-
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -44,9 +41,7 @@ function App() {
                         }
                     }
                 }
-                // Convert set to array and sort alphabetically
-                const sortedIngredients = Array.from(ingredientsSet).sort((a, b) => a.localeCompare(b));
-                setAllIngredients(sortedIngredients);
+                setAllIngredients([...ingredientsSet]);
             }
         };
 
@@ -61,11 +56,10 @@ function App() {
         height: '97vh',
     };
 
-    const handleAddIngredient = (ingredient) => {
-        if (ingredient && !inventory.includes(ingredient)) {
-            setInventory([...inventory, ingredient]);
+    const handleAddIngredient = () => {
+        if (selectedIngredient && !inventory.includes(selectedIngredient)) {
+            setInventory([...inventory, selectedIngredient]);
             setSelectedIngredient('');
-            setShowIngredientList(false);
         }
     };
 
@@ -128,29 +122,6 @@ function App() {
         console.log("Confirm Password:", confirmPassword);
         setShowSignUp(false); // Close sign-up panel after sign-up attempt
     };
-  
-    const handleOutsideClick = (e) => {
-        if (e.target.closest('.ingredient-search')) return;
-        setShowIngredientList(false);
-    };
-
-    useEffect(() => {
-        if (showIngredientList) {
-            document.addEventListener('click', handleOutsideClick);
-        } else {
-            document.removeEventListener('click', handleOutsideClick);
-        }
-
-        return () => {
-            document.removeEventListener('click', handleOutsideClick);
-        };
-    }, [showIngredientList]);
-
-    const filteredIngredients = allIngredients.filter(
-        (ingredient) =>
-            !inventory.includes(ingredient) &&
-            ingredient.toLowerCase().startsWith(ingredientSearchQuery.toLowerCase())
-    );
 
     return (
         <div className="App" style={appStyle}>
@@ -192,37 +163,14 @@ function App() {
                         <button onClick={() => setPanelMode('edit')}>Edit</button>
                     </div>
                     {panelMode === 'add' && (
-                        <div className="add-section ingredient-search">
-                        <input
-                            type="text"
-                            placeholder="Search for an ingredient..."
-                            value={ingredientSearchQuery}
-                            onClick={() => setShowIngredientList(true)}
-                            onChange={(e) => setIngredientSearchQuery(e.target.value)}
-                            style={{ width: '152px' }} // Adjust the width value as per your requirement
-                        />
-                        {showIngredientList && filteredIngredients.length > 0 && (
-                            <select
-                                size={Math.min(10, filteredIngredients.length)}
-                                value={selectedIngredient}
-                                onChange={(e) => {
-                                    setSelectedIngredient(e.target.value);
-                                    handleAddIngredient(e.target.value);
-                                }}
-                                onClick={(e) => {
-                                    if (e.target.tagName === 'OPTION') {
-                                        handleAddIngredient(e.target.value);
-                                    }
-                                }}
-                                style={{ height: 'auto', maxHeight: '200px', overflowY: 'auto' }} // Adjust the height dynamically
-                            >
-                                {filteredIngredients.map((ingredient, index) => (
-                                    <option key={index} value={ingredient}>
-                                        {ingredient}
-                                    </option>
+                        <div className="add-section">
+                            <select value={selectedIngredient} onChange={(e) => setSelectedIngredient(e.target.value)}>
+                                <option value="">Select Ingredient</option>
+                                {allIngredients.filter(ingredient => !inventory.includes(ingredient)).map((ingredient) => (
+                                    <option key={ingredient} value={ingredient}>{ingredient}</option>
                                 ))}
                             </select>
-                            )}
+                            <button onClick={handleAddIngredient}>Add to Inventory</button>
                         </div>
                     )}
                     <div className="inventory-list">
@@ -281,7 +229,6 @@ function App() {
                 <div className="login-panel"> {/* Reuse className for styling */}
                     <div className="panel-header">
                         <button onClick={() => setShowSignUp(false)}>Close</button>
-
                     </div>
                     <form onSubmit={handleSignUp}>
                         <div className="login-field">
@@ -338,66 +285,7 @@ function App() {
                         <h3>{meal.strMeal}</h3>
                         <img src={meal.strMealThumb} alt={meal.strMeal} />
                     </div>
-                    <form onSubmit={handleSignUp}>
-                        <div className="login-field">
-                            <label htmlFor="email">Email:</label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="login-field">
-                            <label htmlFor="username">Username:</label>
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="login-field">
-                            <label htmlFor="password">Password:</label>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="login-field">
-                            <label htmlFor="confirmPassword">Confirm Password:</label>
-                            <input
-                                type="password"
-                                id="confirmPassword"
-                                name="confirmPassword"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <button type="submit" className="login-confirm-button">Sign Up</button>
-                    </form>
-                </div>
-            )}
-            <div className="search-results">
-                {searchResults.length > 0 ? (
-                    searchResults.map((meal) => (
-                        <div key={meal.idMeal} onClick={() => handleMealClick(meal.idMeal)}>
-                            <h3>{meal.strMeal}</h3>
-                            <img src={meal.strMealThumb} alt={meal.strMeal} />
-                        </div>
-                    ))
-                ) : (
-                    <p>No recipes found.</p>
-                )}
+                ))}
             </div>
             {mealDetails && (
                 <div className="meal-details">
@@ -405,9 +293,7 @@ function App() {
                     <img src={mealDetails.strMealThumb} alt={mealDetails.strMeal} />
                     <h3>Ingredients</h3>
                     <ul>
-                    {Array.from({ length: 20 }).map((_, i) => {
                         {Array.from({ length: 20 }).map((_, i) => {
-
                             const ingredient = mealDetails[`strIngredient${i + 1}`];
                             const measure = mealDetails[`strMeasure${i + 1}`];
                             return ingredient ? (
