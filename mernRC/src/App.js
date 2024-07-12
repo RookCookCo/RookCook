@@ -24,6 +24,7 @@ function App() {
     const [ingredientSearchQuery, setIngredientSearchQuery] = useState(''); // New state for ingredient search
     const [showIngredientList, setShowIngredientList] = useState(false); // New state to show/hide ingredient list
 
+
     useEffect(() => {
         const fetchIngredients = async () => {
             const response = await fetch('https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood');
@@ -114,7 +115,6 @@ function App() {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        // Add login logic here
         console.log("Username:", username);
         console.log("Password:", password);
         setShowLogin(false); // Close login panel after login attempt
@@ -128,7 +128,7 @@ function App() {
         console.log("Confirm Password:", confirmPassword);
         setShowSignUp(false); // Close sign-up panel after sign-up attempt
     };
-
+  
     const handleOutsideClick = (e) => {
         if (e.target.closest('.ingredient-search')) return;
         setShowIngredientList(false);
@@ -281,6 +281,62 @@ function App() {
                 <div className="login-panel"> {/* Reuse className for styling */}
                     <div className="panel-header">
                         <button onClick={() => setShowSignUp(false)}>Close</button>
+
+                    </div>
+                    <form onSubmit={handleSignUp}>
+                        <div className="login-field">
+                            <label htmlFor="email">Email:</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="login-field">
+                            <label htmlFor="username">Username:</label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="login-field">
+                            <label htmlFor="password">Password:</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="login-field">
+                            <label htmlFor="confirmPassword">Confirm Password:</label>
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="login-confirm-button">Sign Up</button>
+                    </form>
+                </div>
+            )}
+            <div className="search-results">
+                {searchResults.map((meal) => (
+                    <div key={meal.idMeal} onClick={() => handleMealClick(meal.idMeal)}>
+                        <h3>{meal.strMeal}</h3>
+                        <img src={meal.strMealThumb} alt={meal.strMeal} />
                     </div>
                     <form onSubmit={handleSignUp}>
                         <div className="login-field">
@@ -350,6 +406,8 @@ function App() {
                     <h3>Ingredients</h3>
                     <ul>
                     {Array.from({ length: 20 }).map((_, i) => {
+                        {Array.from({ length: 20 }).map((_, i) => {
+
                             const ingredient = mealDetails[`strIngredient${i + 1}`];
                             const measure = mealDetails[`strMeasure${i + 1}`];
                             return ingredient ? (

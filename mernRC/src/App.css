@@ -167,7 +167,6 @@
   border-radius: 5px;
 }
 
-/* Styles for the login and signup panel */
 .login-panel, .signup-panel {
   position: absolute;
   top: 30%; /* Adjust as needed */
@@ -316,4 +315,4 @@
 .meal-details ul {
   list-style: none;
   padding: 0;
-}
+
