@@ -63,6 +63,24 @@
 .auth-buttons button:hover {
   background-color: #f0f0f0;
 }
+.panel-header {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensures the panel header covers the entire height */
+  justify-content: space-around; /* Distributes buttons evenly along the column */
+}
+
+.panel-header button {
+  flex: 1; /* Allows buttons to take up equal space vertically */
+  padding: 12px; /* Increased padding for larger appearance */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.panel-header button:hover {
+  background-color: #ddd;
+}
+
 
 .add-ingredient-button {
   position: absolute;
@@ -149,7 +167,6 @@
   border-radius: 5px;
 }
 
-/* Styles for the login panel */
 .login-panel, .signup-panel {
   position: absolute;
   top: 30%; /* Adjust as needed */
@@ -164,7 +181,32 @@
 
 .login-panel .panel-header, .signup-panel .panel-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center; /* Center the button horizontally */
+}
+
+.login-panel .panel-header button, 
+.signup-panel .panel-header button,
+.signup-confirm-button {
+  width: 100px; /* Adjust width as needed */
+  padding: 5px 5px; /* Matching padding */
+  border: none; /* No border */
+  border-radius: 5px; /* Border radius */
+  background-color: red; /* Change background color to red */
+  color: white; /* Text color */
+  cursor: pointer; /* Pointer cursor */
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.login-panel .panel-header button:hover, 
+.signup-panel .panel-header button:hover,
+.signup-confirm-button:hover {
+  background-color: darkred; /* Darker red on hover */
+}
+
+
+.login-panel .panel-header button:hover, .signup-panel .panel-header button:hover,
+.signup-confirm-button:hover {
+  background-color: #7a7a7a; /* Hover background color */
 }
 
 .login-panel form, .signup-panel form {
@@ -273,4 +315,4 @@
 .meal-details ul {
   list-style: none;
   padding: 0;
-}
+
