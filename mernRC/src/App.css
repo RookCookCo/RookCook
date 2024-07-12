@@ -150,7 +150,7 @@
 }
 
 /* Styles for the login panel */
-.login-panel {
+.login-panel, .signup-panel {
   position: absolute;
   top: 30%; /* Adjust as needed */
   left: 30%; /* Adjust as needed */
@@ -162,29 +162,29 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.login-panel .panel-header {
+.login-panel .panel-header, .signup-panel .panel-header {
   display: flex;
   justify-content: flex-end;
 }
 
-.login-panel form {
+.login-panel form, .signup-panel form {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.login-field {
+.login-field, .signup-field {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-bottom: 15px;
 }
 
-.login-field label {
+.login-field label, .signup-field label {
   margin-right: 10px;
 }
 
-.login-field input {
+.login-field input, .signup-field input {
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -225,7 +225,7 @@
   background-color: #357ae8;
 }
 
-.login-confirm-button {
+.login-confirm-button, .signup-confirm-button {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -234,7 +234,7 @@
   cursor: pointer;
 }
 
-.login-confirm-button:hover {
+.login-confirm-button:hover, .signup-confirm-button:hover {
   background-color: #7a7a7a;
 }
 
@@ -253,4 +253,24 @@
 
 .generate-recipe-button:hover {
   background-color: #7a7a7a;
+}
+
+.search-results ul {
+  list-style: none;
+  padding: 0;
+}
+
+.search-results li {
+  margin-bottom: 10px;
+}
+
+.meal-details img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.meal-details ul {
+  list-style: none;
+  padding: 0;
 }
