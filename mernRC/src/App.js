@@ -349,18 +349,17 @@ function App() {
                    </form>
                </div>
            )}
-           <div className="search-results">
-               {searchResults.length > 0 ? (
-                   searchResults.map((meal) => (
-                       <div key={meal.idMeal} onClick={() => handleMealClick(meal.idMeal)}>
-                           <h3>{meal.strMeal}</h3>
-                           <img src={meal.strMealThumb} alt={meal.strMeal} />
-                       </div>
-                   ))
-               ) : (
-                   <p>No recipes found.</p>
-               )}
-           </div>
+                <div className="search-results">
+            {searchResults.length > 0 && (
+                searchResults.map((meal) => (
+                    <div key={meal.idMeal} onClick={() => handleMealClick(meal.idMeal)}>
+                        <h3>{meal.strMeal}</h3>
+                        <img src={meal.strMealThumb} alt={meal.strMeal} />
+                    </div>
+                ))
+            )}
+        </div>
+
            {mealDetails && (
                <div className="meal-details">
                    <h2>{mealDetails.strMeal}</h2>
