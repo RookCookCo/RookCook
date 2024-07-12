@@ -5,9 +5,10 @@
   text-align: center;
   color: black; /* Ensure text is visible on dark background */
   position: relative; /* Add this to use absolute positioning for the button */
-}
-
-.App-header {
+ }
+ 
+ 
+ .App-header {
   width: 96%;
   display: flex;
   justify-content: space-between;
@@ -17,24 +18,27 @@
   position: absolute; /* Positioning the header at the top */
   top: 0;
   left: 0; /* Ensure header is aligned to the left */
-}
-
-.site-logo {
+ }
+ 
+ 
+ .site-logo {
   width: 70px; /* Adjust width as needed */
   height: auto;
   position: absolute;
   left: 5px;
-}
-
-.search-box {
+ }
+ 
+ 
+ .search-box {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-grow: 1;
   margin-left: 70px; /* Adjust to accommodate logo width */
-}
-
-.search-box input {
+ }
+ 
+ 
+ .search-box input {
   font-family: Georgia, serif;
   font-size: 15px;
   margin-left: 10px;
@@ -42,14 +46,16 @@
   border: 2px solid #ccc;
   border-radius: 5px;
   width: 300px; /* Adjust width as needed */
-}
-
-.auth-buttons {
+ }
+ 
+ 
+ .auth-buttons {
   display: flex;
   gap: 10px;
-}
-
-.auth-buttons button {
+ }
+ 
+ 
+ .auth-buttons button {
   font-family: Georgia, serif;
   font-size: 15px;
   text-align: center;
@@ -58,13 +64,36 @@
   border-radius: 5px;
   background-color: #fff;
   cursor: pointer;
-}
-
-.auth-buttons button:hover {
+ }
+ 
+ 
+ .auth-buttons button:hover {
   background-color: #f0f0f0;
-}
-
-.add-ingredient-button {
+ }
+ .panel-header {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensures the panel header covers the entire height */
+  justify-content: space-around; /* Distributes buttons evenly along the column */
+ }
+ 
+ 
+ .panel-header button {
+  flex: 1; /* Allows buttons to take up equal space vertically */
+  padding: 12px; /* Increased padding for larger appearance */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+ }
+ 
+ 
+ .panel-header button:hover {
+  background-color: #ddd;
+ }
+ 
+ 
+ 
+ 
+ .add-ingredient-button {
   position: absolute;
   height: 50px;
   width: 50px;
@@ -76,9 +105,10 @@
   color: white;
   border-radius: 100%;
   cursor: pointer;
-}
-
-.ingredient-panel {
+ }
+ 
+ 
+ .ingredient-panel {
   position: absolute;
   top: 20%; /* Adjust this value to position the panel lower */
   left: 20%;
@@ -91,30 +121,35 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
-}
-
-.panel-header {
+ }
+ 
+ 
+ .panel-header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
-}
-
-.add-section, .edit-section, .inventory-list {
+ }
+ 
+ 
+ .add-section, .edit-section, .inventory-list {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.add-section select, .edit-section ul, .inventory-list ul {
+ }
+ 
+ 
+ .add-section select, .edit-section ul, .inventory-list ul {
   margin-bottom: 10px;
-}
-
-.inventory-list ul {
+ }
+ 
+ 
+ .inventory-list ul {
   list-style: none;
   padding: 0;
-}
-
-.inventory-list li {
+ }
+ 
+ 
+ .inventory-list li {
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -122,13 +157,15 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-bottom: 5px;
-}
-
-.search-results {
+ }
+ 
+ 
+ .search-results {
   margin-top: 20px;
-}
-
-.search-results div {
+ }
+ 
+ 
+ .search-results div {
   display: inline-block;
   margin: 10px;
   padding: 10px;
@@ -136,21 +173,24 @@
   border-radius: 5px;
   text-align: center;
   cursor: pointer;
-}
-
-.meal-details {
+ }
+ 
+ 
+ .meal-details {
   margin-top: 20px;
-}
-
-.meal-details img {
+ }
+ 
+ 
+ .meal-details img {
   width: 100px;
   height: 100px;
   object-fit: cover;
   border-radius: 5px;
-}
-
-/* Styles for the login panel */
-.login-panel, .signup-panel {
+ }
+ 
+ 
+ /* Styles for the login and signup panel */
+ .login-panel, .signup-panel {
   position: absolute;
   top: 30%; /* Adjust as needed */
   left: 30%; /* Adjust as needed */
@@ -160,85 +200,127 @@
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.login-panel .panel-header, .signup-panel .panel-header {
+ }
+ 
+ 
+ .login-panel .panel-header, .signup-panel .panel-header {
   display: flex;
-  justify-content: flex-end;
-}
-
-.login-panel form, .signup-panel form {
+  justify-content: center; /* Center the button horizontally */
+ }
+ 
+ 
+ .login-panel .panel-header button,
+ .signup-panel .panel-header button,
+ .signup-confirm-button {
+  width: 100px; /* Adjust width as needed */
+  padding: 5px 5px; /* Matching padding */
+  border: none; /* No border */
+  border-radius: 5px; /* Border radius */
+  background-color: red; /* Change background color to red */
+  color: white; /* Text color */
+  cursor: pointer; /* Pointer cursor */
+  transition: background-color 0.3s ease; /* Smooth transition */
+ }
+ 
+ 
+ .login-panel .panel-header button:hover,
+ .signup-panel .panel-header button:hover,
+ .signup-confirm-button:hover {
+  background-color: darkred; /* Darker red on hover */
+ }
+ 
+ 
+ 
+ 
+ .login-panel .panel-header button:hover, .signup-panel .panel-header button:hover,
+ .signup-confirm-button:hover {
+  background-color: #7a7a7a; /* Hover background color */
+ }
+ 
+ 
+ .login-panel form, .signup-panel form {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.login-field, .signup-field {
+ }
+ 
+ 
+ .login-field, .signup-field {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-bottom: 15px;
-}
-
-.login-field label, .signup-field label {
+ }
+ 
+ 
+ .login-field label, .signup-field label {
   margin-right: 10px;
-}
-
-.login-field input, .signup-field input {
+ }
+ 
+ 
+ .login-field input, .signup-field input {
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
-}
-
-.login-links {
+ }
+ 
+ 
+ .login-links {
   display: flex;
   justify-content: space-between;
   width: 100%;
   margin-bottom: 15px;
-}
-
-.link-button {
+ }
+ 
+ 
+ .link-button {
   background: none;
   border: none;
   color: blue;
   text-decoration: underline;
   cursor: pointer;
-}
-
-.login-google {
+ }
+ 
+ 
+ .login-google {
   display: flex;
   justify-content: center;
   width: 100%;
   margin-bottom: 15px;
-}
-
-.login-google button {
+ }
+ 
+ 
+ .login-google button {
   background-color: #4285F4;
   color: white;
   border: none;
   border-radius: 5px;
   padding: 10px;
   cursor: pointer;
-}
-
-.login-google button:hover {
+ }
+ 
+ 
+ .login-google button:hover {
   background-color: #357ae8;
-}
-
-.login-confirm-button, .signup-confirm-button {
+ }
+ 
+ 
+ .login-confirm-button, .signup-confirm-button {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   background-color: #8e8e8e;
   color: white;
   cursor: pointer;
-}
-
-.login-confirm-button:hover, .signup-confirm-button:hover {
+ }
+ 
+ 
+ .login-confirm-button:hover, .signup-confirm-button:hover {
   background-color: #7a7a7a;
-}
-
-.generate-recipe-button {
+ }
+ 
+ 
+ .generate-recipe-button {
   position: absolute;
   bottom: 20px; /* Adjust as needed */
   right: 12%; /* Adjust as needed */
@@ -249,28 +331,36 @@
   color: white;
   border-radius: 5px;
   cursor: pointer;
-}
-
-.generate-recipe-button:hover {
+ }
+ 
+ 
+ .generate-recipe-button:hover {
   background-color: #7a7a7a;
-}
-
-.search-results ul {
+ }
+ 
+ 
+ .search-results ul {
   list-style: none;
   padding: 0;
-}
-
-.search-results li {
+ }
+ 
+ 
+ .search-results li {
   margin-bottom: 10px;
-}
-
-.meal-details img {
+ }
+ 
+ 
+ .meal-details img {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
-}
-
-.meal-details ul {
+ }
+ 
+ 
+ .meal-details ul {
   list-style: none;
   padding: 0;
-}
+ }
+ 
+ 
+ 
