@@ -15,9 +15,12 @@ function App() {
     const [searchResults, setSearchResults] = useState([]);
     const [mealDetails, setMealDetails] = useState(null);
     const [showLogin, setShowLogin] = useState(false); // New state for login panel
+    const [showSignUp, setShowSignUp] = useState(false); // New state for sign-up panel
     const [username, setUsername] = useState('');
+    const [email, setEmail] = useState(''); // New state for email
     const [password, setPassword] = useState('');
-    const [user, setUser] = useState(null); // Add this line
+    const [confirmPassword, setConfirmPassword] = useState(''); // New state for confirm password
+    const [user, setUser] = useState(null); // User state
     const [ingredientSearchQuery, setIngredientSearchQuery] = useState(''); // New state for ingredient search
     const [showIngredientList, setShowIngredientList] = useState(false); // New state to show/hide ingredient list
 
@@ -117,6 +120,15 @@ function App() {
         setShowLogin(false); // Close login panel after login attempt
     };
 
+    const handleSignUp = async (e) => {
+        e.preventDefault();
+        console.log("Email:", email);
+        console.log("Username:", username);
+        console.log("Password:", password);
+        console.log("Confirm Password:", confirmPassword);
+        setShowSignUp(false); // Close sign-up panel after sign-up attempt
+    };
+
     const handleOutsideClick = (e) => {
         if (e.target.closest('.ingredient-search')) return;
         setShowIngredientList(false);
@@ -166,7 +178,7 @@ function App() {
                     ) : (
                         <>
                             <button onClick={() => setShowLogin(true)}>Login</button>
-                            <button>Sign up</button>
+                            <button onClick={() => setShowSignUp(true)}>Sign up</button> {/* Opens sign-up panel */}
                         </>
                     )}
                 </div>
@@ -265,6 +277,60 @@ function App() {
                     </form>
                 </div>
             )}
+            {showSignUp && (
+                <div className="login-panel"> {/* Reuse className for styling */}
+                    <div className="panel-header">
+                        <button onClick={() => setShowSignUp(false)}>Close</button>
+                    </div>
+                    <form onSubmit={handleSignUp}>
+                        <div className="login-field">
+                            <label htmlFor="email">Email:</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="login-field">
+                            <label htmlFor="username">Username:</label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="login-field">
+                            <label htmlFor="password">Password:</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="login-field">
+                            <label htmlFor="confirmPassword">Confirm Password:</label>
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="login-confirm-button">Sign Up</button>
+                    </form>
+                </div>
+            )}
             <div className="search-results">
                 {searchResults.length > 0 ? (
                     searchResults.map((meal) => (
@@ -283,12 +349,13 @@ function App() {
                     <img src={mealDetails.strMealThumb} alt={mealDetails.strMeal} />
                     <h3>Ingredients</h3>
                     <ul>
-                        {Array.from({ length: 20 }, (_, i) => mealDetails[`strIngredient${i + 1}`])
-                            .filter(ingredient => ingredient)
-                            .sort((a, b) => a.localeCompare(b)) // Sort ingredients alphabetically
-                            .map((ingredient, index) => (
-                                <li key={index}>{ingredient}</li>
-                            ))}
+                    {Array.from({ length: 20 }).map((_, i) => {
+                            const ingredient = mealDetails[`strIngredient${i + 1}`];
+                            const measure = mealDetails[`strMeasure${i + 1}`];
+                            return ingredient ? (
+                                <li key={i}>{ingredient} - {measure}</li>
+                            ) : null;
+                        })}
                     </ul>
                     <h3>Instructions</h3>
                     <p>{mealDetails.strInstructions}</p>
