@@ -304,7 +304,7 @@
  color: white;
  cursor: pointer;
  border-radius: 10px;
- z-index: -1;
+ z-index: 100;
 }
 
 .generate-recipe-button:hover {
