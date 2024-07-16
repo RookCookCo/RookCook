@@ -353,26 +353,27 @@
  padding: 0;
 }
 .recipe-dropdown {
- position: absolute;
- top: 100%; /* Position below the search box */
- left: 0;
- background-color: white;
- border: 1px solid #ccc;
- border-radius: 5px;
- max-height: 200px; /* Set a maximum height and enable scrolling */
- overflow-y: auto;
- z-index: 1000;
- width: 300px;
+  position: absolute;
+  top: calc(100% + 5px); /* Adjust the gap between search box and dropdown */
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%; /* Adjust width to match the search input width */
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
 }
 .recipe-dropdown ul {
- list-style: none;
- padding: 0;
- margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 .recipe-dropdown li {
- padding: 10px;
- cursor: pointer;
-}a
-.recipe-dropdown li:hover {
- background-color: #f0f0f0;
+  padding: 10px;
+  cursor: pointer;
 }
+.recipe-dropdown li:hover {
+  background-color: #f0f0f0;
+}
+
