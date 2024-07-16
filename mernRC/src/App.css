@@ -158,6 +158,7 @@
   border-radius: 5px;
   text-align: center;
   cursor: pointer;
+  width: 300px;
 }
 
 .recipe-grid {
@@ -356,13 +357,13 @@
  position: absolute;
  top: 100%; /* Position below the search box */
  left: 0;
+ width: 100%;
  background-color: white;
  border: 1px solid #ccc;
  border-radius: 5px;
  max-height: 200px; /* Set a maximum height and enable scrolling */
  overflow-y: auto;
  z-index: 1000;
- width: 300px;
 }
 .recipe-dropdown ul {
  list-style: none;
