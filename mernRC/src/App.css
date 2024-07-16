@@ -354,12 +354,12 @@
 }
 .recipe-dropdown {
   position: absolute;
-  top: calc(100% + 5px);
+  top: calc(100% + 5px); /* Adjust the gap between search box and dropdown */
   left: 0;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 300px; /* Adjust to match the width of your search box */
+  width: 100%; /* Adjust width to match the search input width */
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
