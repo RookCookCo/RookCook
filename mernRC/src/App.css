@@ -158,6 +158,7 @@
   border-radius: 5px;
   text-align: center;
   cursor: pointer;
+  width: 300px;
 }
 
 .recipe-grid {
