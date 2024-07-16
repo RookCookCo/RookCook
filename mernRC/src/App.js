@@ -17,7 +17,13 @@ function App() {
     const [showLogin, setShowLogin] = useState(false); // New state for login panel
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [user, setUser] = useState(null); // Add this line
+    const [confirmPassword, setConfirmPassword] = useState(''); // New state for confirm password
+    const [user, setUser] = useState(null); // User state
+    const [ingredientSearchQuery, setIngredientSearchQuery] = useState(''); // New state for ingredient search
+    const [showIngredientList, setShowIngredientList] = useState(false); // New state to show/hide ingredient list
+    const [allRecipes, setAllRecipes] = useState([]); // New state to store all recipes
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupContent, setPopupContent] = useState('');
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -95,14 +101,18 @@ function App() {
         }
     };
 
-    const generateRecipe = async () => {
-        try {
-            const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${inventory.join(',')}`);
-            setSearchResults(response.data.meals || []);
-        } catch (error) {
-            console.error('Error generating recipe:', error);
-        }
-    };
+const generateRecipe = async () => {
+    try {
+        const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${inventory.join(',')}`);
+        const data = response.data.meals || [];
+        const recipeNames = data.map(meal => meal.strMeal).join(', '); // Adjust as per your requirement
+        setPopupContent(recipeNames); // Set the content for the popup
+        setShowPopup(true); // Show the popup
+    } catch (error) {
+        console.error('Error generating recipe:', error);
+    }
+};
+
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -239,6 +249,14 @@ function App() {
                 </div>
             )}
             <button className="generate-recipe-button" onClick={generateRecipe}>Generate Recipe</button>
+            {showPopup && (
+            <div className="popup">
+              <button className="exit-button" onClick={() => setShowPopup(false)}>X</button>
+                <h2>Generated Recipe</h2>
+                <p>{popupContent}</p>
+                <button onClick={() => setShowPopup(false)}>Close</button>
+            </div>
+        )}
         </div>
     );
 }
