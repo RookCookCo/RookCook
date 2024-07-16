@@ -95,12 +95,29 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
+  z-index: 1000;
 }
 
 .panel-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.panel-header > div {
+    margin-bottom: 10px; /* Adjust spacing between buttons */
+}
+
+.panel-header button {
+    display: block;
+    width: 100%;
+    height: 40px; /* Adjust height as needed */
+    border: none;
+    background-color: #f0f0f0; /* Example background color */
+    border-radius: 5px; /* Example border radius */
+    cursor: pointer;
+}
+
+.panel-header button:hover {
+    background-color: #e0e0e0; /* Example hover background color */
 }
 
 .add-section, .edit-section, .inventory-list {
@@ -142,15 +159,51 @@
   cursor: pointer;
 }
 
-.meal-details {
-  margin-top: 20px;
+.recipe-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+ gap: 20px;
+ padding-top: 800px; /* Additional padding to ensure it appears lower */
 }
-
+.recipe-card {
+ border: 1px solid #ccc;
+ border-radius: 5px;
+ padding: 10px;
+ text-align: center;
+ cursor: pointer;
+}
+.recipe-card img {
+ width: 100%;
+ border-radius: 5px;
+}
+.meal-details {
+ margin-top: 20px;
+}
 .meal-details img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 5px;
+ width: 100px;
+ height: 100px;
+ object-fit: cover;
+ border-radius: 5px;
+}
+.video-container {
+ margin-top: 20px;
+}
+.video-container iframe {
+ width: 100%;
+ height: 315px;
+ border-radius: 8px;
+}
+/* Styles for the login and signup panel */
+.login-panel, .signup-panel {
+ position: absolute;
+ top: 30%; /* Adjust as needed */
+ left: 30%; /* Adjust as needed */
+ width: 40%; /* Adjust as needed */
+ background-color: white;
+ border: 2px solid #ccc;
+ border-radius: 10px;
+ padding: 20px;
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Styles for the login panel */

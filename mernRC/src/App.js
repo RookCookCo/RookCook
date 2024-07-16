@@ -24,6 +24,8 @@ function App() {
     const [allRecipes, setAllRecipes] = useState([]); // New state to store all recipes
     const [showPopup, setShowPopup] = useState(false);
     const [popupContent, setPopupContent] = useState('');
+    const [popupSearchResults, setPopupSearchResults] = useState([]);
+    const [selectedMealDetails, setSelectedMealDetails] = useState(null);
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -83,6 +85,12 @@ function App() {
         setMealDetails(data.meals[0]);
     };
 
+    const fetchMealDetails = async (id) => {
+        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+        const data = await response.json();
+        return data.meals ? data.meals[0] : null;
+    };
+
     const handleGoogleLogin = async () => {
         try {
             const result = await signInWithPopup(auth, provider);
@@ -101,19 +109,21 @@ function App() {
         }
     };
 
-const generateRecipe = async () => {
-    try {
-        const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${inventory.join(',')}`);
-        const data = response.data.meals || [];
-        const recipeNames = data.map(meal => meal.strMeal).join(', '); // Adjust as per your requirement
-        setPopupContent(recipeNames); // Set the content for the popup
-        setShowPopup(true); // Show the popup
-    } catch (error) {
-        console.error('Error generating recipe:', error);
-    }
-};
+    const handlePopupMealClick = async (id) => {
+        const mealDetails = await fetchMealDetails(id);
+        setSelectedMealDetails(mealDetails);
+    };
 
-
+    const generateRecipe = async () => {
+        try {
+            const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${inventory.join(',')}`);
+            const data = response.data.meals || [];
+            setPopupSearchResults(data); // Update popup search results
+            setShowPopup(true); // Show the popup
+        } catch (error) {
+            console.error('Error generating recipe:', error);
+        }
+    };
     const handleLogin = (e) => {
         e.preventDefault();
         // Add login logic here
@@ -157,9 +167,15 @@ const generateRecipe = async () => {
             {showPanel && (
                 <div className="ingredient-panel">
                     <div className="panel-header">
-                        <button onClick={() => setShowPanel(false)}>Close</button>
-                        <button onClick={() => setPanelMode('add')}>Add</button>
-                        <button onClick={() => setPanelMode('edit')}>Edit</button>
+                        <div>
+                            <button onClick={() => setShowPanel(false)}>Close</button>
+                        </div>
+                        <div>
+                            <button onClick={() => setPanelMode('add')}>Add</button>
+                        </div>
+                        <div>
+                            <button onClick={() => setPanelMode('edit')}>Edit</button>
+                        </div>
                     </div>
                     {panelMode === 'add' && (
                         <div className="add-section">
@@ -232,32 +248,96 @@ const generateRecipe = async () => {
                     </div>
                 ))}
             </div>
+
             {mealDetails && (
                 <div className="meal-details">
                     <h2>{mealDetails.strMeal}</h2>
                     <img src={mealDetails.strMealThumb} alt={mealDetails.strMeal} />
                     <h3>Ingredients</h3>
                     <ul>
-                        {Array.from({ length: 20 }, (_, i) => mealDetails[`strIngredient${i + 1}`])
-                            .filter(ingredient => ingredient)
-                            .map((ingredient, index) => (
-                                <li key={index}>{ingredient}</li>
-                            ))}
+                        {Array.from({ length: 20 }).map((_, i) => {
+                            const ingredient = mealDetails[`strIngredient${i + 1}`];
+                            const measure = mealDetails[`strMeasure${i + 1}`];
+                            return ingredient ? (
+                                <li key={i}>{ingredient} - {measure}</li>
+                            ) : null;
+                        })}
                     </ul>
                     <h3>Instructions</h3>
                     <p>{mealDetails.strInstructions}</p>
+                    {mealDetails.strYoutube && (
+                        <div className="video-container">
+                            <h3>Video Instructions</h3>
+                            <iframe
+                                width="560"
+                                height="315"
+                                src={`https://www.youtube.com/embed/${mealDetails.strYoutube.split('=')[1]}`}
+                                title="YouTube video player"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            ></iframe>
+                        </div>
+                    )}
                 </div>
             )}
             <button className="generate-recipe-button" onClick={generateRecipe}>Generate Recipe</button>
             {showPopup && (
-            <div className="popup">
-              <button className="exit-button" onClick={() => setShowPopup(false)}>X</button>
-                <h2>Generated Recipe</h2>
-                <p>{popupContent}</p>
-                <button onClick={() => setShowPopup(false)}>Close</button>
+        <div className="popup">
+            <button className="exit-button" onClick={() => setShowPopup(false)}>X</button>
+            <h2>Generated Recipe</h2>
+            <div className="popup-content">
+                {selectedMealDetails ? (
+                    <div className="meal-details-popup">
+                        <button onClick={() => setSelectedMealDetails(null)}>Back</button> {/* Back button */}
+                        <h3>{selectedMealDetails.strMeal}</h3>
+                        <img src={selectedMealDetails.strMealThumb} alt={selectedMealDetails.strMeal} />
+                        <h4>Ingredients</h4>
+                        <ul>
+                            {Array.from({ length: 20 }).map((_, i) => {
+                                const ingredient = selectedMealDetails[`strIngredient${i + 1}`];
+                                const measure = selectedMealDetails[`strMeasure${i + 1}`];
+                                return ingredient ? (
+                                    <li key={i}>{ingredient} - {measure}</li>
+                                ) : null;
+                            })}
+                        </ul>
+                        <h4>Instructions</h4>
+                        <p>{selectedMealDetails.strInstructions}</p>
+                        {selectedMealDetails.strYoutube && (
+                        <div className="video-container">
+                            <h4>Video Instructions</h4>
+                            <iframe
+                                width="560"
+                                height="315"
+                                src={`https://www.youtube.com/embed/${selectedMealDetails.strYoutube.split('=')[1]}`}
+                                title="YouTube video player"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            ></iframe>
+                        </div> 
+                        )}
+                    </div>
+                ) : (
+                    <div className="search-results">
+                        {popupSearchResults.length > 0 && (
+                            <div className="recipe-grid">
+                                {popupSearchResults.map((meal) => (
+                                    <div key={meal.idMeal} className="recipe-card" onClick={() => handlePopupMealClick(meal.idMeal)}>
+                                        <h3>{meal.strMeal}</h3>
+                                        <img src={meal.strMealThumb} alt={meal.strMeal} />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
-        )}
+            <button onClick={() => setShowPopup(false)}>Close</button>
         </div>
+    )}
+    </div>
     );
 }
 
