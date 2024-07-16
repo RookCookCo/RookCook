@@ -304,6 +304,7 @@
  color: white;
  cursor: pointer;
  border-radius: 10px;
+ z-index: -1;
 }
 
 .generate-recipe-button:hover {
@@ -360,7 +361,7 @@
  border-radius: 5px;
  max-height: 200px; /* Set a maximum height and enable scrolling */
  overflow-y: auto;
- z-index: 1000; /* Ensure it appears above other elements */
+ z-index: 1000;
 }
 .recipe-dropdown ul {
  list-style: none;
