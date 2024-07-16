@@ -1,9 +1,13 @@
 .App {
- font-family: Georgia, serif;
- font-size: 18px;
- text-align: center;
- color: black; /* Ensure text is visible on dark background */
- position: relative; /* Add this to use absolute positioning for the button */
+  font-family: Georgia, serif;
+  font-size: 18px;
+  text-align: center;
+  color: black; /* Ensure text is visible on dark background */
+  position: relative; /* Add this to use absolute positioning for the button */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
 }
 .App-header {
  width: 96%;
@@ -85,23 +89,41 @@
  cursor: pointer;
 }
 .ingredient-panel {
- position: absolute;
- top: 20%; /* Adjust this value to position the panel lower */
- left: 20%;
- right: 20%;
- bottom: 20%;
- background-color: white;
- border: 2px solid #ccc;
- border-radius: 10px;
- padding: 20px;
- box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
- display: flex;
- justify-content: space-between;
+  position: absolute;
+  top: 20%; /* Adjust this value to position the panel lower */
+  left: 20%;
+  right: 20%;
+  bottom: 20%;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  z-index: 1000;
 }
+
 .panel-header {
- display: flex;
- justify-content: space-between;
- margin-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.panel-header > div {
+    margin-bottom: 10px; /* Adjust spacing between buttons */
+}
+
+.panel-header button {
+    display: block;
+    width: 100%;
+    height: 40px; /* Adjust height as needed */
+    border: none;
+    background-color: #f0f0f0; /* Example background color */
+    border-radius: 5px; /* Example border radius */
+    cursor: pointer;
+}
+
+.panel-header button:hover {
+    background-color: #e0e0e0; /* Example hover background color */
 }
 .add-section, .edit-section, .inventory-list {
  display: flex;
@@ -125,8 +147,19 @@
  margin-bottom: 5px;
 }
 .search-results {
- margin-top: 200px; /* Adjust this value to position the search results lower on the page */
+  margin-top: 20px;
 }
+
+.search-results div {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
 .recipe-grid {
  display: grid;
  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -173,6 +206,7 @@
  padding: 20px;
  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .login-panel .panel-header, .signup-panel .panel-header {
  display: flex;
  justify-content: center; /* Center the button horizontally */
@@ -260,18 +294,50 @@
 }
 .generate-recipe-button {
  position: absolute;
- bottom: 65px; /* Adjust as needed */
- right: 8%; /* Adjust as needed */
- font-size: 18px;
- padding: 10px 20px;
+ height: 60px;
+ width: 100px;
+ top: 49%; /* Adjust to move the button lower */
+ right: 50%; /* Adjust to move the button more to the left */
+ font-size: 20px;
  border: none;
  background-color: #8e8e8e; /* Adjust color as needed */
  color: white;
- border-radius: 5px;
  cursor: pointer;
+ border-radius: 10px;
 }
+
 .generate-recipe-button:hover {
- background-color: #7a7a7a;
+  background-color: #7a7a7a;
+}
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 1000px;
+  max-height: 80%;
+  overflow-y: auto;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.popup .exit-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: #ccc;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.popup .exit-button:hover {
+  background-color: #bbb;
 }
 .search-results ul {
  list-style: none;
@@ -279,11 +345,6 @@
 }
 .search-results li {
  margin-bottom: 10px;
-}
-.meal-details img {
- max-width: 100%;
- height: auto;
- border-radius: 8px;
 }
 .meal-details ul {
  list-style: none;
@@ -309,7 +370,7 @@
 .recipe-dropdown li {
  padding: 10px;
  cursor: pointer;
-}
+}a
 .recipe-dropdown li:hover {
  background-color: #f0f0f0;
 }
