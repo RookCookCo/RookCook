@@ -27,6 +27,12 @@ Deploying to Web Server
 
    Pull the latest changes from your Git repository (make sure you have Git installed on your server):
 
+4. Navigate to mernRC Directory
+   cd ./mernRC
+   
+   npm install    # Install dependencies if any
+   npm run build  # Build assets (if applicable)
+
 4. Restart Services (if necessary)
    Depending on your setup, you may need to restart services like Nginx to apply the changes:
 
