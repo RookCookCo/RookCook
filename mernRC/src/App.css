@@ -20,7 +20,7 @@
  width: 70px; /* Adjust width as needed */
  height: auto;
  position: absolute;
- left: 5px;
+ left: -50px;
 }
 .search-box {
  display: flex;
@@ -28,6 +28,7 @@
  justify-content: center;
  flex-grow: 1;
  margin-left: 70px; /* Adjust to accommodate logo width */
+ position: relative;
 }
 .search-box input {
  font-family: Georgia, serif;
@@ -124,16 +125,24 @@
  margin-bottom: 5px;
 }
 .search-results {
- margin-top: 20px;
+ margin-top: 200px; /* Adjust this value to position the search results lower on the page */
 }
-.search-results div {
- display: inline-block;
- margin: 10px;
- padding: 10px;
+.recipe-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+ gap: 20px;
+ padding-top: 800px; /* Additional padding to ensure it appears lower */
+}
+.recipe-card {
  border: 1px solid #ccc;
  border-radius: 5px;
+ padding: 10px;
  text-align: center;
  cursor: pointer;
+}
+.recipe-card img {
+ width: 100%;
+ border-radius: 5px;
 }
 .meal-details {
  margin-top: 20px;
@@ -251,8 +260,8 @@
 }
 .generate-recipe-button {
  position: absolute;
- bottom: 20px; /* Adjust as needed */
- right: 12%; /* Adjust as needed */
+ bottom: 65px; /* Adjust as needed */
+ right: 8%; /* Adjust as needed */
  font-size: 18px;
  padding: 10px 20px;
  border: none;
@@ -279,4 +288,28 @@
 .meal-details ul {
  list-style: none;
  padding: 0;
+}
+.recipe-dropdown {
+ position: absolute;
+ top: 100%; /* Position below the search box */
+ left: 0;
+ width: 100%;
+ background-color: white;
+ border: 1px solid #ccc;
+ border-radius: 5px;
+ max-height: 200px; /* Set a maximum height and enable scrolling */
+ overflow-y: auto;
+ z-index: 1000; /* Ensure it appears above other elements */
+}
+.recipe-dropdown ul {
+ list-style: none;
+ padding: 0;
+ margin: 0;
+}
+.recipe-dropdown li {
+ padding: 10px;
+ cursor: pointer;
+}
+.recipe-dropdown li:hover {
+ background-color: #f0f0f0;
 }

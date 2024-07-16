@@ -23,6 +23,7 @@ function App() {
     const [user, setUser] = useState(null); // User state
     const [ingredientSearchQuery, setIngredientSearchQuery] = useState(''); // New state for ingredient search
     const [showIngredientList, setShowIngredientList] = useState(false); // New state to show/hide ingredient list
+    const [allRecipes, setAllRecipes] = useState([]); // New state to store all recipes
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -49,7 +50,16 @@ function App() {
             }
         };
 
+        const fetchRecipes = async () => {
+            const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
+            const data = await response.json();
+            if (data.meals) {
+                setAllRecipes(data.meals);
+            }
+        };
+
         fetchIngredients();
+        fetchRecipes();
     }, []);
 
     const appStyle = {
@@ -152,6 +162,10 @@ function App() {
             ingredient.toLowerCase().startsWith(ingredientSearchQuery.toLowerCase())
     );
 
+    const filteredRecipes = allRecipes.filter(
+        (recipe) => recipe.strMeal.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <div className="App" style={appStyle}>
             <header className="App-header">
@@ -168,6 +182,21 @@ function App() {
                         />
                         <button type="submit">Search</button>
                     </form>
+                    {searchQuery && (
+                        <div className="recipe-dropdown">
+                            {filteredRecipes.length > 0 ? (
+                                <ul>
+                                    {filteredRecipes.map((recipe) => (
+                                        <li key={recipe.idMeal} onClick={() => handleMealClick(recipe.idMeal)}>
+                                            {recipe.strMeal}
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <div>No recipes found</div>
+                            )}
+                        </div>
+                    )}
                 </div>
                 <div className="auth-buttons">
                     {user ? (
@@ -333,12 +362,14 @@ function App() {
             )}
             <div className="search-results">
                 {searchResults.length > 0 && (
-                    searchResults.map((meal) => (
-                        <div key={meal.idMeal} onClick={() => handleMealClick(meal.idMeal)}>
-                            <h3>{meal.strMeal}</h3>
-                            <img src={meal.strMealThumb} alt={meal.strMeal} />
-                        </div>
-                    ))
+                    <div className="recipe-grid">
+                        {searchResults.map((meal) => (
+                            <div key={meal.idMeal} className="recipe-card" onClick={() => handleMealClick(meal.idMeal)}>
+                                <h3>{meal.strMeal}</h3>
+                                <img src={meal.strMealThumb} alt={meal.strMeal} />
+                            </div>
+                        ))}
+                    </div>
                 )}
             </div>
 
