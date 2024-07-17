@@ -25,7 +25,6 @@ function App() {
     const [showIngredientList, setShowIngredientList] = useState(false); // New state to show/hide ingredient list
     const [allRecipes, setAllRecipes] = useState([]); // New state to store all recipes
     const [showPopup, setShowPopup] = useState(false);
-    const [popupContent, setPopupContent] = useState('');
     const [popupSearchResults, setPopupSearchResults] = useState([]);
     const [selectedMealDetails, setSelectedMealDetails] = useState(null);
 
@@ -91,12 +90,13 @@ function App() {
         const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchQuery}`);
         const data = await response.json();
         setSearchResults(data.meals || []);
+        setPopupSearchResults(data.meals || []);
+        setShowPopup(true); // Show the popup with search results
     };
 
     const handleMealClick = async (id) => {
-        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-        const data = await response.json();
-        setMealDetails(data.meals[0]);
+        const mealDetails = await fetchMealDetails(id);
+        setSelectedMealDetails(mealDetails);
     };
 
     const fetchMealDetails = async (id) => {
@@ -138,6 +138,7 @@ function App() {
             console.error('Error generating recipe:', error);
         }
     };
+
     const handleLogin = (e) => {
         e.preventDefault();
         // Add login logic here
@@ -203,7 +204,7 @@ function App() {
                             {filteredRecipes.length > 0 ? (
                                 <ul>
                                     {filteredRecipes.map((recipe) => (
-                                        <li key={recipe.idMeal} onClick={() => handleMealClick(recipe.idMeal)}>
+                                        <li key={recipe.idMeal} onClick={() => handlePopupMealClick(recipe.idMeal)}>
                                             {recipe.strMeal}
                                         </li>
                                     ))}
@@ -382,108 +383,65 @@ function App() {
                     </form>
                 </div>
             )}
-            <div className="search-results">
-                {searchResults.length > 0 && (
-                    <div className="recipe-grid">
-                        {searchResults.map((meal) => (
-                            <div key={meal.idMeal} className="recipe-card" onClick={() => handleMealClick(meal.idMeal)}>
-                                <h3>{meal.strMeal}</h3>
-                                <img src={meal.strMealThumb} alt={meal.strMeal} />
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-
-            {mealDetails && (
-                <div className="meal-details">
-                    <h2>{mealDetails.strMeal}</h2>
-                    <img src={mealDetails.strMealThumb} alt={mealDetails.strMeal} />
-                    <h3>Ingredients</h3>
-                    <ul>
-                        {Array.from({ length: 20 }).map((_, i) => {
-                            const ingredient = mealDetails[`strIngredient${i + 1}`];
-                            const measure = mealDetails[`strMeasure${i + 1}`];
-                            return ingredient ? (
-                                <li key={i}>{ingredient} - {measure}</li>
-                            ) : null;
-                        })}
-                    </ul>
-                    <h3>Instructions</h3>
-                    <p>{mealDetails.strInstructions}</p>
-                    {mealDetails.strYoutube && (
-                        <div className="video-container">
-                            <h3>Video Instructions</h3>
-                            <iframe
-                                width="560"
-                                height="315"
-                                src={`https://www.youtube.com/embed/${mealDetails.strYoutube.split('=')[1]}`}
-                                title="YouTube video player"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            ></iframe>
-                        </div>
-                    )}
-                </div>
-            )}
             <button className="generate-recipe-button" onClick={generateRecipe}>Generate Recipe</button>
             {showPopup && (
-        <div className="popup">
-            <button className="exit-button" onClick={() => setShowPopup(false)}>X</button>
-            <h2>Generated Recipe</h2>
-            <div className="popup-content">
-                {selectedMealDetails ? (
-                    <div className="meal-details-popup">
-                        <button onClick={() => setSelectedMealDetails(null)}>Back</button> {/* Back button */}
-                        <h3>{selectedMealDetails.strMeal}</h3>
-                        <img src={selectedMealDetails.strMealThumb} alt={selectedMealDetails.strMeal} />
-                        <h4>Ingredients</h4>
-                        <ul>
-                            {Array.from({ length: 20 }).map((_, i) => {
-                                const ingredient = selectedMealDetails[`strIngredient${i + 1}`];
-                                const measure = selectedMealDetails[`strMeasure${i + 1}`];
-                                return ingredient ? (
-                                    <li key={i}>{ingredient} - {measure}</li>
-                                ) : null;
-                            })}
-                        </ul>
-                        <h4>Instructions</h4>
-                        <p>{selectedMealDetails.strInstructions}</p>
-                        {selectedMealDetails.strYoutube && (
-                        <div className="video-container">
-                            <h4>Video Instructions</h4>
-                            <iframe
-                                width="560"
-                                height="315"
-                                src={`https://www.youtube.com/embed/${selectedMealDetails.strYoutube.split('=')[1]}`}
-                                title="YouTube video player"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            ></iframe>
-                        </div> 
-                        )}
-                    </div>
-                ) : (
-                    <div className="search-results">
-                        {popupSearchResults.length > 0 && (
-                            <div className="recipe-grid">
-                                {popupSearchResults.map((meal) => (
-                                    <div key={meal.idMeal} className="recipe-card" onClick={() => handlePopupMealClick(meal.idMeal)}>
-                                        <h3>{meal.strMeal}</h3>
-                                        <img src={meal.strMealThumb} alt={meal.strMeal} />
+                <div className="popup">
+                    <button className="exit-button" onClick={() => setShowPopup(false)}>X</button>
+                    <h2>Generated Recipe</h2>
+                    <div className="popup-content">
+                        {selectedMealDetails ? (
+                            <div className="meal-details-popup">
+                                <button onClick={() => setSelectedMealDetails(null)}>Back</button> {/* Back button */}
+                                <h3>{selectedMealDetails.strMeal}</h3>
+                                <img src={selectedMealDetails.strMealThumb} alt={selectedMealDetails.strMeal} />
+                                <h4>Ingredients</h4>
+                                <ul>
+                                    {Array.from({ length: 20 }).map((_, i) => {
+                                        const ingredient = selectedMealDetails[`strIngredient${i + 1}`];
+                                        const measure = selectedMealDetails[`strMeasure${i + 1}`];
+                                        return ingredient ? (
+                                            <li key={i}>{ingredient} - {measure}</li>
+                                        ) : null;
+                                    })}
+                                </ul>
+                                <h4>Instructions</h4>
+                                <p>{selectedMealDetails.strInstructions}</p>
+                                {selectedMealDetails.strYoutube && (
+                                    <div className="video-container">
+                                        <h4>Video Instructions</h4>
+                                        <iframe
+                                            width="560"
+                                            height="315"
+                                            src={`https://www.youtube.com/embed/${selectedMealDetails.strYoutube.split('=')[1]}`}
+                                            title="YouTube video player"
+                                            frameBorder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                        ></iframe>
                                     </div>
-                                ))}
+                                )}
+                            </div>
+                        ) : (
+                            <div className="search-results">
+                                {popupSearchResults.length > 0 ? (
+                                    <div className="recipe-grid">
+                                        {popupSearchResults.map((meal) => (
+                                            <div key={meal.idMeal} className="recipe-card" onClick={() => handlePopupMealClick(meal.idMeal)}>
+                                                <h3>{meal.strMeal}</h3>
+                                                <img src={meal.strMealThumb} alt={meal.strMeal} />
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div>No recipes found</div>
+                                )}
                             </div>
                         )}
                     </div>
-                )}
-            </div>
-            <button onClick={() => setShowPopup(false)}>Close</button>
+                    <button onClick={() => setShowPopup(false)}>Close</button>
+                </div>
+            )}
         </div>
-    )}
-    </div>
     );
 }
 
