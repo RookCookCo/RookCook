@@ -192,7 +192,8 @@
     padding: 10px;
     text-align: center;
     cursor: pointer;
-    overflow: hidden; /* Ensure images do not overflow */
+    overflow: hidden; 
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
 }
 
 .recipe-card img {
@@ -201,6 +202,11 @@
     max-height: 150px; /* Limit maximum height */
     object-fit: cover; /* Maintain aspect ratio and cover container */
     border-radius: 5px;
+}
+
+.recipe-card:hover {
+    background-color: #f0f0f0; 
+    transform: scale(1.05);
 }
 
 .recipe-grid {
