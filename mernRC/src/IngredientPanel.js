@@ -41,7 +41,8 @@ const IngredientPanel = ({
                         value={ingredientSearchQuery}
                         onClick={() => setShowIngredientList(true)}
                         onChange={(e) => setIngredientSearchQuery(e.target.value)}
-                        style={{ width: '152px' }} // Adjust the width value as per your requirement
+                        className="ingredient-search-input"
+                        style={{ width: '152px', marginLeft: '90px' }} // Adjust width and margin-left
                     />
                     {showIngredientList && filteredIngredients.length > 0 && (
                         <div>
@@ -58,7 +59,8 @@ const IngredientPanel = ({
                                             handleAddIngredient(e.target.value);
                                         }
                                     }}
-                                    style={{ height: 'auto', maxHeight: '200px', overflowY: 'auto' }} // Adjust the height dynamically
+                                    className="ingredient-select"
+                                    style={{ width: '157px', maxHeight: '200px', overflowY: 'auto', marginLeft: '90px' }} // Adjust width, maxHeight, and marginLeft
                                 >
                                     {filteredIngredients.map((ingredient, index) => (
                                         <option key={index} value={ingredient}>
@@ -73,13 +75,15 @@ const IngredientPanel = ({
                                         setSelectedIngredient(ingredient);
                                         handleAddIngredient(ingredient);
                                     }}
-                                    style={{
-                                        cursor: 'pointer',
-                                        backgroundColor: 'white',
-                                        padding: '5px',
-                                        border: '1px solid #ccc',
-                                        borderRadius: '4px',
-                                        marginTop: '5px'
+                                    className="single-ingredient"
+                                    
+                                    onMouseEnter={(e) => {
+                                        e.target.style.backgroundColor = '#e0e0e0'; // Lighter background on hover
+                                        e.target.style.transform = 'scale(1.05)'; // Scale up slightly on hover
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.target.style.backgroundColor = '#f0f0f0'; // Restore original background color
+                                        e.target.style.transform = 'scale(1)'; // Restore original scale
                                     }}
                                 >
                                     {filteredIngredients[0]}
@@ -89,7 +93,7 @@ const IngredientPanel = ({
                     )}
                 </div>
             )}
-            <div className="inventory-list">
+            <div className="inventory-list" style={{ maxHeight: '500px', overflowY: 'auto', width: '200px' }}>
                 <h3>Inventory</h3>
                 <ul>
                     {inventory.map((ingredient) => (
