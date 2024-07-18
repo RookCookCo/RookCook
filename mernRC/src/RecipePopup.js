@@ -10,7 +10,7 @@ const RecipePopup = ({
     return (
         <div className="popup">
             <button className="exit-button" onClick={() => setShowPopup(false)}>X</button>
-            <h2>Generated Recipe</h2>
+            <h2>Recipes</h2>
             <div className="popup-content">
                 {selectedMealDetails ? (
                     <div className="meal-details-popup">
