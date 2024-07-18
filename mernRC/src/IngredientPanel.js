@@ -19,12 +19,34 @@ const IngredientPanel = ({
         <div className="ingredient-panel">
             <div className="panel-header">
                 <div>
-                    <button
-                        onClick={() => setShowPanel(false)}
-                        style={{ backgroundColor: 'red', color: 'white' }}
-                    >
-                        Close
-                    </button>
+                <button
+                    onClick={() => setShowPanel(false)}
+                    style={{
+                        backgroundColor: 'red',
+                        color: 'white',
+                        padding: '10px',
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.3s, color 0.3s, transform 0.3s',
+                        fontFamily: 'Arial, sans-serif',
+                        fontWeight: 'bold',
+                        fontSize: '14px',
+                        letterSpacing: '0.5px',
+                        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                        outline: 'none', // Remove outline on focus
+                    }}
+                    onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = '#D50606'; // Change background color on hover
+                        e.target.style.transform = 'scale(1.05)'; // Scale up by 5% on hover
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = 'red'; // Revert background color on hover out
+                        e.target.style.transform = 'scale(1)'; // Revert scale to normal
+                    }}
+                >
+                    Close
+                </button>
                 </div>
                 <div>
                     <button onClick={() => setPanelMode('add')}>Add</button>
