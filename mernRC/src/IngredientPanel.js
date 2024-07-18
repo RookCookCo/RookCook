@@ -76,7 +76,26 @@ const IngredientPanel = ({
                                         handleAddIngredient(ingredient);
                                     }}
                                     className="single-ingredient"
-                                    
+                                    style={{
+                                        cursor: 'pointer',
+                                        backgroundColor: '#f0f0f0', // Light gray background
+                                        padding: '10px', // Increased padding
+                                        border: '1px solid #ccc',
+                                        borderRadius: '8px', // Rounded corners
+                                        marginTop: '15px', // Increased margin-top
+                                        width: `${(filteredIngredients[0].length * 10) + 20}px`, // Adjusted width based on text length
+                                        marginLeft: '90px', // Match marginLeft with input field
+                                        boxShadow: '0 4px 8px rgba(0,0,0,0.1)', // Soft shadow for elevation
+                                        fontFamily: 'Arial, sans-serif', // Standard font family
+                                        textAlign: 'center', // Center text horizontally
+                                        color: '#333', // Darker text color
+                                        fontSize: '14px', // Font size
+                                        fontWeight: 'bold', // Bold text
+                                        lineHeight: '1.4', // Line height
+                                        textTransform: 'uppercase', // Uppercase text
+                                        letterSpacing: '0.5px', // Letter spacing
+                                        transition: 'transform 0.3s ease-in-out, background-color 0.3s' // Smooth transform and background-color transition
+                                    }}
                                     onMouseEnter={(e) => {
                                         e.target.style.backgroundColor = '#e0e0e0'; // Lighter background on hover
                                         e.target.style.transform = 'scale(1.05)'; // Scale up slightly on hover
