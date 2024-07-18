@@ -1,12 +1,12 @@
 import React from 'react';
 
 const RecipePopup = ({
-                         setShowPopup,
-                         selectedMealDetails,
-                         setSelectedMealDetails,
-                         popupSearchResults,
-                         handlePopupMealClick
-                     }) => {
+    setShowPopup,
+    selectedMealDetails,
+    setSelectedMealDetails,
+    popupSearchResults,
+    handlePopupMealClick
+}) => {
     return (
         <div className="popup">
             <button className="exit-button" onClick={() => setShowPopup(false)}>X</button>
