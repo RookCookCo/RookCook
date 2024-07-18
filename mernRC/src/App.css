@@ -192,11 +192,22 @@
     padding: 10px;
     text-align: center;
     cursor: pointer;
+    overflow: hidden; /* Ensure images do not overflow */
 }
 
 .recipe-card img {
     width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    max-height: 150px; /* Limit maximum height */
+    object-fit: cover; /* Maintain aspect ratio and cover container */
     border-radius: 5px;
+}
+
+.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust column width as needed */
+    gap: 20px;
+    padding-top: 20px; /* Remove large padding */
 }
 
 .meal-details {
