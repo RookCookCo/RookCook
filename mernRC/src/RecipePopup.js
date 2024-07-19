@@ -10,23 +10,31 @@ const RecipePopup = ({
     return (
         <div className="popup">
             <button className="exit-button" onClick={() => setShowPopup(false)}>X</button>
-            <h2>Recipes</h2>
+            <h2>Generated Recipe</h2>
             <div className="popup-content">
                 {selectedMealDetails ? (
                     <div className="meal-details-popup">
                         <button onClick={() => setSelectedMealDetails(null)}>Back</button>
                         <h3>{selectedMealDetails.strMeal}</h3>
-                        <img src={selectedMealDetails.strMealThumb} alt={selectedMealDetails.strMeal} />
-                        <h4>Ingredients</h4>
-                        <ul>
-                            {Array.from({ length: 20 }).map((_, i) => {
-                                const ingredient = selectedMealDetails[`strIngredient${i + 1}`];
-                                const measure = selectedMealDetails[`strMeasure${i + 1}`];
-                                return ingredient ? (
-                                    <li key={i}>{ingredient} - {measure}</li>
-                                ) : null;
-                            })}
-                        </ul>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '20px' }}>
+                            <img 
+                                style={{ width: '50%', maxWidth: '200px' }}
+                                src={selectedMealDetails.strMealThumb} 
+                                alt={selectedMealDetails.strMeal} 
+                            />
+                            <div style={{ textAlign: 'left' }}>
+                                <h4>Ingredients</h4>
+                                <ul>
+                                    {Array.from({ length: 20 }).map((_, i) => {
+                                        const ingredient = selectedMealDetails[`strIngredient${i + 1}`];
+                                        const measure = selectedMealDetails[`strMeasure${i + 1}`];
+                                        return ingredient ? (
+                                            <li key={i}>{ingredient} - {measure}</li>
+                                        ) : null;
+                                    })}
+                                </ul>
+                            </div>
+                        </div>
                         <h4>Instructions</h4>
                         <p>{selectedMealDetails.strInstructions}</p>
                         {selectedMealDetails.strYoutube && (
