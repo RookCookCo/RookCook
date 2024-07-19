@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const RecipePopup = ({
     setShowPopup,
@@ -7,16 +7,49 @@ const RecipePopup = ({
     popupSearchResults,
     handlePopupMealClick
 }) => {
+    const [rating, setRating] = useState(0);
+    const [hover, setHover] = useState(0);
+
     return (
         <div className="popup">
             <button className="exit-button" onClick={() => setShowPopup(false)}>X</button>
-            <h2>Generated Recipe</h2>
+            <h2>Recipes</h2>
             <div className="popup-content">
                 {selectedMealDetails ? (
                     <div className="meal-details-popup">
-                        <button onClick={() => setSelectedMealDetails(null)}>Back</button>
+                        <button onClick={() => {
+                            setSelectedMealDetails(null);
+                            setRating(0); // Reset rating when going back to search results
+                        }}>Back</button>
                         <h3>{selectedMealDetails.strMeal}</h3>
-                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '20px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                {[...Array(5)].map((star, index) => {
+                                    index += 1;
+                                    return (
+                                        <button
+                                            type="button"
+                                            key={index}
+                                            className={index <= (hover || rating) ? "on" : "off"}
+                                            onClick={() => setRating(index)}
+                                            onMouseEnter={() => setHover(index)}
+                                            onMouseLeave={() => setHover(rating)}
+                                            style={{
+                                                backgroundColor: 'transparent',
+                                                border: 'none',
+                                                cursor: 'pointer',
+                                                fontSize: '1.5rem',
+                                                color: index <= (hover || rating) ? "#ffc107" : "#e4e5e9",
+                                            }}
+                                        >
+                                            <span className="star">&#9733;</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                        <div style={{ margin: '10px 0' }}></div>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '50px' }}>
                             <img 
                                 style={{ width: '50%', maxWidth: '200px' }}
                                 src={selectedMealDetails.strMealThumb} 
@@ -67,7 +100,6 @@ const RecipePopup = ({
                     </div>
                 )}
             </div>
-            <button onClick={() => setShowPopup(false)}>Close</button>
         </div>
     );
 };
