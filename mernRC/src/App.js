@@ -16,7 +16,7 @@ function App() {
     const [allIngredients, setAllIngredients] = useState([]);
     const [selectedIngredient, setSelectedIngredient] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState([]); // Added state for search results
+    const [searchResults, setSearchResults] = useState([]);
     const [showLogin, setShowLogin] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
     const [username, setUsername] = useState('');
@@ -133,7 +133,23 @@ function App() {
         try {
             const response = await axios.get(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${inventory.join(',')}`);
             const data = response.data.meals || [];
-            setPopupSearchResults(data);
+
+            const allRecipesDetails = await Promise.all(data.map(async (meal) => {
+                const details = await fetchMealDetails(meal.idMeal);
+                return details;
+            }));
+
+            const filteredRecipes = allRecipesDetails.filter((recipe) => {
+                const ingredients = [];
+                for (let i = 1; i <= 20; i++) {
+                    if (recipe[`strIngredient${i}`]) {
+                        ingredients.push(recipe[`strIngredient${i}`].toLowerCase());
+                    }
+                }
+                return ingredients.every(ingredient => inventory.includes(ingredient));
+            });
+
+            setPopupSearchResults(filteredRecipes);
             setShowPopup(true);
         } catch (error) {
             console.error('Error generating recipe:', error);

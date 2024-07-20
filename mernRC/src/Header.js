@@ -22,17 +22,26 @@ const Header = ({
             recipe.strMeal.toLowerCase().includes(searchQuery.toLowerCase())
         );
         setFilteredSearchResults(filtered);
-        setShowDropdown(filtered.length > 0);
     }, [searchQuery, filteredRecipes]);
 
     const handleInputChange = (e) => {
         setSearchQuery(e.target.value);
+        setShowDropdown(true);
     };
 
     const handleRecipeClick = (id, name) => {
         setSearchQuery(name);
         setShowDropdown(false);
         handlePopupMealClick(id);
+    };
+
+    const handleInputFocus = () => {
+        setShowDropdown(true);
+    };
+
+    const handleInputBlur = () => {
+        // Delay hiding dropdown to allow click event to be registered
+        setTimeout(() => setShowDropdown(false), 100);
     };
 
     return (
@@ -47,6 +56,8 @@ const Header = ({
                         name="search"
                         value={searchQuery}
                         onChange={handleInputChange}
+                        onFocus={handleInputFocus}
+                        onBlur={handleInputBlur}
                     />
                     <select onChange={(e) => setDietaryFilter(e.target.value)}>
                         <option value="">All Diets</option>
