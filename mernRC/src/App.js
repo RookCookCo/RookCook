@@ -16,8 +16,7 @@ function App() {
     const [allIngredients, setAllIngredients] = useState([]);
     const [selectedIngredient, setSelectedIngredient] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
-    const [mealDetails, setMealDetails] = useState(null);
+    const [searchResults, setSearchResults] = useState([]); // Added state for search results
     const [showLogin, setShowLogin] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
     const [username, setUsername] = useState('');
@@ -27,46 +26,39 @@ function App() {
     const [user, setUser] = useState(null);
     const [ingredientSearchQuery, setIngredientSearchQuery] = useState('');
     const [showIngredientList, setShowIngredientList] = useState(false);
-    const [allRecipes, setAllRecipes] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
     const [popupSearchResults, setPopupSearchResults] = useState([]);
     const [selectedMealDetails, setSelectedMealDetails] = useState(null);
+    const [dietaryFilter, setDietaryFilter] = useState('');
+    const [ethnicFilter, setEthnicFilter] = useState('');
 
     useEffect(() => {
         const fetchIngredients = async () => {
-            const response = await fetch('https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood');
+            const response = await fetch('https://www.themealdb.com/api/json/v2/9973533/list.php?i=list');
             const data = await response.json();
+            console.log('Fetched Ingredients:', data); // Debugging log
             if (data.meals) {
-                const ingredientsSet = new Set();
-                for (let meal of data.meals) {
-                    const mealDetailsResponse = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${meal.idMeal}`);
-                    const mealDetails = await mealDetailsResponse.json();
-                    if (mealDetails.meals) {
-                        const mealDetail = mealDetails.meals[0];
-                        for (let i = 1; i <= 20; i++) {
-                            const ingredient = mealDetail[`strIngredient${i}`];
-                            if (ingredient) {
-                                ingredientsSet.add(ingredient);
-                            }
-                        }
-                    }
-                }
-                const sortedIngredients = Array.from(ingredientsSet).sort((a, b) => a.localeCompare(b));
-                setAllIngredients(sortedIngredients);
-            }
-        };
-
-        const fetchRecipes = async () => {
-            const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
-            const data = await response.json();
-            if (data.meals) {
-                setAllRecipes(data.meals);
+                const ingredients = data.meals.map(meal => meal.strIngredient); // Extract ingredient names
+                setAllIngredients(ingredients);
+                console.log('All Ingredients:', ingredients); // Debugging log
             }
         };
 
         fetchIngredients();
-        fetchRecipes();
     }, []);
+
+    useEffect(() => {
+        const fetchRecipes = async () => {
+            const response = await fetch(`https://www.themealdb.com/api/json/v2/9973533/search.php?s=${searchQuery}`);
+            const data = await response.json();
+            console.log('Fetched Recipes:', data); // Debugging log
+            if (data.meals) {
+                setSearchResults(data.meals); // Set search results
+            }
+        };
+
+        fetchRecipes();
+    }, [searchQuery]);
 
     const appStyle = {
         backgroundImage: `url(${background})`,
@@ -90,15 +82,25 @@ function App() {
 
     const handleSearch = async (e) => {
         e.preventDefault();
-        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchQuery}`);
+        let apiUrl = `https://www.themealdb.com/api/json/v2/9973533/search.php?s=${searchQuery}`;
+
+        if (dietaryFilter) {
+            apiUrl = `https://www.themealdb.com/api/json/v2/9973533/filter.php?c=${dietaryFilter}`;
+        }
+
+        if (ethnicFilter) {
+            apiUrl = `https://www.themealdb.com/api/json/v2/9973533/filter.php?a=${ethnicFilter}`;
+        }
+
+        const response = await fetch(apiUrl);
         const data = await response.json();
-        setSearchResults(data.meals || []);
-        setPopupSearchResults(data.meals || []);
-        setShowPopup(true);
+        setSearchResults(data.meals || []); // Set search results
+        setPopupSearchResults(data.meals || []); // Set popup search results
+        setShowPopup(true); // Show popup
     };
 
     const fetchMealDetails = async (id) => {
-        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+        const response = await fetch(`https://www.themealdb.com/api/json/v2/9973533/lookup.php?i=${id}`);
         const data = await response.json();
         return data.meals ? data.meals[0] : null;
     };
@@ -129,7 +131,7 @@ function App() {
 
     const generateRecipe = async () => {
         try {
-            const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${inventory.join(',')}`);
+            const response = await axios.get(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${inventory.join(',')}`);
             const data = response.data.meals || [];
             setPopupSearchResults(data);
             setShowPopup(true);
@@ -176,10 +178,7 @@ function App() {
             !inventory.includes(ingredient) &&
             ingredient.toLowerCase().startsWith(ingredientSearchQuery.toLowerCase())
     );
-
-    const filteredRecipes = allRecipes.filter(
-        (recipe) => recipe.strMeal.toLowerCase().startsWith(searchQuery.toLowerCase())
-    );
+    console.log('Filtered Ingredients:', filteredIngredients); // Debugging log
 
     return (
         <div className="App" style={appStyle}>
@@ -193,7 +192,9 @@ function App() {
                 setShowLogin={setShowLogin}
                 setShowSignUp={setShowSignUp}
                 handlePopupMealClick={handlePopupMealClick}
-                filteredRecipes={filteredRecipes}
+                filteredRecipes={searchResults} // Pass search results to Header
+                setDietaryFilter={setDietaryFilter}
+                setEthnicFilter={setEthnicFilter}
             />
             <button className="add-ingredient-button" onClick={() => { setShowPanel(true); setPanelMode('add'); }}>+</button>
             {showPanel && (

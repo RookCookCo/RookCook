@@ -10,14 +10,23 @@ const Header = ({
                     setShowLogin,
                     setShowSignUp,
                     handlePopupMealClick,
-                    filteredRecipes
+                    filteredRecipes,
+                    setDietaryFilter,
+                    setEthnicFilter
                 }) => {
     const [showDropdown, setShowDropdown] = useState(false);
+    const [filteredSearchResults, setFilteredSearchResults] = useState([]);
+
+    useEffect(() => {
+        const filtered = filteredRecipes.filter(recipe =>
+            recipe.strMeal.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setFilteredSearchResults(filtered);
+        setShowDropdown(filtered.length > 0);
+    }, [searchQuery, filteredRecipes]);
 
     const handleInputChange = (e) => {
-        const query = e.target.value;
-        setSearchQuery(query);
-        setShowDropdown(query.length > 0);
+        setSearchQuery(e.target.value);
     };
 
     const handleRecipeClick = (id, name) => {
@@ -25,10 +34,6 @@ const Header = ({
         setShowDropdown(false);
         handlePopupMealClick(id);
     };
-
-    const filteredRecipesStart = filteredRecipes.filter(recipe =>
-        recipe.strMeal.toLowerCase().startsWith(searchQuery.toLowerCase())
-    );
 
     return (
         <header className="App-header">
@@ -43,13 +48,28 @@ const Header = ({
                         value={searchQuery}
                         onChange={handleInputChange}
                     />
+                    <select onChange={(e) => setDietaryFilter(e.target.value)}>
+                        <option value="">All Diets</option>
+                        <option value="Vegetarian">Vegetarian</option>
+                        <option value="Vegan">Vegan</option>
+                        <option value="Gluten-Free">Gluten-Free</option>
+                        {/* Add more dietary options as needed */}
+                    </select>
+                    <select onChange={(e) => setEthnicFilter(e.target.value)}>
+                        <option value="">All Cuisines</option>
+                        <option value="Canadian">Canadian</option>
+                        <option value="Chinese">Chinese</option>
+                        <option value="Italian">Italian</option>
+                        <option value="Mexican">Mexican</option>
+                        {/* Add more cuisine options as needed */}
+                    </select>
                     <button type="submit">Search</button>
                 </form>
                 {showDropdown && (
                     <div className="recipe-dropdown">
-                        {filteredRecipesStart.length > 0 ? (
+                        {filteredSearchResults.length > 0 ? (
                             <ul>
-                                {filteredRecipesStart.map((recipe) => (
+                                {filteredSearchResults.map((recipe) => (
                                     <li
                                         key={recipe.idMeal}
                                         onClick={() => handleRecipeClick(recipe.idMeal, recipe.strMeal)}
