@@ -187,14 +187,45 @@ function App() {
 
     const generateRecipe = async () => {
         try {
-            const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${inventory.join(',')}`);
+            const ingredientList = inventory.join(',');
+            const response = await axios.get(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${ingredientList}`);
             const data = response.data.meals || [];
-            setPopupSearchResults(data);
+
+            if (data.length === 0) {
+                const userConfirmed = window.confirm("No recipes found with all ingredients. Would you like to see less specific recipes?");
+                if (userConfirmed) {
+                    let lessSpecificRecipes = [];
+                    for (let ingredient of inventory) {
+                        const response = await axios.get(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${ingredient}`);
+                        const ingredientData = response.data.meals || [];
+                        lessSpecificRecipes = [...lessSpecificRecipes, ...ingredientData];
+                    }
+
+                    // Remove duplicate recipes
+                    const uniqueRecipes = new Map();
+                    lessSpecificRecipes.forEach(meal => {
+                        uniqueRecipes.set(meal.idMeal, meal);
+                    });
+
+                    setPopupSearchResults(Array.from(uniqueRecipes.values()));
+                }
+            } else {
+                // Create a map to store unique recipes
+                const uniqueRecipes = new Map();
+                data.forEach(meal => {
+                    uniqueRecipes.set(meal.idMeal, meal);
+                });
+
+                setPopupSearchResults(Array.from(uniqueRecipes.values()));
+            }
+
             setShowPopup(true);
         } catch (error) {
             console.error('Error generating recipe:', error);
         }
     };
+
+
 
     const handleLogin = (e) => {
         e.preventDefault();

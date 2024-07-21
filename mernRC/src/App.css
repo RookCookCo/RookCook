@@ -439,7 +439,7 @@
 .recipe-dropdown li:hover {
     background-color: #f0f0f0;
 }
-
+/* Add styles for the new components and interactions */
 .popup {
     position: fixed;
     top: 50%;
@@ -467,6 +467,60 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
 .popup .exit-button:hover {
     background-color: #bbb;
 }
+
+.recipe-dropdown {
+    position: absolute;
+    top: 100%; /* Position below the search box */
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 200px; /* Set a maximum height and enable scrolling */
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.recipe-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recipe-dropdown li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.recipe-dropdown li:hover {
+    background-color: #f0f0f0;
+}
+
+.recipe-card:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
+.generate-recipe-button {
+    position: absolute;
+    height: 60px;
+    width: 100px;
+    top: 49%; /* Adjust to move the button lower */
+    right: 50%; /* Adjust to move the button more to the left */
+    font-size: 20px;
+    border: none;
+    background-color: #8e8e8e; /* Adjust color as needed */
+    color: white;
+    cursor: pointer;
+    border-radius: 10px;
+    z-index: 1;
+}
+
+.generate-recipe-button:hover {
+    background-color: #7a7a7a;
+}
+
