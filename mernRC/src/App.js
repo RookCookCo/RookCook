@@ -34,13 +34,20 @@ function App() {
 
     useEffect(() => {
         const fetchIngredients = async () => {
-            const response = await fetch('https://www.themealdb.com/api/json/v2/9973533/list.php?i=list');
-            const data = await response.json();
-            console.log('Fetched Ingredients:', data); // Debugging log
-            if (data.meals) {
-                const ingredients = data.meals.map(meal => meal.strIngredient); // Extract ingredient names
-                setAllIngredients(ingredients);
-                console.log('All Ingredients:', ingredients); // Debugging log
+            try {
+                const response = await fetch('https://www.themealdb.com/api/json/v2/9973533/list.php?i=list');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log('Fetched Ingredients:', data); // Debugging log
+                if (data.meals) {
+                    const ingredients = data.meals.map(meal => meal.strIngredient); // Extract ingredient names
+                    setAllIngredients(ingredients);
+                    console.log('All Ingredients:', ingredients); // Debugging log
+                }
+            } catch (error) {
+                console.error('Fetch Ingredients Error:', error);
             }
         };
 
@@ -49,11 +56,18 @@ function App() {
 
     useEffect(() => {
         const fetchRecipes = async () => {
-            const response = await fetch(`https://www.themealdb.com/api/json/v2/9973533/search.php?s=${searchQuery}`);
-            const data = await response.json();
-            console.log('Fetched Recipes:', data); // Debugging log
-            if (data.meals) {
-                setSearchResults(data.meals); // Set search results
+            try {
+                const response = await fetch(`https://www.themealdb.com/api/json/v2/9973533/search.php?s=${searchQuery}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log('Fetched Recipes:', data); // Debugging log
+                if (data.meals) {
+                    setSearchResults(data.meals); // Set search results
+                }
+            } catch (error) {
+                console.error('Fetch Recipes Error:', error);
             }
         };
 
@@ -82,48 +96,69 @@ function App() {
 
     const handleSearch = async (e) => {
         e.preventDefault();
-        let apiUrl = `https://www.themealdb.com/api/json/v2/9973533/search.php?s=${searchQuery}`;
+        try {
+            let apiUrl = `https://www.themealdb.com/api/json/v2/9973533/search.php?s=${searchQuery}`;
 
-        const dietaryFilterUrl = dietaryFilter ? `https://www.themealdb.com/api/json/v2/9973533/filter.php?c=${dietaryFilter}` : '';
-        const ethnicFilterUrl = ethnicFilter ? `https://www.themealdb.com/api/json/v2/9973533/filter.php?a=${ethnicFilter}` : '';
+            const dietaryFilterUrl = dietaryFilter ? `https://www.themealdb.com/api/json/v2/9973533/filter.php?c=${dietaryFilter}` : '';
+            const ethnicFilterUrl = ethnicFilter ? `https://www.themealdb.com/api/json/v2/9973533/filter.php?a=${ethnicFilter}` : '';
 
-        let dietaryResults = [];
-        if (dietaryFilterUrl) {
-            const dietaryResponse = await fetch(dietaryFilterUrl);
-            const dietaryData = await dietaryResponse.json();
-            dietaryResults = dietaryData.meals || [];
+            let dietaryResults = [];
+            if (dietaryFilterUrl) {
+                const dietaryResponse = await fetch(dietaryFilterUrl);
+                if (!dietaryResponse.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const dietaryData = await dietaryResponse.json();
+                dietaryResults = dietaryData.meals || [];
+            }
+
+            let ethnicResults = [];
+            if (ethnicFilterUrl) {
+                const ethnicResponse = await fetch(ethnicFilterUrl);
+                if (!ethnicResponse.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const ethnicData = await ethnicResponse.json();
+                ethnicResults = ethnicData.meals || [];
+            }
+
+            let finalResults = [];
+            if (dietaryResults.length && ethnicResults.length) {
+                const dietaryIds = dietaryResults.map(meal => meal.idMeal);
+                finalResults = ethnicResults.filter(meal => dietaryIds.includes(meal.idMeal));
+            } else if (dietaryResults.length) {
+                finalResults = dietaryResults;
+            } else if (ethnicResults.length) {
+                finalResults = ethnicResults;
+            } else {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                finalResults = data.meals || [];
+            }
+
+            setSearchResults(finalResults);
+            setPopupSearchResults(finalResults);
+            setShowPopup(true);
+        } catch (error) {
+            console.error('Search Error:', error);
         }
-
-        let ethnicResults = [];
-        if (ethnicFilterUrl) {
-            const ethnicResponse = await fetch(ethnicFilterUrl);
-            const ethnicData = await ethnicResponse.json();
-            ethnicResults = ethnicData.meals || [];
-        }
-
-        let finalResults = [];
-        if (dietaryResults.length && ethnicResults.length) {
-            const dietaryIds = dietaryResults.map(meal => meal.idMeal);
-            finalResults = ethnicResults.filter(meal => dietaryIds.includes(meal.idMeal));
-        } else if (dietaryResults.length) {
-            finalResults = dietaryResults;
-        } else if (ethnicResults.length) {
-            finalResults = ethnicResults;
-        } else {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-            finalResults = data.meals || [];
-        }
-
-        setSearchResults(finalResults);
-        setPopupSearchResults(finalResults);
-        setShowPopup(true);
     };
 
     const fetchMealDetails = async (id) => {
-        const response = await fetch(`https://www.themealdb.com/api/json/v2/9973533/lookup.php?i=${id}`);
-        const data = await response.json();
-        return data.meals ? data.meals[0] : null;
+        try {
+            const response = await fetch(`https://www.themealdb.com/api/json/v2/9973533/lookup.php?i=${id}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            return data.meals ? data.meals[0] : null;
+        } catch (error) {
+            console.error('Fetch Meal Details Error:', error);
+            return null;
+        }
     };
 
     const handlePopupMealClick = async (id) => {
@@ -152,25 +187,9 @@ function App() {
 
     const generateRecipe = async () => {
         try {
-            const response = await axios.get(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${inventory.join(',')}`);
+            const response = await axios.get(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${inventory.join(',')}`);
             const data = response.data.meals || [];
-
-            const allRecipesDetails = await Promise.all(data.map(async (meal) => {
-                const details = await fetchMealDetails(meal.idMeal);
-                return details;
-            }));
-
-            const filteredRecipes = allRecipesDetails.filter((recipe) => {
-                const ingredients = [];
-                for (let i = 1; i <= 20; i++) {
-                    if (recipe[`strIngredient${i}`]) {
-                        ingredients.push(recipe[`strIngredient${i}`].toLowerCase());
-                    }
-                }
-                return ingredients.every(ingredient => inventory.includes(ingredient));
-            });
-
-            setPopupSearchResults(filteredRecipes);
+            setPopupSearchResults(data);
             setShowPopup(true);
         } catch (error) {
             console.error('Error generating recipe:', error);
