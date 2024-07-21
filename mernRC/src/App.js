@@ -187,36 +187,37 @@ function App() {
 
     const generateRecipe = async () => {
         try {
-            const ingredientList = inventory.join(',');
-            const response = await axios.get(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${ingredientList}`);
-            const data = response.data.meals || [];
+            let ingredientList = inventory.join(',');
+            let response = await axios.get(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${ingredientList}`);
+            let data = response.data.meals || [];
 
             if (data.length === 0) {
                 const userConfirmed = window.confirm("No recipes found with all ingredients. Would you like to see less specific recipes?");
                 if (userConfirmed) {
-                    let lessSpecificRecipes = [];
-                    for (let ingredient of inventory) {
-                        const response = await axios.get(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${ingredient}`);
-                        const ingredientData = response.data.meals || [];
-                        lessSpecificRecipes = [...lessSpecificRecipes, ...ingredientData];
+                    let foundRecipes = new Map();
+
+                    for (let i = inventory.length; i > 0; i--) {
+                        let combinations = getCombinations(inventory, i);
+                        for (let combination of combinations) {
+                            ingredientList = combination.join(',');
+                            response = await axios.get(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${ingredientList}`);
+                            data = response.data.meals || [];
+
+                            data.forEach(meal => {
+                                if (!foundRecipes.has(meal.idMeal)) {
+                                    foundRecipes.set(meal.idMeal, meal);
+                                }
+                            });
+
+                            if (foundRecipes.size > 0) break;
+                        }
+                        if (foundRecipes.size > 0) break;
                     }
 
-                    // Remove duplicate recipes
-                    const uniqueRecipes = new Map();
-                    lessSpecificRecipes.forEach(meal => {
-                        uniqueRecipes.set(meal.idMeal, meal);
-                    });
-
-                    setPopupSearchResults(Array.from(uniqueRecipes.values()));
+                    setPopupSearchResults(Array.from(foundRecipes.values()));
                 }
             } else {
-                // Create a map to store unique recipes
-                const uniqueRecipes = new Map();
-                data.forEach(meal => {
-                    uniqueRecipes.set(meal.idMeal, meal);
-                });
-
-                setPopupSearchResults(Array.from(uniqueRecipes.values()));
+                setPopupSearchResults(data);
             }
 
             setShowPopup(true);
@@ -224,6 +225,24 @@ function App() {
             console.error('Error generating recipe:', error);
         }
     };
+
+// Utility function to get all combinations of a given array
+    const getCombinations = (array, length) => {
+        const result = [];
+        const f = (prefix, array) => {
+            for (let i = 0; i < array.length; i++) {
+                const newPrefix = prefix.concat(array[i]);
+                if (newPrefix.length === length) {
+                    result.push(newPrefix);
+                } else {
+                    f(newPrefix, array.slice(i + 1));
+                }
+            }
+        };
+        f([], array);
+        return result;
+    };
+
 
 
 
