@@ -84,19 +84,40 @@ function App() {
         e.preventDefault();
         let apiUrl = `https://www.themealdb.com/api/json/v2/9973533/search.php?s=${searchQuery}`;
 
-        if (dietaryFilter) {
-            apiUrl = `https://www.themealdb.com/api/json/v2/9973533/filter.php?c=${dietaryFilter}`;
+        const dietaryFilterUrl = dietaryFilter ? `https://www.themealdb.com/api/json/v2/9973533/filter.php?c=${dietaryFilter}` : '';
+        const ethnicFilterUrl = ethnicFilter ? `https://www.themealdb.com/api/json/v2/9973533/filter.php?a=${ethnicFilter}` : '';
+
+        let dietaryResults = [];
+        if (dietaryFilterUrl) {
+            const dietaryResponse = await fetch(dietaryFilterUrl);
+            const dietaryData = await dietaryResponse.json();
+            dietaryResults = dietaryData.meals || [];
         }
 
-        if (ethnicFilter) {
-            apiUrl = `https://www.themealdb.com/api/json/v2/9973533/filter.php?a=${ethnicFilter}`;
+        let ethnicResults = [];
+        if (ethnicFilterUrl) {
+            const ethnicResponse = await fetch(ethnicFilterUrl);
+            const ethnicData = await ethnicResponse.json();
+            ethnicResults = ethnicData.meals || [];
         }
 
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        setSearchResults(data.meals || []); // Set search results
-        setPopupSearchResults(data.meals || []); // Set popup search results
-        setShowPopup(true); // Show popup
+        let finalResults = [];
+        if (dietaryResults.length && ethnicResults.length) {
+            const dietaryIds = dietaryResults.map(meal => meal.idMeal);
+            finalResults = ethnicResults.filter(meal => dietaryIds.includes(meal.idMeal));
+        } else if (dietaryResults.length) {
+            finalResults = dietaryResults;
+        } else if (ethnicResults.length) {
+            finalResults = ethnicResults;
+        } else {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            finalResults = data.meals || [];
+        }
+
+        setSearchResults(finalResults);
+        setPopupSearchResults(finalResults);
+        setShowPopup(true);
     };
 
     const fetchMealDetails = async (id) => {
