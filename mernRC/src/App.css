@@ -353,22 +353,35 @@
 
 .generate-recipe-button {
     position: absolute;
-    height: 60px;
+    height: 30px;
     width: 100px;
     top: 49%; /* Adjust to move the button lower */
-    right: 50%; /* Adjust to move the button more to the left */
-    font-size: 20px;
-    border: none;
-    background-color: #8e8e8e; /* Adjust color as needed */
-    color: white;
+    left: 27.5%; /* Adjust to move the button more to the left */
+    font-size: 16px !important; /* Make the font size smaller and use !important */
+    border: 2px solid black; /* Add a border to make the button visible */
+    background-color: transparent !important; /* Ensure the background is clear */
+    color: white !important; /* Make the font color white */
+    font-weight: bold; /* Make the font bold */
     cursor: pointer;
     border-radius: 10px;
     z-index: 1;
+    transition: transform 0.3s, background-color 0.3s;
+    box-shadow: none; /* Ensure no shadow is present */
+    text-shadow: 
+        -1px -1px 0 black,  
+         1px -1px 0 black,
+        -1px  1px 0 black,
+         1px  1px 0 black; /* Create black outline effect */
 }
 
 .generate-recipe-button:hover {
-    background-color: #7a7a7a;
+    background-color: rgba(255, 255, 255, 0.2); /* Slightly lighter background on hover */
+    transform: scale(1.4); /* Pop up effect */
 }
+
+
+
+
 
 .popup {
     position: fixed;

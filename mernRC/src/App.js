@@ -345,7 +345,7 @@ function App() {
                     setShowSignUp={setShowSignUp}
                 />
             )}
-            <button className="generate-recipe-button" onClick={generateRecipe}>Generate Recipe</button>
+            <button className="generate-recipe-button" onClick={generateRecipe}>Recipes</button>
             {showPopup && (
                 <RecipePopup
                     setShowPopup={setShowPopup}
