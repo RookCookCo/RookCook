@@ -8,6 +8,7 @@ import SignUpPanel from './SignUpPanel';
 import RecipePopup from './RecipePopup';
 import { auth, provider, signInWithPopup, signOut } from './firebase';
 import axios from 'axios';
+import RecipeBookImage from './RecipeBook.png';
 
 function App() {
     const [showPanel, setShowPanel] = useState(false);
@@ -345,7 +346,9 @@ function App() {
                     setShowSignUp={setShowSignUp}
                 />
             )}
-            <button className="generate-recipe-button" onClick={generateRecipe}>Recipes</button>
+             <button className="generate-recipe-button" onClick={generateRecipe}>
+                <img src={RecipeBookImage} alt="Generate Recipes" style={{ width: '100%', height: '100%' }} />
+            </button>
             {showPopup && (
                 <RecipePopup
                     setShowPopup={setShowPopup}
