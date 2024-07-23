@@ -1,22 +1,25 @@
 import React from 'react';
 
 const IngredientPanel = ({
-                             panelMode,
-                             setShowPanel,
-                             setPanelMode,
-                             ingredientSearchQuery,
-                             setIngredientSearchQuery,
-                             showIngredientList,
-                             setShowIngredientList,
-                             filteredIngredients,
-                             selectedIngredient,
-                             setSelectedIngredient,
-                             handleAddIngredient,
-                             inventory,
-                             handleDeleteIngredient
-                         }) => {
+    panelMode,
+    setShowPanel,
+    setPanelMode,
+    ingredientSearchQuery,
+    setIngredientSearchQuery,
+    showIngredientList,
+    setShowIngredientList,
+    filteredIngredients,
+    selectedIngredient,
+    setSelectedIngredient,
+    handleAddIngredient,
+    inventory,
+    handleDeleteIngredient
+}) => {
     console.log('Filtered Ingredients:', filteredIngredients); // Debugging log
     console.log('Show Ingredient List:', showIngredientList); // Debugging log
+
+    // Sort the inventory alphabetically
+    const sortedInventory = [...inventory].sort();
 
     return (
         <div className="ingredient-panel">
@@ -160,7 +163,7 @@ const IngredientPanel = ({
             <div className="inventory-list" style={{ maxHeight: '500px', overflowY: 'auto', width: '200px' }}>
                 <h3>Inventory</h3>
                 <ul>
-                    {inventory.map((ingredient) => (
+                    {sortedInventory.map((ingredient) => (
                         <li key={ingredient}>
                             {ingredient}
                             {panelMode === 'edit' && (
