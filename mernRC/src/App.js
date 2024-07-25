@@ -11,28 +11,30 @@ import axios from 'axios';
 import RecipeBookImage from './RecipeBook.png';
 
 function App() {
-    const [showPanel, setShowPanel] = useState(false);
-    const [panelMode, setPanelMode] = useState('add');
-    const [inventory, setInventory] = useState([]);
-    const [allIngredients, setAllIngredients] = useState([]);
-    const [selectedIngredient, setSelectedIngredient] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
-    const [showLogin, setShowLogin] = useState(false);
-    const [showSignUp, setShowSignUp] = useState(false);
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [user, setUser] = useState(null);
-    const [ingredientSearchQuery, setIngredientSearchQuery] = useState('');
-    const [showIngredientList, setShowIngredientList] = useState(false);
-    const [showPopup, setShowPopup] = useState(false);
-    const [popupSearchResults, setPopupSearchResults] = useState([]);
-    const [selectedMealDetails, setSelectedMealDetails] = useState(null);
-    const [dietaryFilter, setDietaryFilter] = useState('');
-    const [ethnicFilter, setEthnicFilter] = useState('');
+    // State variables for UI panels, user inputs, and data
+    const [showPanel, setShowPanel] = useState(false); // Show/hide ingredient panel
+    const [panelMode, setPanelMode] = useState('add'); // Mode for ingredient panel (add/edit)
+    const [inventory, setInventory] = useState([]); // User's ingredient inventory
+    const [allIngredients, setAllIngredients] = useState([]); // All available ingredients from API
+    const [selectedIngredient, setSelectedIngredient] = useState(''); // Currently selected ingredient
+    const [searchQuery, setSearchQuery] = useState(''); // Search query for recipes
+    const [searchResults, setSearchResults] = useState([]); // Search results for recipes
+    const [showLogin, setShowLogin] = useState(false); // Show/hide login panel
+    const [showSignUp, setShowSignUp] = useState(false); // Show/hide sign-up panel
+    const [username, setUsername] = useState(''); // User's username
+    const [email, setEmail] = useState(''); // User's email
+    const [password, setPassword] = useState(''); // User's password
+    const [confirmPassword, setConfirmPassword] = useState(''); // User's password confirmation
+    const [user, setUser] = useState(null); // Currently logged-in user
+    const [ingredientSearchQuery, setIngredientSearchQuery] = useState(''); // Search query for ingredients
+    const [showIngredientList, setShowIngredientList] = useState(false); // Show/hide ingredient search list
+    const [showPopup, setShowPopup] = useState(false); // Show/hide recipe popup
+    const [popupSearchResults, setPopupSearchResults] = useState([]); // Search results for popup
+    const [selectedMealDetails, setSelectedMealDetails] = useState(null); // Details of selected meal
+    const [dietaryFilter, setDietaryFilter] = useState(''); // Dietary filter for recipe search
+    const [ethnicFilter, setEthnicFilter] = useState(''); // Ethnic filter for recipe search
 
+    // Fetch all available ingredients from API on component mount
     useEffect(() => {
         const fetchIngredients = async () => {
             try {
@@ -55,6 +57,7 @@ function App() {
         fetchIngredients();
     }, []);
 
+    // Fetch recipes based on search query
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
@@ -75,6 +78,7 @@ function App() {
         fetchRecipes();
     }, [searchQuery]);
 
+    // Style for the app background
     const appStyle = {
         backgroundImage: `url(${background})`,
         backgroundSize: '100%',
@@ -83,6 +87,7 @@ function App() {
         height: '97vh',
     };
 
+    // Add ingredient to inventory
     const handleAddIngredient = (ingredient) => {
         if (ingredient && !inventory.includes(ingredient)) {
             setInventory([...inventory, ingredient]);
@@ -91,10 +96,12 @@ function App() {
         }
     };
 
+    // Remove ingredient from inventory
     const handleDeleteIngredient = (ingredient) => {
         setInventory(inventory.filter(item => item !== ingredient));
     };
 
+    // Handle recipe search form submission
     const handleSearch = async (e) => {
         e.preventDefault();
         try {
@@ -148,6 +155,7 @@ function App() {
         }
     };
 
+    // Fetch meal details by ID
     const fetchMealDetails = async (id) => {
         try {
             const response = await fetch(`https://www.themealdb.com/api/json/v2/9973533/lookup.php?i=${id}`);
@@ -162,12 +170,14 @@ function App() {
         }
     };
 
+    // Handle meal click in popup to fetch and display details
     const handlePopupMealClick = async (id) => {
         const mealDetails = await fetchMealDetails(id);
         setSelectedMealDetails(mealDetails);
         setShowPopup(true);
     };
 
+    // Handle Google login
     const handleGoogleLogin = async () => {
         try {
             const result = await signInWithPopup(auth, provider);
@@ -177,6 +187,7 @@ function App() {
         }
     };
 
+    // Handle logout
     const handleLogout = async () => {
         try {
             await signOut(auth);
@@ -186,6 +197,7 @@ function App() {
         }
     };
 
+    // Generate recipe based on inventory ingredients
     const generateRecipe = async () => {
         try {
             let ingredientList = inventory.join(',');
@@ -227,7 +239,7 @@ function App() {
         }
     };
 
-// Utility function to get all combinations of a given array
+    // Utility function to get all combinations of a given array
     const getCombinations = (array, length) => {
         const result = [];
         const f = (prefix, array) => {
@@ -244,9 +256,7 @@ function App() {
         return result;
     };
 
-
-
-
+    // Handle login form submission
     const handleLogin = (e) => {
         e.preventDefault();
         console.log("Username:", username);
@@ -254,6 +264,7 @@ function App() {
         setShowLogin(false);
     };
 
+    // Handle sign-up form submission
     const handleSignUp = async (e) => {
         e.preventDefault();
         console.log("Email:", email);
@@ -263,11 +274,13 @@ function App() {
         setShowSignUp(false);
     };
 
+    // Handle clicks outside the ingredient search list to hide it
     const handleOutsideClick = (e) => {
         if (e.target.closest('.ingredient-search')) return;
         setShowIngredientList(false);
     };
 
+    // Add event listener for outside clicks when ingredient list is shown
     useEffect(() => {
         if (showIngredientList) {
             document.addEventListener('click', handleOutsideClick);
@@ -280,6 +293,7 @@ function App() {
         };
     }, [showIngredientList]);
 
+    // Filter ingredients based on search query
     const filteredIngredients = allIngredients.filter(
         (ingredient) =>
             !inventory.includes(ingredient) &&
@@ -346,7 +360,7 @@ function App() {
                     setShowSignUp={setShowSignUp}
                 />
             )}
-             <button className="generate-recipe-button" onClick={generateRecipe}>
+            <button className="generate-recipe-button" onClick={generateRecipe}>
                 <img src={RecipeBookImage} alt="Generate Recipes" style={{ width: '100%', height: '100%' }} />
             </button>
             {showPopup && (
