@@ -6,6 +6,7 @@ import IngredientPanel from './IngredientPanel';
 import LoginPanel from './LoginPanel';
 import SignUpPanel from './SignUpPanel';
 import RecipePopup from './RecipePopup';
+import DiscussionForum from './DiscussionForum';
 import { auth, provider, signInWithPopup, signOut } from './firebase';
 import axios from 'axios';
 import RecipeBookImage from './RecipeBook.png';
@@ -33,6 +34,7 @@ function App() {
     const [selectedMealDetails, setSelectedMealDetails] = useState(null); // Details of selected meal
     const [dietaryFilter, setDietaryFilter] = useState(''); // Dietary filter for recipe search
     const [ethnicFilter, setEthnicFilter] = useState(''); // Ethnic filter for recipe search
+    const [showDiscussionForum, setShowDiscussionForum] = useState(false); // State for DiscussionForum
 
     // Fetch all available ingredients from API on component mount
     useEffect(() => {
@@ -301,6 +303,11 @@ function App() {
             ingredient.toLowerCase().startsWith(ingredientSearchQuery.toLowerCase()) // Match search query
     );
     console.log('Filtered Ingredients:', filteredIngredients); // Debugging log
+    
+    // Function to toggle DiscussionForum visibility
+    const toggleDiscussionForum = () => {
+        setShowDiscussionForum(!showDiscussionForum);
+    };
 
     return (
         <div className="App" style={appStyle}>
@@ -379,6 +386,14 @@ function App() {
                     popupSearchResults={popupSearchResults}
                     handlePopupMealClick={handlePopupMealClick}
                 />
+            )}
+            {/* Discussion Forum button */}
+            <button className="discussion-forum-button" onClick={toggleDiscussionForum}>
+                Discussion Forum
+            </button>
+            {/* Popup for discussion forum */}
+            {showDiscussionForum && (
+                <DiscussionForum setShowDiscussionForum={setShowDiscussionForum} />
             )}
         </div>
     );
