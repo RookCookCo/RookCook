@@ -40,7 +40,9 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
                     <div className="reply-buttons">
                         {!reply.deleted && (
                             <>
-                                <button className="delete-reply-button" onClick={() => onDeleteReply(topic.id, reply.id)}>Delete Reply</button>
+                                <button className="trash-button" onClick={() => onDeleteReply(topic.id, reply.id)}>
+                                    <i className="fas fa-trash"></i>
+                                </button>
                                 <button className="reply-button" onClick={() => setReplyParentId(reply.id)}>Reply</button>
                             </>
                         )}
