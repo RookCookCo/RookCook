@@ -11,52 +11,64 @@ const saveTopics = (topics) => {
     localStorage.setItem('topics', JSON.stringify(topics));
 };
 
-const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply, onBack }) => {
+const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
     const [replyText, setReplyText] = useState('');
+    const [replyParentId, setReplyParentId] = useState(null);
 
     const handleReplyChange = (e) => {
         setReplyText(e.target.value);
     };
 
-    const handleReplySubmit = () => {
+    const handleReplySubmit = (parentId = null) => {
         if (replyText.trim()) {
-            console.log('Submitting reply:', replyText); // Debug: Log the reply text
-            onReply(topic.id, replyText);
+            onReply(topic.id, replyText, parentId);
             setReplyText('');
+            setReplyParentId(null);
         }
+    };
+    const renderReplies = (replies, parentId = null) => {
+        return replies
+        .filter(reply => reply.parentId === parentId)
+        .map((reply) => (
+            <div key={reply.id} className="reply">
+                <div className="reply-content">
+                    <p className={reply.deleted ? 'deleted-reply' : ''}>
+                        {reply.deleted ? 'This reply has been deleted' : reply.text}
+                    </p>
+                </div>
+                <div className="reply-buttons">
+                    {!reply.deleted && (
+                        <>
+                            <button className="trash-button" onClick={() => onDeleteReply(topic.id, reply.id)}>
+                                <i className="fas fa-trash"></i>
+                            </button>
+                            <button className="reply-button" onClick={() => setReplyParentId(reply.id)}>Reply</button>
+                        </>
+                    )}
+                </div>
+                {renderReplies(replies, reply.id)}
+            </div>
+        ));
     };
 
     return (
         <div className="discussion-topic">
-            <button className="back-button" onClick={onBack}>Back to Topics</button>
             <h3>{topic.title}</h3>
             <p>{topic.content}</p>
-            <button className="delete-button" onClick={() => onDeleteTopic(topic.id)}>Delete Topic</button>
+            <button className="discussion-delete-button" onClick={() => onDeleteTopic(topic.id)}>Delete Topic</button>
             <div className="replies">
                 {topic.replies.length > 0 ? (
-                    <>
-                        <div className="recent-reply">
-                            <p><strong>Latest Reply:</strong></p>
-                            <p>{topic.replies[topic.replies.length - 1].text}</p>
-                        </div>
-                        {topic.replies.map((reply, index) => (
-                            <div key={index} className="reply">
-                                <p>{reply.text}</p>
-                                <button className="delete-reply-button" onClick={() => onDeleteReply(topic.id, index)}>Delete Reply</button>
-                            </div>
-                        ))}
-                    </>
+                    renderReplies(topic.replies)
                 ) : (
                     <p>No replies yet.</p>
                 )}
             </div>
-            <textarea 
+            <textarea
                 value={replyText}
                 onChange={handleReplyChange}
                 placeholder="Write a reply..."
             />
-            <button onClick={handleReplySubmit}>Reply</button>
-        </div>
+        <button className="reply-button" onClick={() => handleReplySubmit(replyParentId)}>Reply</button>        </div>
     );
 };
 
@@ -74,7 +86,6 @@ const NewTopicForm = ({ onAddTopic }) => {
 
     const handleSubmit = () => {
         if (title.trim() && content.trim()) {
-            console.log('Adding new topic:', title, content); // Debug: Log new topic data
             onAddTopic(title, content);
             setTitle('');
             setContent('');
@@ -83,13 +94,13 @@ const NewTopicForm = ({ onAddTopic }) => {
 
     return (
         <div className="new-topic-form">
-            <input 
-                type="text" 
-                value={title} 
-                onChange={handleTitleChange} 
+            <input
+                type="text"
+                value={title}
+                onChange={handleTitleChange}
                 placeholder="Topic Title"
             />
-            <textarea 
+            <textarea
                 value={content}
                 onChange={handleContentChange}
                 placeholder="Write your topic content..."
@@ -105,99 +116,90 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
     const [selectedTopic, setSelectedTopic] = useState(null);
 
     useEffect(() => {
-        // Save topics to localStorage whenever topics change
         saveTopics(topics);
     }, [topics]);
 
     const handleAddTopic = (title, content) => {
         const newTopic = { id: Date.now(), title, content, replies: [] };
-        console.log('Adding topic:', newTopic); // Debug: Log new topic
         setTopics(prevTopics => [...prevTopics, newTopic]);
-        setShowNewTopicForm(false); // Hide the form after adding a topic
+        setShowNewTopicForm(false);
     };
-
-    const handleReply = (topicId, reply) => {
-        console.log('Replying to topic ID:', topicId, 'with reply:', reply); // Debug: Log reply action
+    const handleReply = (topicId, replyText, parentId) => {
+        const newReply = { id: Date.now(), text: replyText, parentId, deleted: false };
         setTopics(prevTopics =>
             prevTopics.map(topic =>
                 topic.id === topicId
-                    ? { ...topic, replies: [...topic.replies, { text: reply }] }
+                ? { ...topic, replies: [...topic.replies, newReply] }  
                     : topic
             )
         );
         setSelectedTopic(prevTopic =>
             prevTopic && prevTopic.id === topicId
-                ? { ...prevTopic, replies: [...prevTopic.replies, { text: reply }] }
+            ? { ...prevTopic, replies: [...prevTopic.replies, newReply] }
                 : prevTopic
         );
     };
 
     const handleDeleteTopic = (topicId) => {
-        console.log('Deleting topic ID:', topicId); // Debug: Log delete action
         setTopics(prevTopics => prevTopics.filter(topic => topic.id !== topicId));
         if (selectedTopic && selectedTopic.id === topicId) {
             setSelectedTopic(null);
         }
     };
 
-    const handleDeleteReply = (topicId, replyIndex) => {
-        console.log('Deleting reply index:', replyIndex, 'from topic ID:', topicId); // Debug: Log delete reply action
+    const handleDeleteReply = (topicId, replyId) => {
         setTopics(prevTopics =>
             prevTopics.map(topic =>
                 topic.id === topicId
-                    ? { ...topic, replies: topic.replies.filter((_, index) => index !== replyIndex) }
+                    ? {
+                        ...topic,
+                        replies: topic.replies.map(reply =>
+                            reply.id === replyId ? { ...reply, deleted: true } : reply
+                        )
+                    }
                     : topic
             )
         );
         setSelectedTopic(prevTopic =>
             prevTopic && prevTopic.id === topicId
-                ? { ...prevTopic, replies: prevTopic.replies.filter((_, index) => index !== replyIndex) }
+                 ? {
+                    ...prevTopic,
+                    replies: prevTopic.replies.map(reply =>
+                        reply.id === replyId ? { ...reply, deleted: true } : reply
+                    )
+                }
                 : prevTopic
         );
     };
 
     const handleViewTopic = (topic) => {
-        console.log('Viewing topic:', topic); // Debug: Log view topic action
         setSelectedTopic(topic);
     };
-
-    const handleBackToTopics = () => {
-        setSelectedTopic(null);
-    };
-
     return (
-        <div className="popup">
-            <button className="exit-button" onClick={() => setShowDiscussionForum(false)}>X</button>
-            <h2>Discussion Forum</h2>
-            {selectedTopic ? (
-                <DiscussionTopic 
+        <div className="discussion-popup">
+        <button className="exit-button" onClick={() => setShowDiscussionForum(false)}>X</button>            <div className="discussion-popup-content">
+                {topics.length > 0 ? (
+                    topics.map(topic => (
+                        <div key={topic.id} className="topic-preview" onClick={() => handleViewTopic(topic)}>
+                            <h3>{topic.title}</h3>
+                            <p>{topic.content.substring(0, 100)}...</p>
+                        </div>
+                    ))
+                ) : (
+                    <p>No topics available. Start by adding a new topic!</p>
+                )}
+                <button className="new-topic-button" onClick={() => setShowNewTopicForm(true)}>New Topic</button>
+                {showNewTopicForm && <NewTopicForm onAddTopic={handleAddTopic} />}
+            </div>
+            {selectedTopic && (
+                <DiscussionTopic
                     topic={selectedTopic}
                     onReply={handleReply}
                     onDeleteTopic={handleDeleteTopic}
                     onDeleteReply={handleDeleteReply}
-                    onBack={handleBackToTopics}
                 />
-            ) : showNewTopicForm ? (
-                <NewTopicForm onAddTopic={handleAddTopic} />
-            ) : (
-                <>
-                    <button onClick={() => setShowNewTopicForm(true)}>New Topic</button>
-                    <div className="popup-content">
-                        {topics.length > 0 ? (
-                            topics.map(topic => (
-                                <div key={topic.id} className="topic-preview" onClick={() => handleViewTopic(topic)}>
-                                    <h3>{topic.title}</h3>
-                                    <p>{topic.content.substring(0, 100)}...</p>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No topics available. Start by adding a new topic!</p>
-                        )}
-                    </div>
-                </>
             )}
         </div>
     );
 };
-
 export default DiscussionForum;
