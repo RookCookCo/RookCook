@@ -377,10 +377,6 @@
     transform: scale(1.25); /* Pop up effect */
 }
 
-
-
-
-
 .popup {
     position: fixed;
     top: 50%;

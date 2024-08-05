@@ -23,6 +23,21 @@
     margin-right: 20px;
 }
 
+.popup .discussion-exit-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.popup .discussion-exit-button:hover {
+    background-color: #bbb;
+}
+
 .topic-preview {
     background: #f9f9f9;
     padding: 10px;
@@ -59,8 +74,7 @@
 
 .new-topic-form button,
 .back-button,
-.delete-reply-button,
-.exit-button {
+.delete-reply-button {
     background: #007bff;
     color: #fff;
     padding: 5px 10px;
@@ -68,7 +82,6 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 12px;
-    height: 25px;
 }
 
 .new-topic-form button:hover,

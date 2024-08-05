@@ -177,7 +177,7 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
     };
     return (
         <div className="discussion-popup">
-        <button className="exit-button" onClick={() => setShowDiscussionForum(false)}>X</button>            <div className="discussion-popup-content">
+        <button className="discussion-exit-button" onClick={() => setShowDiscussionForum(false)}>X</button>            <div className="discussion-popup-content">
                 {topics.length > 0 ? (
                     topics.map(topic => (
                         <div key={topic.id} className="topic-preview" onClick={() => handleViewTopic(topic)}>
