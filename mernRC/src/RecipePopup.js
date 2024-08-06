@@ -8,12 +8,12 @@ const fetchFromApi = async (url) => {
 };
 
 const RecipePopup = ({
-    setShowPopup,
-    selectedMealDetails,
-    setSelectedMealDetails,
-    popupSearchResults,
-    handlePopupMealClick
-}) => {
+                         setShowPopup,
+                         selectedMealDetails,
+                         setSelectedMealDetails,
+                         popupSearchResults,
+                         handlePopupMealClick
+                     }) => {
     const [rating, setRating] = useState(0);
     const [hover, setHover] = useState(0);
     const [reviews, setReviews] = useState([]);
@@ -34,7 +34,7 @@ const RecipePopup = ({
             const categoriesData = await fetchFromApi('https://www.themealdb.com/api/json/v2/9973533/categories.php');
             const areasData = await fetchFromApi('https://www.themealdb.com/api/json/v2/9973533/list.php?a=list');
             const ingredientsData = await fetchFromApi('https://www.themealdb.com/api/json/v2/9973533/list.php?i=list');
-            
+
             setCategories(categoriesData.categories);
             setAreas(areasData.meals);
             setIngredients(ingredientsData.meals);
@@ -60,17 +60,53 @@ const RecipePopup = ({
 
     // Fetch meals based on selected filters
     useEffect(() => {
-        if (selectedCategory || selectedArea || selectedIngredient) {
-            let url = 'https://www.themealdb.com/api/json/v2/9973533/filter.php?';
+        const fetchFilteredMeals = async () => {
+            let categoryMeals = [];
+            let areaMeals = [];
+            let ingredientMeals = [];
+            let combinedMeals = [];
 
-            if (selectedCategory) url += `c=${selectedCategory}&`;
-            if (selectedArea) url += `a=${selectedArea}&`;
-            if (selectedIngredient) url += `i=${selectedIngredient}&`;
+            if (selectedCategory) {
+                const categoryData = await fetchFromApi(`https://www.themealdb.com/api/json/v2/9973533/filter.php?c=${selectedCategory}`);
+                categoryMeals = categoryData.meals || [];
+            }
 
-            fetchFromApi(url).then(data => {
-                setFilteredResults(data.meals || []); // Update filtered results
-            });
-        }
+            if (selectedArea) {
+                const areaData = await fetchFromApi(`https://www.themealdb.com/api/json/v2/9973533/filter.php?a=${selectedArea}`);
+                areaMeals = areaData.meals || [];
+            }
+
+            if (selectedIngredient) {
+                const ingredientData = await fetchFromApi(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${selectedIngredient}`);
+                ingredientMeals = ingredientData.meals || [];
+            }
+
+            // Combine the results locally
+            if (selectedCategory && selectedArea && selectedIngredient) {
+                combinedMeals = categoryMeals.filter(meal =>
+                    areaMeals.some(areaMeal => areaMeal.idMeal === meal.idMeal) &&
+                    ingredientMeals.some(ingredientMeal => ingredientMeal.idMeal === meal.idMeal)
+                );
+            } else if (selectedCategory && selectedArea) {
+                combinedMeals = categoryMeals.filter(meal =>
+                    areaMeals.some(areaMeal => areaMeal.idMeal === meal.idMeal)
+                );
+            } else if (selectedCategory && selectedIngredient) {
+                combinedMeals = categoryMeals.filter(meal =>
+                    ingredientMeals.some(ingredientMeal => ingredientMeal.idMeal === meal.idMeal)
+                );
+            } else if (selectedArea && selectedIngredient) {
+                combinedMeals = areaMeals.filter(meal =>
+                    ingredientMeals.some(ingredientMeal => ingredientMeal.idMeal === meal.idMeal)
+                );
+            } else {
+                combinedMeals = categoryMeals.concat(areaMeals, ingredientMeals);
+            }
+
+            setFilteredResults(combinedMeals);
+        };
+
+        fetchFilteredMeals();
     }, [selectedCategory, selectedArea, selectedIngredient]);
 
     // Function to reset filters
@@ -87,8 +123,8 @@ const RecipePopup = ({
             <h2>Recipes</h2>
             {/* Show filter button only when `selectedMealDetails` is null */}
             {!selectedMealDetails && (
-                <button 
-                    className="show-filters-button" 
+                <button
+                    className="show-filters-button"
                     onClick={() => setFiltersVisible(!filtersVisible)}
                     style={{ marginBottom: '20px', cursor: 'pointer', backgroundColor: '#007bff', color: '#fff', border: 'none', padding: '10px', borderRadius: '5px' }}
                 >
@@ -99,8 +135,8 @@ const RecipePopup = ({
                 <div className="filters-section" style={{ marginBottom: '20px' }}>
                     <h4>Filters</h4>
                     <div>
-                        <select 
-                            value={selectedCategory} 
+                        <select
+                            value={selectedCategory}
                             onChange={(e) => setSelectedCategory(e.target.value)}
                             style={{ marginBottom: '10px', padding: '5px', borderRadius: '5px', border: '1px solid #ddd' }}
                         >
@@ -113,8 +149,8 @@ const RecipePopup = ({
                         </select>
                     </div>
                     <div>
-                        <select 
-                            value={selectedArea} 
+                        <select
+                            value={selectedArea}
                             onChange={(e) => setSelectedArea(e.target.value)}
                             style={{ marginBottom: '10px', padding: '5px', borderRadius: '5px', border: '1px solid #ddd' }}
                         >
@@ -127,8 +163,8 @@ const RecipePopup = ({
                         </select>
                     </div>
                     <div>
-                        <select 
-                            value={selectedIngredient} 
+                        <select
+                            value={selectedIngredient}
                             onChange={(e) => setSelectedIngredient(e.target.value)}
                             style={{ marginBottom: '10px', padding: '5px', borderRadius: '5px', border: '1px solid #ddd' }}
                         >
@@ -140,7 +176,7 @@ const RecipePopup = ({
                             ))}
                         </select>
                     </div>
-                    <button 
+                    <button
                         onClick={resetFilters}
                         style={{ marginTop: '10px', cursor: 'pointer', backgroundColor: '#dc3545', color: '#fff', border: 'none', padding: '10px', borderRadius: '5px' }}
                     >
@@ -181,8 +217,8 @@ const RecipePopup = ({
                                         </button>
                                     );
                                 })}
-                                <span 
-                                    style={{ cursor: 'pointer', color: '#007bff', marginLeft: '10px' }} 
+                                <span
+                                    style={{ cursor: 'pointer', color: '#007bff', marginLeft: '10px' }}
                                     onClick={scrollToReviews}
                                 >
                                     {reviews.length} review{reviews.length !== 1 && 's'}
@@ -190,10 +226,10 @@ const RecipePopup = ({
                             </div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '50px', marginTop: '20px' }}>
-                            <img 
+                            <img
                                 style={{ width: '50%', maxWidth: '200px' }}
-                                src={selectedMealDetails.strMealThumb} 
-                                alt={selectedMealDetails.strMeal} 
+                                src={selectedMealDetails.strMealThumb}
+                                alt={selectedMealDetails.strMeal}
                             />
                             <div style={{ textAlign: 'left' }}>
                                 <h4>Ingredients</h4>
