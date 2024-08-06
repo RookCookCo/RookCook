@@ -1,211 +1,164 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 
-// Retrieve topics from localStorage
-const getStoredTopics = () => {
-    const storedTopics = localStorage.getItem('topics');
-    return storedTopics ? JSON.parse(storedTopics) : [];
-};
+const RecipePopup = ({
+    setShowPopup,
+    selectedMealDetails,
+    setSelectedMealDetails,
+    popupSearchResults,
+    handlePopupMealClick
+}) => {
+    const [rating, setRating] = useState(0);
+    const [hover, setHover] = useState(0);
+    const [reviews, setReviews] = useState([]);
+    const [reviewText, setReviewText] = useState('');
+    const reviewsRef = useRef(null);
 
-// Save topics to localStorage
-const saveTopics = (topics) => {
-    localStorage.setItem('topics', JSON.stringify(topics));
-};
-
-const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
-    const [replyText, setReplyText] = useState('');
-    const [replyParentId, setReplyParentId] = useState(null);
-
-    const handleReplyChange = (e) => {
-        setReplyText(e.target.value);
-    };
-
-    const handleReplySubmit = (parentId = null) => {
-        if (replyText.trim()) {
-            onReply(topic.id, replyText, parentId);
-            setReplyText('');
-            setReplyParentId(null);
+    const handleAddReview = () => {
+        if (reviewText.trim() !== '') {
+            setReviews([...reviews, { rating, text: reviewText }]);
+            setReviewText('');
+            setRating(0);
+            setHover(0);
         }
     };
 
-    const renderReplies = (replies, parentId = null) => {
-        return replies
-            .filter(reply => reply.parentId === parentId)
-            .map((reply) => (
-                <div key={reply.id} className="reply">
-                    <div className="reply-content">
-                        <p className={reply.deleted ? 'deleted-reply' : ''}>
-                            {reply.deleted ? 'This reply has been deleted' : reply.text}
-                        </p>
-                    </div>
-                    <div className="reply-buttons">
-                        {!reply.deleted && (
-                            <>
-                                <button className="trash-button" onClick={() => onDeleteReply(topic.id, reply.id)}>
-                                    <i className="fas fa-trash"></i>
-                                </button>
-                                <button className="reply-button" onClick={() => setReplyParentId(reply.id)}>Reply</button>
-                            </>
-                        )}
-                    </div>
-                    {renderReplies(replies, reply.id)}
-                </div>
-            ));
-    };
-
-    return (
-        <div className="discussion-topic">
-            <h3>{topic.title}</h3>
-            <p>{topic.content}</p>
-            <button className="delete-button" onClick={() => onDeleteTopic(topic.id)}>Delete Topic</button>
-            <div className="replies">
-                {topic.replies.length > 0 ? (
-                    renderReplies(topic.replies)
-                ) : (
-                    <p>No replies yet.</p>
-                )}
-            </div>
-            <textarea
-                value={replyText}
-                onChange={handleReplyChange}
-                placeholder="Write a reply..."
-            />
-            <button className="reply-button" onClick={() => handleReplySubmit(replyParentId)}>Reply</button>
-        </div>
-    );
-};
-
-const NewTopicForm = ({ onAddTopic }) => {
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-
-    const handleTitleChange = (e) => {
-        setTitle(e.target.value);
-    };
-
-    const handleContentChange = (e) => {
-        setContent(e.target.value);
-    };
-
-    const handleSubmit = () => {
-        if (title.trim() && content.trim()) {
-            onAddTopic(title, content);
-            setTitle('');
-            setContent('');
-        }
-    };
-
-    return (
-        <div className="new-topic-form">
-            <input
-                type="text"
-                value={title}
-                onChange={handleTitleChange}
-                placeholder="Topic Title"
-            />
-            <textarea
-                value={content}
-                onChange={handleContentChange}
-                placeholder="Write your topic content..."
-            />
-            <button onClick={handleSubmit}>Add Topic</button>
-        </div>
-    );
-};
-
-const DiscussionForum = ({ setShowDiscussionForum }) => {
-    const [topics, setTopics] = useState(getStoredTopics());
-    const [showNewTopicForm, setShowNewTopicForm] = useState(false);
-    const [selectedTopic, setSelectedTopic] = useState(null);
-
-    useEffect(() => {
-        saveTopics(topics);
-    }, [topics]);
-
-    const handleAddTopic = (title, content) => {
-        const newTopic = { id: Date.now(), title, content, replies: [] };
-        setTopics(prevTopics => [...prevTopics, newTopic]);
-        setShowNewTopicForm(false);
-    };
-
-    const handleReply = (topicId, replyText, parentId) => {
-        const newReply = { id: Date.now(), text: replyText, parentId, deleted: false };
-        setTopics(prevTopics =>
-            prevTopics.map(topic =>
-                topic.id === topicId
-                    ? { ...topic, replies: [...topic.replies, newReply] }
-                    : topic
-            )
-        );
-        setSelectedTopic(prevTopic =>
-            prevTopic && prevTopic.id === topicId
-                ? { ...prevTopic, replies: [...prevTopic.replies, newReply] }
-                : prevTopic
-        );
-    };
-
-    const handleDeleteTopic = (topicId) => {
-        setTopics(prevTopics => prevTopics.filter(topic => topic.id !== topicId));
-        if (selectedTopic && selectedTopic.id === topicId) {
-            setSelectedTopic(null);
-        }
-    };
-
-    const handleDeleteReply = (topicId, replyId) => {
-        setTopics(prevTopics =>
-            prevTopics.map(topic =>
-                topic.id === topicId
-                    ? {
-                        ...topic,
-                        replies: topic.replies.map(reply =>
-                            reply.id === replyId ? { ...reply, deleted: true } : reply
-                        )
-                    }
-                    : topic
-            )
-        );
-        setSelectedTopic(prevTopic =>
-            prevTopic && prevTopic.id === topicId
-                ? {
-                    ...prevTopic,
-                    replies: prevTopic.replies.map(reply =>
-                        reply.id === replyId ? { ...reply, deleted: true } : reply
-                    )
-                }
-                : prevTopic
-        );
-    };
-
-    const handleViewTopic = (topic) => {
-        setSelectedTopic(topic);
+    const scrollToReviews = () => {
+        reviewsRef.current.scrollIntoView({ behavior: 'smooth' });
     };
 
     return (
         <div className="popup">
-            <button className="exit-button" onClick={() => setShowDiscussionForum(false)}>X</button>
+            <button className="exit-button" onClick={() => setShowPopup(false)}>X</button>
+            <h2>Recipes</h2>
             <div className="popup-content">
-                {topics.length > 0 ? (
-                    topics.map(topic => (
-                        <div key={topic.id} className="topic-preview" onClick={() => handleViewTopic(topic)}>
-                            <h3>{topic.title}</h3>
-                            <p>{topic.content.substring(0, 100)}...</p>
+                {selectedMealDetails ? (
+                    <div className="meal-details-popup">
+                        <button onClick={() => {
+                            setSelectedMealDetails(null);
+                            setRating(0); // Reset rating when going back to search results
+                            setHover(0);
+                        }}>Back</button>
+                        <h3>{selectedMealDetails.strMeal}</h3>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                {[...Array(5)].map((star, index) => {
+                                    index += 1;
+                                    return (
+                                        <button
+                                            type="button"
+                                            key={index}
+                                            className={index <= (hover || rating) ? "on" : "off"}
+                                            onClick={() => setRating(index)}
+                                            onMouseEnter={() => setHover(index)}
+                                            onMouseLeave={() => setHover(rating)}
+                                            style={{
+                                                backgroundColor: 'transparent',
+                                                border: 'none',
+                                                cursor: 'pointer',
+                                                fontSize: '1.5rem',
+                                                color: index <= (hover || rating) ? "#ffc107" : "#e4e5e9",
+                                            }}
+                                        >
+                                            <span className="star">&#9733;</span>
+                                        </button>
+                                    );
+                                })}
+                                <span 
+                                    style={{ cursor: 'pointer', color: '#007bff', marginLeft: '10px' }} 
+                                    onClick={scrollToReviews}
+                                >
+                                    {reviews.length} review{reviews.length !== 1 && 's'}
+                                </span>
+                            </div>
                         </div>
-                    ))
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '50px', marginTop: '20px' }}>
+                            <img 
+                                style={{ width: '50%', maxWidth: '200px' }}
+                                src={selectedMealDetails.strMealThumb} 
+                                alt={selectedMealDetails.strMeal} 
+                            />
+                            <div style={{ textAlign: 'left' }}>
+                                <h4>Ingredients</h4>
+                                <ul>
+                                    {Array.from({ length: 20 }).map((_, i) => {
+                                        const ingredient = selectedMealDetails[`strIngredient${i + 1}`];
+                                        const measure = selectedMealDetails[`strMeasure${i + 1}`];
+                                        return ingredient ? (
+                                            <li key={i}>{ingredient} - {measure}</li>
+                                        ) : null;
+                                    })}
+                                </ul>
+                            </div>
+                        </div>
+                        <h4>Instructions</h4>
+                        <p>{selectedMealDetails.strInstructions}</p>
+                        {selectedMealDetails.strYoutube && (
+                            <div className="video-container">
+                                <h4>Video Instructions</h4>
+                                <iframe
+                                    width="560"
+                                    height="315"
+                                    src={`https://www.youtube.com/embed/${selectedMealDetails.strYoutube.split('=')[1]}`}
+                                    title="YouTube video player"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
+                        )}
+                        <div ref={reviewsRef} style={{ marginTop: '20px' }}>
+                            <h4>Reviews</h4>
+                            {reviews.length > 0 ? (
+                                <ul>
+                                    {reviews.map((review, index) => (
+                                        <li key={index} style={{ margin: '10px 0' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                {[...Array(5)].map((star, i) => (
+                                                    <span
+                                                        key={i}
+                                                        style={{
+                                                            fontSize: '1rem',
+                                                            color: i < review.rating ? "#ffc107" : "#e4e5e9",
+                                                        }}
+                                                    >
+                                                        &#9733;
+                                                    </span>
+                                                ))}
+                                            </div>
+                                            <p>{review.text}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No reviews yet.</p>
+                            )}
+                            <textarea
+                                value={reviewText}
+                                onChange={(e) => setReviewText(e.target.value)}
+                                placeholder="Write your review here..."
+                                rows="3"
+                                style={{ width: '95%', padding: '10px', marginTop: '10px', resize: 'vertical' }}
+                            ></textarea>
+                            <button onClick={handleAddReview} style={{ marginTop: '10px' }}>Add Review</button>
+                        </div>
+                    </div>
                 ) : (
-                    <p>No topics available. Start by adding a new topic!</p>
+                    <div className="search-results">
+                        {popupSearchResults.length > 0 && (
+                            <div className="recipe-grid">
+                                {popupSearchResults.map((meal) => (
+                                    <div key={meal.idMeal} className="recipe-card" onClick={() => handlePopupMealClick(meal.idMeal)}>
+                                        <h3>{meal.strMeal}</h3>
+                                        <img src={meal.strMealThumb} alt={meal.strMeal} />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 )}
-                <button className="new-topic-button" onClick={() => setShowNewTopicForm(true)}>New Topic</button>
-                {showNewTopicForm && <NewTopicForm onAddTopic={handleAddTopic} />}
             </div>
-            {selectedTopic && (
-                <DiscussionTopic
-                    topic={selectedTopic}
-                    onReply={handleReply}
-                    onDeleteTopic={handleDeleteTopic}
-                    onDeleteReply={handleDeleteReply}
-                />
-            )}
         </div>
     );
 };
 
-export default DiscussionForum;
+export default RecipePopup;
