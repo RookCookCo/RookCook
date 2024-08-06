@@ -1,0 +1,312 @@
+.add-ingredient-button {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    top: 52%; /* Adjust to move the button lower */
+    left: 84%; /* Adjust to move the button more to the left */
+    font-size: 40px;
+    border: 3px solid black; /* Add a border to make the button visible */
+    background-color: #A1002D; /* Button background color */
+    color: white !important; /* Make the font color white */
+    font-weight: bold; /* Make the font bold */
+    cursor: pointer;
+    border-radius: 100%;
+    z-index: 1;
+    transition: transform 0.3s, background-color 0.3s;
+    box-shadow: none; /* Ensure no shadow is present */
+}
+
+.add-ingredient-button:hover {
+    background-color: #C2185B; /* Slightly lighter but still contrasting color */
+    transform: scale(1.3); /* Pop up effect */
+}
+
+.generate-recipe-button {
+    position: absolute;
+    height: auto;
+    max-width: 8%;
+    top: 47%; /* Adjust to move the button lower */
+    left: 28%; /* Adjust to move the button more to the left */
+    background-color: transparent !important; /* Ensure the background is clear */
+    font-weight: bold; /* Make the font bold */
+    border: none;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.3s, background-color 0.3s;
+    box-shadow: none; /* Ensure no shadow is present */
+}
+
+.generate-recipe-button:hover {
+    transform: scale(1.25); /* Pop up effect */
+}
+
+.ingredient-panel {
+    position: absolute;
+    top: 20%; /* Adjust this value to position the panel lower */
+    left: 20%;
+    right: 15%;
+    bottom: 20%;
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    z-index: 1000;
+}
+
+.inventory-grid {
+    max-height: 500px;
+    width: 675px;
+    margin: 10px 10px;
+    padding: 10px; /* Optional: Add some padding around the content */
+    border: 1px solid #ddd; /* Optional: Add a border to the list */
+    border-radius: 8px; /* Optional: Add rounded corners to the border */
+    background-color: #f9f9f9; /* Optional: Add a background color */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow-inline: scroll;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); /* Adjust column size */
+    gap: 10px; /* Space between items */
+    max-height: 215px; /* Height of the grid container */
+    overflow-x: hidden; /* Horizontal scroll if items overflow */
+    overflow-y: auto; /* No vertical scroll */
+    padding: 10px; /* Add some padding around the container */
+}
+
+.grid-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 85px; /* Ensure items have a minimum width */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    box-sizing: border-box; /* Include padding and border in the item's width and height */
+}
+
+.grid-item:hover {
+    background-color: #f9f9f9; /* Light background color on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+}
+
+.ingredient-image {
+    width: 100px; /* Width of the ingredient image */
+    height: 100px; /* Height of the ingredient image */
+    object-fit: cover; /* Ensure image covers the area without distortion */
+    margin-bottom: 8px; /* Space below the image */
+}
+
+.ingredient-name {
+    font-size: 14px; /* Font size for the ingredient name */
+    font-weight: bold; /* Make the font bold */
+    text-align: center; /* Center align text */
+    margin-bottom: 8px; /* Space below the name */
+}
+
+.ingredient-delete-button {
+    background-color: #f44336; /* Red background for delete button */
+    color: #fff; /* White text color */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    padding: 5px 10px; /* Padding inside the button */
+}
+
+.inventory-list-container {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    height: 100%; /* Ensure it takes up full height of the parent container */
+}
+
+.inventory-list {
+    max-height: 500px;
+    overflow-y: auto;
+    width: 500px;
+    margin: 10px;
+    padding: 10px; /* Optional: Add some padding around the content */
+    border: 1px solid #ddd; /* Optional: Add a border to the list */
+    border-radius: 8px; /* Optional: Add rounded corners to the border */
+    background-color: #f9f9f9; /* Optional: Add a background color */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: Add a shadow */
+}
+
+.add-section, .edit-section, .inventory-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.add-section select, .edit-section ul, .inventory-list ul {
+    margin-bottom: 10px;
+}
+
+.inventory-list ul {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Adjust column size */
+    gap: 15px; /* Space between items */
+    max-height: 215px; /* Height of the grid container */
+    overflow-x: hidden; /* Horizontal scroll if items overflow */
+    overflow-y: auto; /* Vertical scroll if items overflow */
+    padding: 10px;
+    margin: 0; /* Remove default margin */
+    list-style-type: none; /* Remove default list styling */
+}
+
+.inventory-list li {
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    width: auto;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    text-align: center; /* Center text horizontally */
+    background-color: #fff; /* Optional: to ensure a clean look */
+}
+
+.inventory-list li:hover {
+    background-color: #f9f9f9; /* Light background color on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+}
+
+.ingredient-search-input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.ingredient-dropdown {
+    margin-right: 50px;
+    z-index: 1000;
+}
+
+.single-ingredient {
+    cursor: pointer;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-top: 15px;
+    width: auto;
+    max-width: 200px; /* Adjust as needed */
+    margin-left: 90px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: transform 0.3s ease-in-out, background-color 0.3s;
+}
+
+.single-ingredient:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.05);
+}
+
+.search-results {
+    margin-top: 20px;
+}
+
+.search-results div {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.recipe-dropdown {
+    position: absolute;
+    top: 100%; /* Position below the search box */
+    margin-left: 130px;
+    paddingLeft: '10px';
+    marginRight: '5px';
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 200px; /* Set a maximum height and enable scrolling */
+    overflow-y: auto;
+    z-index: 1000;
+    box-sizing: border-box; /* Ensure width includes padding and border */
+}
+
+.recipe-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recipe-dropdown li {
+    padding: 10px;
+    cursor: pointer;
+    width: 230px;
+}
+
+.recipe-dropdown li:hover {
+    background-color: #f0f0f0;
+}
+
+.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust column width as needed */
+    gap: 20px;
+    padding-top: 20px; /* Remove large padding */
+}
+
+.recipe-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    overflow: hidden;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
+
+.recipe-card img {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    max-height: 150px; /* Limit maximum height */
+    object-fit: cover; /* Maintain aspect ratio and cover container */
+    border-radius: 5px;
+}
+
+.recipe-card:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
+.meal-details {
+    margin-top: 20px;
+}
+
+.meal-details img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.video-container {
+    margin-top: 20px;
+}
+
+.video-container iframe {
+    width: 100%;
+    height: 315px;
+    border-radius: 8px;
+}

@@ -1,0 +1,67 @@
+/* Popup styles */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 1000px;
+    max-height: 80%;
+    overflow-y: auto;
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.popup .exit-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.popup .exit-button:hover {
+    background-color: #bbb;
+}
+
+/* Delete button styles */
+.delete-button {
+    background-color: #f44336; /* Red background for delete */
+    color: white; /* White text color */
+    border: none; /* No border */
+    padding: 5px 10px; /* Padding around text */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin-bottom: 10px; /* Space below the button */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+.delete-button:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+}
+
+/* Remove outline from focused buttons and inputs */
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+}
+
+/* Apply specific styles to focus states if needed */
+.auth-buttons button:focus,
+.panel-header button:focus,
+.add-ingredient-button:focus,
+.generate-recipe-button:focus,
+.login-panel button:focus,
+.signup-panel button:focus,
+.delete-button:focus {
+    outline: none;
+}

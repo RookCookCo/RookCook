@@ -1,0 +1,59 @@
+.App-header {
+    width: 96%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Optional: a semi-transparent background for the header */
+    position: absolute; /* Positioning the header at the top */
+    top: 0;
+    left: 0; /* Ensure header is aligned to the left */
+    z-index: 2; /* Ensure the header is above other elements */
+}
+
+.site-logo {
+    width: 100px; /* Adjust width as needed */
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    margin-left: 70px; /* Adjust to accommodate logo width */
+    position: relative;
+}
+
+.search-box input {
+    font-family: Georgia, serif;
+    font-size: 15px;
+    margin-left: 10px;
+    padding: 2px 5px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.auth-buttons button {
+    font-family: Georgia, serif;
+    font-size: 15px;
+    text-align: center;
+    padding: 2px 5px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.auth-buttons button:hover {
+    background-color: #f0f0f0;
+}
