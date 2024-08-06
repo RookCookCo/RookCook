@@ -47,40 +47,48 @@ const IngredientPanel = ({
                 {panelMode === 'edit' ? (
                     <div className="inventory-grid">
                         <h3>Inventory</h3>
-                        <div className="grid-container">
-                            {sortedInventory.map((ingredient) => (
-                                <div key={ingredient} className="grid-item">
-                                    <img
-                                        src={getImageUrl(ingredient)}
-                                        alt={ingredient}
-                                        className="ingredient-image"
-                                    />
-                                    <div className="ingredient-name">
-                                        {ingredient}
+                        {sortedInventory.length === 0 ? (
+                            <p>No Ingredients Added</p>
+                        ) : (
+                            <div className="grid-container">
+                                {sortedInventory.map((ingredient) => (
+                                    <div key={ingredient} className="grid-item">
+                                        <img
+                                            src={getImageUrl(ingredient)}
+                                            alt={ingredient}
+                                            className="ingredient-image"
+                                        />
+                                        <div className="ingredient-name">
+                                            {ingredient}
+                                        </div>
+                                        <button
+                                            className="ingredient-delete-button"
+                                            onClick={() => handleDeleteIngredient(ingredient)}
+                                        >
+                                            Delete
+                                        </button>
                                     </div>
-                                    <button
-                                        className="ingredient-delete-button"
-                                        onClick={() => handleDeleteIngredient(ingredient)}
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <div className="inventory-list">
                         <h3>Inventory</h3>
-                        <ul>
-                            {sortedInventory.map((ingredient) => (
-                                <li key={ingredient}>
-                                    {ingredient}
-                                    {panelMode === 'edit' && (
-                                        <button onClick={() => handleDeleteIngredient(ingredient)}>Delete</button>
-                                    )}
-                                </li>
-                            ))}
-                        </ul>
+                        {sortedInventory.length === 0 ? (
+                            <p>No Ingredients Added</p>
+                        ) : (
+                            <ul>
+                                {sortedInventory.map((ingredient) => (
+                                    <li key={ingredient}>
+                                        {ingredient}
+                                        {panelMode === 'edit' && (
+                                            <button onClick={() => handleDeleteIngredient(ingredient)}>Delete</button>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 )}
             </div>
@@ -92,7 +100,8 @@ const IngredientPanel = ({
                         value={ingredientSearchQuery}
                         onClick={() => setShowIngredientList(true)}
                         onChange={(e) => setIngredientSearchQuery(e.target.value)}
-                        className="ingredient-search-input" style={{ width: '160px', marginRight: '50px' }}
+                        className="ingredient-search-input"
+                        style={{ width: '160px', marginRight: '50px' }}
                     />
                     {showIngredientList && filteredIngredients.length > 0 && (
                         <div>
