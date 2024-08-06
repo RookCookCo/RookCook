@@ -27,11 +27,11 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
         }
     };
 
-    const renderReplies = (replies, parentId = null) => {
+    const renderReplies = (replies, parentId = null, level = 0) => {
         return replies
             .filter(reply => reply.parentId === parentId)
             .map((reply) => (
-                <div key={reply.id} className="reply">
+                <div key={reply.id} className={`reply reply-level-${level % 2 === 0 ? 'even' : 'odd'}`}>
                     <div className="reply-content">
                         <p className={reply.deleted ? 'deleted-reply' : ''}>
                             {reply.deleted ? 'This reply has been deleted' : reply.text}
@@ -47,7 +47,7 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
                             </>
                         )}
                     </div>
-                    {renderReplies(replies, reply.id)}
+                    {renderReplies(replies, reply.id, level + 1)}
                 </div>
             ));
     };
@@ -69,7 +69,7 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
                 onChange={handleReplyChange}
                 placeholder={replyParentId ? "Write a reply..." : "Write a comment..."}
             />
-            <button className="reply-button" onClick={() => handleReplySubmit(replyParentId)}>Comment</button>        
+            <button className="reply-button" onClick={() => handleReplySubmit(replyParentId)}>Comment</button>
         </div>
     );
 };
@@ -132,13 +132,13 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
         setTopics(prevTopics =>
             prevTopics.map(topic =>
                 topic.id === topicId
-                ? { ...topic, replies: [...topic.replies, newReply] }  
+                    ? { ...topic, replies: [...topic.replies, newReply] }
                     : topic
             )
         );
         setSelectedTopic(prevTopic =>
             prevTopic && prevTopic.id === topicId
-            ? { ...prevTopic, replies: [...prevTopic.replies, newReply] }
+                ? { ...prevTopic, replies: [...prevTopic.replies, newReply] }
                 : prevTopic
         );
     };
@@ -165,7 +165,7 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
         );
         setSelectedTopic(prevTopic =>
             prevTopic && prevTopic.id === topicId
-                 ? {
+                ? {
                     ...prevTopic,
                     replies: prevTopic.replies.map(reply =>
                         reply.id === replyId ? { ...reply, deleted: true } : reply

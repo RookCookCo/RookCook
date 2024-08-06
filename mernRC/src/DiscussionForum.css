@@ -117,12 +117,19 @@
 .reply {
     margin-left: 20px;
     padding: 10px;
-    background: #f1f1f1;
     border-radius: 5px;
     margin-top: 10px;
     position: relative;
-    border-left: 3px solid #007bff;
+    border-left: 3px solid #66b2ff; /* Light blue for replies */
     font-size: 12px;
+}
+
+.reply-level-even {
+    background: #f1f1f1;
+}
+
+.reply-level-odd {
+    background: #ffffff;
 }
 
 .reply::before {
@@ -157,7 +164,7 @@ textarea {
     padding: 20px;
     border-radius: 5px;
     background: #f9f9f9;
-    border-left: 5px solid #007bff;
+    border-left: 5px solid #003d99; /* Dark blue for main comments */
     font-size: 12px;
     flex: 2;
     height: fit-content;
@@ -244,4 +251,3 @@ textarea {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000; /* Ensure popup is above other content */
 }
-
