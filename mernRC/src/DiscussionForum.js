@@ -42,6 +42,8 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
                             <>
                                 <button className="trash-button" onClick={() => onDeleteReply(topic.id, reply.id)}>
                                     <i className="fas fa-trash"></i>
+                                </button>
+                                <button className="reply-button" onClick={() => setReplyParentId(reply.id)}>Reply</button>
                             </>
                         )}
                     </div>
