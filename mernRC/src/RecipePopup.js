@@ -85,14 +85,17 @@ const RecipePopup = ({
         <div className="popup">
             <button className="exit-button" onClick={() => setShowPopup(false)}>X</button>
             <h2>Recipes</h2>
-            <button 
-                className="show-filters-button" 
-                onClick={() => setFiltersVisible(!filtersVisible)}
-                style={{ marginBottom: '20px', cursor: 'pointer', backgroundColor: '#007bff', color: '#fff', border: 'none', padding: '10px', borderRadius: '5px' }}
-            >
-                {filtersVisible ? 'Hide Filters' : 'Show Filters'}
-            </button>
-            {filtersVisible && (
+            {/* Show filter button only when `selectedMealDetails` is null */}
+            {!selectedMealDetails && (
+                <button 
+                    className="show-filters-button" 
+                    onClick={() => setFiltersVisible(!filtersVisible)}
+                    style={{ marginBottom: '20px', cursor: 'pointer', backgroundColor: '#007bff', color: '#fff', border: 'none', padding: '10px', borderRadius: '5px' }}
+                >
+                    {filtersVisible ? 'Hide Filters' : 'Show Filters'}
+                </button>
+            )}
+            {filtersVisible && !selectedMealDetails && (
                 <div className="filters-section" style={{ marginBottom: '20px' }}>
                     <h4>Filters</h4>
                     <div>
