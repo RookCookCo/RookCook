@@ -11,6 +11,7 @@ import DiscussionForum from './DiscussionForum';
 import { auth, provider, signInWithPopup, signOut } from './firebase';
 import axios from 'axios';
 import RecipeBookImage from './RecipeBook.png';
+import PhoneImage from './phone.png';
 
 function App() {
     // State variables for UI panels, user inputs, and data
@@ -390,7 +391,7 @@ function App() {
             )}
             {/* Discussion Forum button */}
             <button className="discussion-forum-button" title="Discussion Forum" onClick={toggleDiscussionForum}>
-                Discussion Forum
+                <img src={PhoneImage} alt="Discussion Forum" title="Discussion Forum" style={{ width: '100%', height: '100%' }} />
             </button>
             {/* Popup for discussion forum */}
             {showDiscussionForum && (
