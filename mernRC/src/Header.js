@@ -1,28 +1,61 @@
 import React, { useState, useEffect } from 'react';
 
 const Header = ({
-                    user,
-                    searchQuery,
-                    setSearchQuery,
-                    handleSearch,
-                    handleGoogleLogin,
-                    handleLogout,
-                    setShowLogin,
-                    setShowSignUp,
-                    handlePopupMealClick,
-                    filteredRecipes,
-                    setDietaryFilter,
-                    setEthnicFilter
-                }) => {
+    user,
+    searchQuery,
+    setSearchQuery,
+    handleSearch,
+    handleGoogleLogin,
+    handleLogout,
+    setShowLogin,
+    setShowSignUp,
+    handlePopupMealClick,
+    setDietaryFilter,
+    setEthnicFilter
+}) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [filteredSearchResults, setFilteredSearchResults] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [areas, setAreas] = useState([]);
+    const [dietaryFilter, setDietaryFilterLocal] = useState('');
+    const [ethnicFilter, setEthnicFilterLocal] = useState('');
 
     useEffect(() => {
-        const filtered = filteredRecipes.filter(recipe =>
-            recipe.strMeal.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        setFilteredSearchResults(filtered);
-    }, [searchQuery, filteredRecipes]);
+        // Fetch categories
+        fetch('https://www.themealdb.com/api/json/v2/9973533/categories.php')
+            .then(response => response.json())
+            .then(data => setCategories(data.categories));
+
+        // Fetch areas
+        fetch('https://www.themealdb.com/api/json/v2/9973533/list.php?a=list')
+            .then(response => response.json())
+            .then(data => setAreas(data.meals));
+    }, []);
+
+    useEffect(() => {
+        // Build URL with filters
+        let url = 'https://www.themealdb.com/api/json/v2/9973533/filter.php?';
+
+        if (dietaryFilter) {
+            url += `c=${dietaryFilter}&`;
+        }
+        if (ethnicFilter) {
+            url += `a=${ethnicFilter}&`;
+        }
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                // Filter recipes based on search query
+                let filteredResults = data.meals || [];
+                if (searchQuery) {
+                    filteredResults = filteredResults.filter(meal =>
+                        meal.strMeal.toLowerCase().includes(searchQuery.toLowerCase())
+                    );
+                }
+                setFilteredSearchResults(filteredResults);
+            });
+    }, [dietaryFilter, ethnicFilter, searchQuery]);
 
     const handleInputChange = (e) => {
         setSearchQuery(e.target.value);
@@ -40,7 +73,6 @@ const Header = ({
     };
 
     const handleInputBlur = () => {
-        // Delay hiding dropdown to allow click event to be registered
         setTimeout(() => setShowDropdown(false), 100);
     };
 
@@ -59,20 +91,27 @@ const Header = ({
                         onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
                     />
-                    <select onChange={(e) => setDietaryFilter(e.target.value)}>
+                    <select onChange={(e) => {
+                        setDietaryFilterLocal(e.target.value);
+                        setDietaryFilter(e.target.value);
+                    }}>
                         <option value="">All Diets</option>
-                        <option value="Vegetarian">Vegetarian</option>
-                        <option value="Vegan">Vegan</option>
-                        <option value="Gluten-Free">Gluten-Free</option>
-                        {/* Add more dietary options as needed */}
+                        {categories.map(category => (
+                            <option key={category.strCategory} value={category.strCategory}>
+                                {category.strCategory}
+                            </option>
+                        ))}
                     </select>
-                    <select onChange={(e) => setEthnicFilter(e.target.value)}>
+                    <select onChange={(e) => {
+                        setEthnicFilterLocal(e.target.value);
+                        setEthnicFilter(e.target.value);
+                    }}>
                         <option value="">All Cuisines</option>
-                        <option value="Canadian">Canadian</option>
-                        <option value="Chinese">Chinese</option>
-                        <option value="Italian">Italian</option>
-                        <option value="Mexican">Mexican</option>
-                        {/* Add more cuisine options as needed */}
+                        {areas.map(area => (
+                            <option key={area.strArea} value={area.strArea}>
+                                {area.strArea}
+                            </option>
+                        ))}
                     </select>
                     <button type="submit">Search</button>
                 </form>
