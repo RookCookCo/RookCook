@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import background from './background.png';
 import './App.css';
+import './DiscussionForum.css';
 import Header from './Header';
 import IngredientPanel from './IngredientPanel';
 import LoginPanel from './LoginPanel';
