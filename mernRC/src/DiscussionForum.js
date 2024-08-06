@@ -51,6 +51,31 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
         ));
     };
 
+    const renderReplies = (replies, parentId = null) => {
+        return replies
+            .filter(reply => reply.parentId === parentId)
+            .map((reply) => (
+                <div key={reply.id} className="reply">
+                    <div className="reply-content">
+                        <p className={reply.deleted ? 'deleted-reply' : ''}>
+                            {reply.deleted ? 'This reply has been deleted' : reply.text}
+                        </p>
+                    </div>
+                    <div className="reply-buttons">
+                        {!reply.deleted && (
+                            <>
+                                <button className="trash-button" onClick={() => onDeleteReply(topic.id, reply.id)}>
+                                    <i className="fas fa-trash"></i>
+                                </button>
+                                <button className="reply-button" onClick={() => setReplyParentId(reply.id)}>Reply</button>
+                            </>
+                        )}
+                    </div>
+                    {renderReplies(replies, reply.id)}
+                </div>
+            ));
+    };
+
     return (
         <div className="discussion-topic">
             <h3>{topic.title}</h3>
@@ -66,9 +91,10 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
             <textarea
                 value={replyText}
                 onChange={handleReplyChange}
-                placeholder="Write a reply..."
+                placeholder={replyParentId ? "Write a reply..." : "Write a comment..."}
             />
-        <button className="reply-button" onClick={() => handleReplySubmit(replyParentId)}>Reply</button>        </div>
+            <button className="reply-button" onClick={() => handleReplySubmit(replyParentId)}>Comment</button>        
+        </div>
     );
 };
 
@@ -124,6 +150,7 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
         setTopics(prevTopics => [...prevTopics, newTopic]);
         setShowNewTopicForm(false);
     };
+
     const handleReply = (topicId, replyText, parentId) => {
         const newReply = { id: Date.now(), text: replyText, parentId, deleted: false };
         setTopics(prevTopics =>
@@ -175,6 +202,7 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
     const handleViewTopic = (topic) => {
         setSelectedTopic(topic);
     };
+
     return (
         <div className="discussion-popup">
             <button className="discussion-exit-button" onClick={() => setShowDiscussionForum(false)}>X</button>
