@@ -11,6 +11,10 @@ const saveTopics = (topics) => {
     localStorage.setItem('topics', JSON.stringify(topics));
 };
 
+const style = {
+    background: 'linear-gradient(270deg, rgba(255,255,255,1) 0%, rgba(184,217,242,1) 35%, rgba(61,143,208,1) 100%)'
+};
+
 const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
     const [replyText, setReplyText] = useState('');
     const [replyParentId, setReplyParentId] = useState(null);
@@ -191,7 +195,10 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
                         </div>
                     ))
                 ) : (
-                    <p>No topics available. Start by adding a new topic!</p>
+                    <div className="topic-preview" style={style}>
+                        <h3>Discussion Forum</h3>
+                        <p>No topics available. Start by adding a new topic!</p>
+                    </div>
                 )}
                 <button className="new-topic-button" onClick={() => setShowNewTopicForm(true)}>New Topic</button>
                 {showNewTopicForm && <NewTopicForm onAddTopic={handleAddTopic} />}

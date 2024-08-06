@@ -58,6 +58,7 @@
 
 .topic-preview:hover {
     transform: translateY(-5px);
+    background: #e0e0e0; 
 }
 
 .topic-preview h3 {
