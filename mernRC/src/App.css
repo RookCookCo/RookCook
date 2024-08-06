@@ -446,7 +446,6 @@
 .login-panel .panel-header button,
 .signup-panel .panel-header button,
 .signup-confirm-button {
-    width: 100px; /* Adjust width as needed */
     padding: 5px 5px; /* Matching padding */
     border: none; /* No border */
     border-radius: 5px; /* Border radius */
@@ -461,6 +460,7 @@
 .signup-confirm-button:hover {
     background-color: darkred; /* Darker red on hover */
     transform: scale(1.05); /* Slightly larger on hover */
+    z-index: 1000;
 }
 
 .login-panel form, .signup-panel form {

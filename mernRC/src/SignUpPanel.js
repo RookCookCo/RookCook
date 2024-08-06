@@ -15,8 +15,9 @@ const SignUpPanel = ({
     return (
         <div className="signup-panel">
             <div className="panel-header">
-                <button onClick={() => setShowSignUp(false)}>Close</button>
+                <button className="exit-button" onClick={() => setShowSignUp(false)}>X</button>
             </div>
+            <h1>Sign Up!</h1>
             <form onSubmit={handleSignUp}>
                 <div className="signup-field">
                     <label htmlFor="email">Email:</label>
@@ -62,7 +63,7 @@ const SignUpPanel = ({
                         required
                     />
                 </div>
-                <button type="submit" className="signup-confirm-button">Sign Up</button>
+                <button type="submit" className="signup-confirm-button">Register</button>
             </form>
         </div>
     );

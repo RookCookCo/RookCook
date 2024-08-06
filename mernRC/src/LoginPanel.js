@@ -12,8 +12,9 @@ const LoginPanel = ({
     return (
         <div className="login-panel">
             <div className="panel-header">
-                <button onClick={() => setShowLogin(false)}>Close</button>
+                <button className="exit-button" onClick={() => setShowLogin(false)}>X</button>
             </div>
+            <h1>Welcome Back!</h1>
             <form onSubmit={handleLogin}>
                 <div className="login-field">
                     <label htmlFor="username">Username:</label>
