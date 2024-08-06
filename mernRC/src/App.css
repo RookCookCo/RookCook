@@ -140,11 +140,10 @@
     position: absolute;
     height: auto;
     max-width: 8%;
-    top: 49%; /* Adjust to move the button lower */
-    left: 30.5%; /* Adjust to move the button more to the left */
+    top: 47%; /* Adjust to move the button lower */
+    left: 28%; /* Adjust to move the button more to the left */
     background-color: transparent !important; /* Ensure the background is clear */
     font-weight: bold; /* Make the font bold */
-    font-size: 20px;
     border: none;
     cursor: pointer;
     color: white;
