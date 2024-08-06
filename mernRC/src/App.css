@@ -63,6 +63,7 @@
     border-radius: 5px;
     background-color: #fff;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .auth-buttons button:hover {
@@ -74,24 +75,32 @@
     flex-direction: column;
     height: 100%; /* Ensures the panel header covers the entire height */
     justify-content: space-around; /* Distributes buttons evenly along the column */
+    margin-bottom: 20px;
+}
+
+.panel-header > div {
+    margin-bottom: 10px; /* Adjust spacing between buttons */
 }
 
 .panel-header button {
     flex: 1; /* Allows buttons to take up equal space vertically */
     padding: 12px; /* Increased padding for larger appearance */
     cursor: pointer;
+    border: none; /* Remove border */
+    background-color: #f0f0f0; /* Background color */
+    border-radius: 5px; /* Border radius */
     transition: background-color 0.3s ease;
 }
 
 .panel-header button:hover {
-    background-color: #ddd;
+    background-color: #e0e0e0; /* Hover background color */
 }
 
 .add-ingredient-button {
     position: absolute;
     height: 50px;
     width: 50px;
-    top: 59%; /* Adjust to move the button lower */
+    top: 52%; /* Adjust to move the button lower */
     left: 84%; /* Adjust to move the button more to the left */
     font-size: 40px;
     border: 3px solid black; /* Add a border to make the button visible */
@@ -110,6 +119,25 @@
     transform: scale(1.3); /* Pop up effect */
 }
 
+.generate-recipe-button {
+    position: absolute;
+    height: auto;
+    max-width: 8%;
+    top: 49%; /* Adjust to move the button lower */
+    left: 30.5%; /* Adjust to move the button more to the left */
+    background-color: transparent !important; /* Ensure the background is clear */
+    font-weight: bold; /* Make the font bold */
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.3s, background-color 0.3s;
+    box-shadow: none; /* Ensure no shadow is present */
+}
+
+.generate-recipe-button:hover {
+    transform: scale(1.25); /* Pop up effect */
+}
 
 .ingredient-panel {
     position: absolute;
@@ -125,28 +153,6 @@
     display: flex;
     justify-content: space-between;
     z-index: 1000;
-}
-
-.panel-header {
-    margin-bottom: 20px;
-}
-
-.panel-header > div {
-    margin-bottom: 10px; /* Adjust spacing between buttons */
-}
-
-.panel-header button {
-    display: block;
-    width: 100%;
-    height: 40px; /* Adjust height as needed */
-    border: none;
-    background-color: #f0f0f0; /* Example background color */
-    border-radius: 5px; /* Example border radius */
-    cursor: pointer;
-}
-
-.panel-header button:hover {
-    background-color: #e0e0e0; /* Example hover background color */
 }
 
 .add-section, .edit-section, .inventory-list {
@@ -188,11 +194,39 @@
     cursor: pointer;
 }
 
+.recipe-dropdown {
+    position: absolute;
+    top: 100%; /* Position below the search box */
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 200px; /* Set a maximum height and enable scrolling */
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.recipe-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recipe-dropdown li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.recipe-dropdown li:hover {
+    background-color: #f0f0f0;
+}
+
 .recipe-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust column width as needed */
     gap: 20px;
-    padding-top: 800px; /* Additional padding to ensure it appears lower */
+    padding-top: 20px; /* Remove large padding */
 }
 
 .recipe-card {
@@ -216,13 +250,6 @@
 .recipe-card:hover {
     background-color: #f0f0f0; 
     transform: scale(1.05);
-}
-
-.recipe-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust column width as needed */
-    gap: 20px;
-    padding-top: 20px; /* Remove large padding */
 }
 
 .meal-details {
@@ -275,18 +302,14 @@
     background-color: red; /* Change background color to red */
     color: white; /* Text color */
     cursor: pointer; /* Pointer cursor */
-    transition: background-color 0.3s ease; /* Smooth transition */
+    transition: background-color 0.3s ease, transform 0.3s; /* Smooth transition */
 }
 
 .login-panel .panel-header button:hover,
 .signup-panel .panel-header button:hover,
 .signup-confirm-button:hover {
     background-color: darkred; /* Darker red on hover */
-}
-
-.login-panel .panel-header button:hover, .signup-panel .panel-header button:hover,
-.signup-confirm-button:hover {
-    background-color: #7a7a7a; /* Hover background color */
+    transform: scale(1.05); /* Slightly larger on hover */
 }
 
 .login-panel form, .signup-panel form {
@@ -360,23 +383,6 @@
     background-color: #7a7a7a;
 }
 
-.generate-recipe-button {
-    position: absolute;
-    height: 30px;
-    width: 100px;
-    top: 49%; /* Adjust to move the button lower */
-    left: 30.5%; /* Adjust to move the button more to the left */
-    background-color: transparent !important; /* Ensure the background is clear */
-    font-weight: bold; /* Make the font bold */
-    cursor: pointer;
-    transition: transform 0.3s, background-color 0.3s;
-    box-shadow: none; /* Ensure no shadow is present */
-}
-
-.generate-recipe-button:hover {
-    transform: scale(1.25); /* Pop up effect */
-}
-
 .popup {
     position: fixed;
     top: 50%;
@@ -403,136 +409,11 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .popup .exit-button:hover {
     background-color: #bbb;
-}
-
-.search-results ul {
-    list-style: none;
-    padding: 0;
-}
-
-.search-results li {
-    margin-bottom: 10px;
-}
-
-.meal-details ul {
-    list-style: none;
-    padding: 0;
-}
-.recipe-dropdown {
-    position: absolute;
-    top: 100%; /* Position below the search box */
-    left: 0;
-    width: 100%;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    max-height: 200px; /* Set a maximum height and enable scrolling */
-    overflow-y: auto;
-    z-index: 1000;
-}
-.recipe-dropdown ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.recipe-dropdown li {
-    padding: 10px;
-    cursor: pointer;
-}
-.recipe-dropdown li:hover {
-    background-color: #f0f0f0;
-}
-/* Add styles for the new components and interactions */
-.popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    max-width: 1000px;
-    max-height: 80%;
-    overflow-y: auto;
-    background-color: white;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-}
-
-.popup .exit-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 5px 10px;
-    background-color: #ccc;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.popup .exit-button:hover {
-    background-color: #bbb;
-}
-
-.recipe-dropdown {
-    position: absolute;
-    top: 100%; /* Position below the search box */
-    left: 0;
-    width: 100%;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    max-height: 200px; /* Set a maximum height and enable scrolling */
-    overflow-y: auto;
-    z-index: 1000;
-}
-
-.recipe-dropdown ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.recipe-dropdown li {
-    padding: 10px;
-    cursor: pointer;
-}
-
-.recipe-dropdown li:hover {
-    background-color: #f0f0f0;
-}
-
-.recipe-card:hover {
-    background-color: #f0f0f0;
-    transform: scale(1.05);
-}
-
-.generate-recipe-button {
-    position: absolute;
-    height: 60px;
-    width: 100px;
-    top: 49%; /* Adjust to move the button lower */
-    right: 50%; /* Adjust to move the button more to the left */
-    font-size: 20px;
-    border: none;
-    background-color: #8e8e8e; /* Adjust color as needed */
-    color: white;
-    cursor: pointer;
-    border-radius: 10px;
-    z-index: 1;
-}
-
-.generate-recipe-button:hover {
-    background-color: #7a7a7a;
-}
-
-.popup-content {
-    margin-top: 20px;
 }
 
 .new-topic-form input,
@@ -585,9 +466,23 @@
     padding: 5px 10px; /* Padding around text */
     cursor: pointer; /* Pointer cursor on hover */
     margin-bottom: 10px; /* Space below the button */
+    transition: background-color 0.3s; /* Smooth transition */
 }
 
 .delete-button:hover {
     background-color: #d32f2f; /* Darker red on hover */
 }
 
+.search-results ul {
+    list-style: none;
+    padding: 0;
+}
+
+.search-results li {
+    margin-bottom: 10px;
+}
+
+.meal-details ul {
+    list-style: none;
+    padding: 0;
+}
