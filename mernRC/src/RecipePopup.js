@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 const RecipePopup = ({
     setShowPopup,
@@ -9,6 +9,22 @@ const RecipePopup = ({
 }) => {
     const [rating, setRating] = useState(0);
     const [hover, setHover] = useState(0);
+    const [reviews, setReviews] = useState([]);
+    const [reviewText, setReviewText] = useState('');
+    const reviewsRef = useRef(null);
+
+    const handleAddReview = () => {
+        if (reviewText.trim() !== '') {
+            setReviews([...reviews, { rating, text: reviewText }]);
+            setReviewText('');
+            setRating(0);
+            setHover(0);
+        }
+    };
+
+    const scrollToReviews = () => {
+        reviewsRef.current.scrollIntoView({ behavior: 'smooth' });
+    };
 
     return (
         <div className="popup">
@@ -20,9 +36,10 @@ const RecipePopup = ({
                         <button onClick={() => {
                             setSelectedMealDetails(null);
                             setRating(0); // Reset rating when going back to search results
+                            setHover(0);
                         }}>Back</button>
                         <h3>{selectedMealDetails.strMeal}</h3>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                                 {[...Array(5)].map((star, index) => {
                                     index += 1;
@@ -46,10 +63,15 @@ const RecipePopup = ({
                                         </button>
                                     );
                                 })}
+                                <span 
+                                    style={{ cursor: 'pointer', color: '#007bff', marginLeft: '10px' }} 
+                                    onClick={scrollToReviews}
+                                >
+                                    {reviews.length} review{reviews.length !== 1 && 's'}
+                                </span>
                             </div>
                         </div>
-                        <div style={{ margin: '10px 0' }}></div>
-                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '50px' }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '50px', marginTop: '20px' }}>
                             <img 
                                 style={{ width: '50%', maxWidth: '200px' }}
                                 src={selectedMealDetails.strMealThumb} 
@@ -84,6 +106,41 @@ const RecipePopup = ({
                                 ></iframe>
                             </div>
                         )}
+                        <div ref={reviewsRef} style={{ marginTop: '20px' }}>
+                            <h4>Reviews</h4>
+                            {reviews.length > 0 ? (
+                                <ul>
+                                    {reviews.map((review, index) => (
+                                        <li key={index} style={{ margin: '10px 0' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                {[...Array(5)].map((star, i) => (
+                                                    <span
+                                                        key={i}
+                                                        style={{
+                                                            fontSize: '1rem',
+                                                            color: i < review.rating ? "#ffc107" : "#e4e5e9",
+                                                        }}
+                                                    >
+                                                        &#9733;
+                                                    </span>
+                                                ))}
+                                            </div>
+                                            <p>{review.text}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No reviews yet.</p>
+                            )}
+                            <textarea
+                                value={reviewText}
+                                onChange={(e) => setReviewText(e.target.value)}
+                                placeholder="Write your review here..."
+                                rows="3"
+                                style={{ width: '95%', padding: '10px', marginTop: '10px', resize: 'vertical' }}
+                            ></textarea>
+                            <button onClick={handleAddReview} style={{ marginTop: '10px' }}>Add Review</button>
+                        </div>
                     </div>
                 ) : (
                     <div className="search-results">

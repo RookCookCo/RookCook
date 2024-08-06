@@ -82,7 +82,8 @@
 }
 
 .new-topic-form button,
-.new-topic-button {
+.back-button,
+.delete-reply-button {
     background: #007bff;
     color: #fff;
     padding: 5px 10px;
@@ -94,11 +95,10 @@
 }
 
 .new-topic-form button:hover,
-.new-topic-button:hover {
+.back-button:hover,
+.delete-reply-button:hover {
     background: #0056b3;
 }
-
-/* Delete topic button */
 .discussion-delete-button {
     background-color: #f44336;
     color: #fff;
@@ -173,6 +173,23 @@ textarea {
     font-size: 12px;
 }
 
+/* New topic button */
+.new-topic-button {
+    background: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-bottom: 10px;
+    transition: background 0.3s;
+}
+
+.new-topic-button:hover {
+    background: #0056b3;
+}
+
 /* Trash button */
 .trash-button {
     background: none;
@@ -227,3 +244,4 @@ textarea {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000; /* Ensure popup is above other content */
 }
+

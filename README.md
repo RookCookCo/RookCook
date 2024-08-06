@@ -11,7 +11,7 @@ Provide a wide array of recipes catering to various diets and skill levels to en
 Cultivate user engagement by enriching profiles and facilitating the saving of favorite recipes. 
 Foster a vibrant community by facilitating recipe reviews, offering forums for culinary discussions, and delivering comprehensive nutritional information to promote informed cooking choices.
 
-Stack: HTML, JavaScript, PHP, CSS, SQL, Web Hosting Platform, Node
+Stack: JavaScript, HTML, CSS, Node, React, MongoDB
 
 Milestones:
 June 2024:
