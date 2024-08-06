@@ -121,7 +121,7 @@
     left: 84%; /* Adjust to move the button more to the left */
     font-size: 40px;
     border: 3px solid black; /* Add a border to make the button visible */
-    background-color: red !important; 
+    background-color: A1002D; 
     color: white !important; /* Make the font color white */
     font-weight: bold; /* Make the font bold */
     cursor: pointer;
