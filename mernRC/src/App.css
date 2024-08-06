@@ -1,3 +1,4 @@
+/* Base styles */
 .App {
     font-family: Georgia, serif;
     font-size: 18px;
@@ -9,6 +10,7 @@
     height: 100%;
     overflow: hidden;
 }
+
 .App-header {
     width: 96%;
     display: flex;
@@ -21,12 +23,14 @@
     left: 0; /* Ensure header is aligned to the left */
     z-index: 2; /* Ensure the header is above other elements */
 }
+
 .site-logo {
     width: 70px; /* Adjust width as needed */
     height: auto;
     position: absolute;
     left: -50px;
 }
+
 .search-box {
     display: flex;
     align-items: center;
@@ -35,6 +39,7 @@
     margin-left: 70px; /* Adjust to accommodate logo width */
     position: relative;
 }
+
 .search-box input {
     font-family: Georgia, serif;
     font-size: 15px;
@@ -44,10 +49,12 @@
     border-radius: 5px;
     width: 300px; /* Adjust width as needed */
 }
+
 .auth-buttons {
     display: flex;
     gap: 10px;
 }
+
 .auth-buttons button {
     font-family: Georgia, serif;
     font-size: 15px;
@@ -63,6 +70,7 @@
 .auth-buttons button:hover {
     background-color: #f0f0f0;
 }
+
 .panel-header {
     display: flex;
     flex-direction: column;
@@ -93,7 +101,6 @@
     position: absolute;
     height: 50px;
     width: 50px;
-    top: 59%; /* Adjust to move the button lower */
     top: 52%; /* Adjust to move the button lower */
     left: 84%; /* Adjust to move the button more to the left */
     font-size: 40px;
@@ -107,6 +114,7 @@
     transition: transform 0.3s, background-color 0.3s;
     box-shadow: none; /* Ensure no shadow is present */
 }
+
 .add-ingredient-button:hover {
     background-color: rgba(255, 255, 255, 0.2); /* Slightly lighter background on hover */
     transform: scale(1.3); /* Pop up effect */
@@ -147,18 +155,22 @@
     justify-content: space-between;
     z-index: 1000;
 }
+
 .add-section, .edit-section, .inventory-list {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
 .add-section select, .edit-section ul, .inventory-list ul {
     margin-bottom: 10px;
 }
+
 .inventory-list ul {
     list-style: none;
     padding: 0;
 }
+
 .inventory-list li {
     display: flex;
     justify-content: space-between;
@@ -168,9 +180,11 @@
     border-radius: 5px;
     margin-bottom: 5px;
 }
+
 .search-results {
     margin-top: 20px;
 }
+
 .search-results div {
     display: inline-block;
     margin: 10px;
@@ -225,6 +239,7 @@
     overflow: hidden; 
     transition: background-color 0.3s, color 0.3s, transform 0.3s;
 }
+
 .recipe-card img {
     width: 100%;
     height: auto; /* Maintain aspect ratio */
@@ -232,27 +247,33 @@
     object-fit: cover; /* Maintain aspect ratio and cover container */
     border-radius: 5px;
 }
+
 .recipe-card:hover {
     background-color: #f0f0f0; 
     transform: scale(1.05);
 }
+
 .meal-details {
     margin-top: 20px;
 }
+
 .meal-details img {
     width: 100px;
     height: 100px;
     object-fit: cover;
     border-radius: 5px;
 }
+
 .video-container {
     margin-top: 20px;
 }
+
 .video-container iframe {
     width: 100%;
     height: 315px;
     border-radius: 8px;
 }
+
 /* Styles for the login and signup panel */
 .login-panel, .signup-panel {
     position: absolute;
@@ -266,10 +287,12 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000;
 }
+
 .login-panel .panel-header, .signup-panel .panel-header {
     display: flex;
     justify-content: center; /* Center the button horizontally */
 }
+
 .login-panel .panel-header button,
 .signup-panel .panel-header button,
 .signup-confirm-button {
@@ -287,7 +310,7 @@
 .signup-panel .panel-header button:hover,
 .signup-confirm-button:hover {
     background-color: darkred; /* Darker red on hover */
-     transform: scale(1.05); /* Slightly larger on hover */
+    transform: scale(1.05); /* Slightly larger on hover */
 }
 
 .login-panel form, .signup-panel form {
@@ -295,26 +318,32 @@
     flex-direction: column;
     align-items: center;
 }
+
 .login-field, .signup-field {
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-bottom: 15px;
 }
+
 .login-field label, .signup-field label {
     margin-right: 10px;
 }
+
 .login-field input, .signup-field input {
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+
+/* Login links styles */
 .login-links {
     display: flex;
     justify-content: space-between;
     width: 100%;
     margin-bottom: 15px;
 }
+
 .link-button {
     background: none;
     border: none;
@@ -322,12 +351,15 @@
     text-decoration: underline;
     cursor: pointer;
 }
+
+/* Google login button styles */
 .login-google {
     display: flex;
     justify-content: center;
     width: 100%;
     margin-bottom: 15px;
 }
+
 .login-google button {
     background-color: #4285F4;
     color: white;
@@ -336,9 +368,12 @@
     padding: 10px;
     cursor: pointer;
 }
+
 .login-google button:hover {
     background-color: #357ae8;
 }
+
+/* Confirm button styles */
 .login-confirm-button, .signup-confirm-button {
     padding: 10px 20px;
     border: none;
@@ -347,9 +382,12 @@
     color: white;
     cursor: pointer;
 }
+
 .login-confirm-button:hover, .signup-confirm-button:hover {
     background-color: #7a7a7a;
 }
+
+/* Popup styles */
 .popup {
     position: fixed;
     top: 50%;
@@ -366,6 +404,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000;
 }
+
 .popup .exit-button {
     position: absolute;
     top: 10px;
@@ -382,6 +421,7 @@
     background-color: #bbb;
 }
 
+/* Delete button styles */
 .delete-button {
     background-color: #f44336; /* Red background for delete */
     color: white; /* White text color */
@@ -396,16 +436,21 @@
     background-color: #d32f2f; /* Darker red on hover */
 }
 
-.search-results ul {
-    list-style: none;
-    padding: 0;
+/* Remove outline from focused buttons and inputs */
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
 }
 
-.search-results li {
-    margin-bottom: 10px;
-}
-
-.meal-details ul {
-    list-style: none;
-    padding: 0;
+/* Apply specific styles to focus states if needed */
+.auth-buttons button:focus,
+.panel-header button:focus,
+.add-ingredient-button:focus,
+.generate-recipe-button:focus,
+.login-panel button:focus,
+.signup-panel button:focus,
+.delete-button:focus {
+    outline: none;
 }
