@@ -25,10 +25,11 @@
 }
 
 .site-logo {
-    width: 70px; /* Adjust width as needed */
+    width: 100px; /* Adjust width as needed */
     height: auto;
-    position: absolute;
-    left: -50px;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 .search-box {
@@ -47,7 +48,6 @@
     padding: 2px 5px;
     border: 2px solid #ccc;
     border-radius: 5px;
-    width: 300px; /* Adjust width as needed */
 }
 
 .auth-buttons {
@@ -348,14 +348,16 @@
 .recipe-dropdown {
     position: absolute;
     top: 100%; /* Position below the search box */
-    left: 0;
-    width: 100%;
+    margin-left: 130px;
+    paddingLeft: '10px';
+    marginRight: '5px';
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 5px;
     max-height: 200px; /* Set a maximum height and enable scrolling */
     overflow-y: auto;
     z-index: 1000;
+    box-sizing: border-box; /* Ensure width includes padding and border */
 }
 
 .recipe-dropdown ul {
@@ -367,6 +369,7 @@
 .recipe-dropdown li {
     padding: 10px;
     cursor: pointer;
+    width: 230px;
 }
 
 .recipe-dropdown li:hover {
@@ -446,7 +449,6 @@
 .login-panel .panel-header button,
 .signup-panel .panel-header button,
 .signup-confirm-button {
-    width: 100px; /* Adjust width as needed */
     padding: 5px 5px; /* Matching padding */
     border: none; /* No border */
     border-radius: 5px; /* Border radius */
@@ -461,6 +463,7 @@
 .signup-confirm-button:hover {
     background-color: darkred; /* Darker red on hover */
     transform: scale(1.05); /* Slightly larger on hover */
+    z-index: 1000;
 }
 
 .login-panel form, .signup-panel form {

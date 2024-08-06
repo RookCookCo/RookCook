@@ -328,7 +328,7 @@ function App() {
                 setEthnicFilter={setEthnicFilter}
             />
             {/* Button to add new ingredient */}
-            <button className="add-ingredient-button" onClick={() => { setShowPanel(true); setPanelMode('add'); }}>+</button>
+            <button className="add-ingredient-button" title="Add Ingredients" onClick={() => { setShowPanel(true); setPanelMode('add'); }}>+</button>
             {/* Ingredient panel to manage ingredients */}
             {showPanel && (
                 <IngredientPanel
@@ -376,7 +376,7 @@ function App() {
             )}
             {/* Button to generate recipes */}
             <button className="generate-recipe-button" onClick={generateRecipe}>
-                <img src={RecipeBookImage} alt="Generate Recipes" style={{ width: '100%', height: '100%' }} />
+                <img src={RecipeBookImage} alt="Generate Recipes" title="Generate Recipes" style={{ width: '100%', height: '100%' }} />
             </button>
             {/* Popup for displaying recipe details */}
             {showPopup && (
@@ -389,7 +389,7 @@ function App() {
                 />
             )}
             {/* Discussion Forum button */}
-            <button className="discussion-forum-button" onClick={toggleDiscussionForum}>
+            <button className="discussion-forum-button" title="Discussion Forum" onClick={toggleDiscussionForum}>
                 Discussion Forum
             </button>
             {/* Popup for discussion forum */}
