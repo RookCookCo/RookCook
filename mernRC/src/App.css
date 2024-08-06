@@ -443,10 +443,6 @@
     list-style: none;
     padding: 0;
 }
-enable scrolling */
-    overflow-y: auto;
-    z-index: 1000;
-}
 
 .recipe-dropdown ul {
     list-style: none;

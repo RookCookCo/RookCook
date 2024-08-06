@@ -26,30 +26,6 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
             setReplyParentId(null);
         }
     };
-    const renderReplies = (replies, parentId = null) => {
-        return replies
-        .filter(reply => reply.parentId === parentId)
-        .map((reply) => (
-            <div key={reply.id} className="reply">
-                <div className="reply-content">
-                    <p className={reply.deleted ? 'deleted-reply' : ''}>
-                        {reply.deleted ? 'This reply has been deleted' : reply.text}
-                    </p>
-                </div>
-                <div className="reply-buttons">
-                    {!reply.deleted && (
-                        <>
-                            <button className="trash-button" onClick={() => onDeleteReply(topic.id, reply.id)}>
-                                <i className="fas fa-trash"></i>
-                            </button>
-                            <button className="reply-button" onClick={() => setReplyParentId(reply.id)}>Reply</button>
-                        </>
-                    )}
-                </div>
-                {renderReplies(replies, reply.id)}
-            </div>
-        ));
-    };
 
     const renderReplies = (replies, parentId = null) => {
         return replies
@@ -231,4 +207,5 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
         </div>
     );
 };
+
 export default DiscussionForum;
