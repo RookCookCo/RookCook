@@ -1,4 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
+// Utility function to fetch data from an API endpoint
+const fetchFromApi = async (url) => {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+};
 
 const RecipePopup = ({
     setShowPopup,
@@ -11,8 +18,32 @@ const RecipePopup = ({
     const [hover, setHover] = useState(0);
     const [reviews, setReviews] = useState([]);
     const [reviewText, setReviewText] = useState('');
+    const [filtersVisible, setFiltersVisible] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [areas, setAreas] = useState([]);
+    const [ingredients, setIngredients] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedArea, setSelectedArea] = useState('');
+    const [selectedIngredient, setSelectedIngredient] = useState('');
+    const [filteredResults, setFilteredResults] = useState([]); // State for filtered search results
     const reviewsRef = useRef(null);
 
+    // Fetch filter data when the component mounts
+    useEffect(() => {
+        const fetchFilterData = async () => {
+            const categoriesData = await fetchFromApi('https://www.themealdb.com/api/json/v2/9973533/categories.php');
+            const areasData = await fetchFromApi('https://www.themealdb.com/api/json/v2/9973533/list.php?a=list');
+            const ingredientsData = await fetchFromApi('https://www.themealdb.com/api/json/v2/9973533/list.php?i=list');
+            
+            setCategories(categoriesData.categories);
+            setAreas(areasData.meals);
+            setIngredients(ingredientsData.meals);
+        };
+
+        fetchFilterData();
+    }, []);
+
+    // Handle adding a review
     const handleAddReview = () => {
         if (reviewText.trim() !== '') {
             setReviews([...reviews, { rating, text: reviewText }]);
@@ -22,14 +53,98 @@ const RecipePopup = ({
         }
     };
 
+    // Scroll to reviews section
     const scrollToReviews = () => {
         reviewsRef.current.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // Fetch meals based on selected filters
+    useEffect(() => {
+        if (selectedCategory || selectedArea || selectedIngredient) {
+            let url = 'https://www.themealdb.com/api/json/v2/9973533/filter.php?';
+
+            if (selectedCategory) url += `c=${selectedCategory}&`;
+            if (selectedArea) url += `a=${selectedArea}&`;
+            if (selectedIngredient) url += `i=${selectedIngredient}&`;
+
+            fetchFromApi(url).then(data => {
+                setFilteredResults(data.meals || []); // Update filtered results
+            });
+        }
+    }, [selectedCategory, selectedArea, selectedIngredient]);
+
+    // Function to reset filters
+    const resetFilters = () => {
+        setSelectedCategory('');
+        setSelectedArea('');
+        setSelectedIngredient('');
+        setFilteredResults([]); // Clear filtered results
     };
 
     return (
         <div className="popup">
             <button className="exit-button" onClick={() => setShowPopup(false)}>X</button>
             <h2>Recipes</h2>
+            <button 
+                className="show-filters-button" 
+                onClick={() => setFiltersVisible(!filtersVisible)}
+                style={{ marginBottom: '20px', cursor: 'pointer', backgroundColor: '#007bff', color: '#fff', border: 'none', padding: '10px', borderRadius: '5px' }}
+            >
+                {filtersVisible ? 'Hide Filters' : 'Show Filters'}
+            </button>
+            {filtersVisible && (
+                <div className="filters-section" style={{ marginBottom: '20px' }}>
+                    <h4>Filters</h4>
+                    <div>
+                        <select 
+                            value={selectedCategory} 
+                            onChange={(e) => setSelectedCategory(e.target.value)}
+                            style={{ marginBottom: '10px', padding: '5px', borderRadius: '5px', border: '1px solid #ddd' }}
+                        >
+                            <option value="">Select a category</option>
+                            {categories.map((category) => (
+                                <option key={category.strCategory} value={category.strCategory}>
+                                    {category.strCategory}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <select 
+                            value={selectedArea} 
+                            onChange={(e) => setSelectedArea(e.target.value)}
+                            style={{ marginBottom: '10px', padding: '5px', borderRadius: '5px', border: '1px solid #ddd' }}
+                        >
+                            <option value="">Select an area</option>
+                            {areas.map((area) => (
+                                <option key={area.strArea} value={area.strArea}>
+                                    {area.strArea}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <select 
+                            value={selectedIngredient} 
+                            onChange={(e) => setSelectedIngredient(e.target.value)}
+                            style={{ marginBottom: '10px', padding: '5px', borderRadius: '5px', border: '1px solid #ddd' }}
+                        >
+                            <option value="">Select an ingredient</option>
+                            {ingredients.map((ingredient) => (
+                                <option key={ingredient.strIngredient} value={ingredient.strIngredient}>
+                                    {ingredient.strIngredient}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <button 
+                        onClick={resetFilters}
+                        style={{ marginTop: '10px', cursor: 'pointer', backgroundColor: '#dc3545', color: '#fff', border: 'none', padding: '10px', borderRadius: '5px' }}
+                    >
+                        Reset Filters
+                    </button>
+                </div>
+            )}
             <div className="popup-content">
                 {selectedMealDetails ? (
                     <div className="meal-details-popup">
@@ -144,7 +259,17 @@ const RecipePopup = ({
                     </div>
                 ) : (
                     <div className="search-results">
-                        {popupSearchResults.length > 0 && (
+                        {filteredResults.length > 0 && (
+                            <div className="recipe-grid">
+                                {filteredResults.map((meal) => (
+                                    <div key={meal.idMeal} className="recipe-card" onClick={() => handlePopupMealClick(meal.idMeal)}>
+                                        <h3>{meal.strMeal}</h3>
+                                        <img src={meal.strMealThumb} alt={meal.strMeal} />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        {filteredResults.length === 0 && popupSearchResults.length > 0 && (
                             <div className="recipe-grid">
                                 {popupSearchResults.map((meal) => (
                                     <div key={meal.idMeal} className="recipe-card" onClick={() => handlePopupMealClick(meal.idMeal)}>
