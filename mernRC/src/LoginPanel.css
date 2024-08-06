@@ -1,0 +1,112 @@
+/* Styles for the login and signup panel */
+.login-panel, .signup-panel {
+    position: absolute;
+    top: 30%; /* Adjust as needed */
+    left: 30%; /* Adjust as needed */
+    width: 40%; /* Adjust as needed */
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.login-panel .panel-header, .signup-panel .panel-header {
+    display: flex;
+    justify-content: left; /* Center the button horizontally */
+}
+
+.login-panel .panel-header button,
+.signup-panel .panel-header button,
+.signup-confirm-button {
+    padding: 5px 5px; /* Matching padding */
+    border: none; /* No border */
+    border-radius: 5px; /* Border radius */
+    background-color: red; /* Change background color to red */
+    color: white; /* Text color */
+    cursor: pointer; /* Pointer cursor */
+    transition: background-color 0.3s ease, transform 0.3s; /* Smooth transition */
+}
+
+.login-panel .panel-header button:hover,
+.signup-panel .panel-header button:hover,
+.signup-confirm-button:hover {
+    background-color: darkred; /* Darker red on hover */
+    transform: scale(1.05); /* Slightly larger on hover */
+    z-index: 1000;
+}
+
+.login-panel form, .signup-panel form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-field, .signup-field {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.login-field label, .signup-field label {
+    margin-right: 10px;
+}
+
+.login-field input, .signup-field input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Login links styles */
+.login-links {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.link-button {
+    background: none;
+    border: none;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Google login button styles */
+.login-google {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.login-google button {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.login-google button:hover {
+    background-color: #357ae8;
+}
+
+/* Confirm button styles */
+.login-confirm-button, .signup-confirm-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #8e8e8e;
+    color: white;
+    cursor: pointer;
+}
+
+.login-confirm-button:hover, .signup-confirm-button:hover {
+    background-color: #7a7a7a;
+}
