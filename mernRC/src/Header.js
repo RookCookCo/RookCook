@@ -9,16 +9,12 @@ const Header = ({
     handleLogout,
     setShowLogin,
     setShowSignUp,
-    handlePopupMealClick,
-    setDietaryFilter,
-    setEthnicFilter
+    handlePopupMealClick
 }) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [filteredSearchResults, setFilteredSearchResults] = useState([]);
     const [categories, setCategories] = useState([]);
     const [areas, setAreas] = useState([]);
-    const [dietaryFilter, setDietaryFilterLocal] = useState('');
-    const [ethnicFilter, setEthnicFilterLocal] = useState('');
 
     useEffect(() => {
         // Fetch categories
@@ -33,29 +29,15 @@ const Header = ({
     }, []);
 
     useEffect(() => {
-        // Build URL with filters
-        let url = 'https://www.themealdb.com/api/json/v2/9973533/filter.php?';
-
-        if (dietaryFilter) {
-            url += `c=${dietaryFilter}&`;
-        }
-        if (ethnicFilter) {
-            url += `a=${ethnicFilter}&`;
-        }
+        // Build URL for search
+        const url = `https://www.themealdb.com/api/json/v2/9973533/search.php?s=${searchQuery}`;
 
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                // Filter recipes based on search query
-                let filteredResults = data.meals || [];
-                if (searchQuery) {
-                    filteredResults = filteredResults.filter(meal =>
-                        meal.strMeal.toLowerCase().includes(searchQuery.toLowerCase())
-                    );
-                }
-                setFilteredSearchResults(filteredResults);
+                setFilteredSearchResults(data.meals || []);
             });
-    }, [dietaryFilter, ethnicFilter, searchQuery]);
+    }, [searchQuery]);
 
     const handleInputChange = (e) => {
         setSearchQuery(e.target.value);
@@ -91,28 +73,6 @@ const Header = ({
                         onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
                     />
-                    <select onChange={(e) => {
-                        setDietaryFilterLocal(e.target.value);
-                        setDietaryFilter(e.target.value);
-                    }}>
-                        <option value="">All Diets</option>
-                        {categories.map(category => (
-                            <option key={category.strCategory} value={category.strCategory}>
-                                {category.strCategory}
-                            </option>
-                        ))}
-                    </select>
-                    <select onChange={(e) => {
-                        setEthnicFilterLocal(e.target.value);
-                        setEthnicFilter(e.target.value);
-                    }}>
-                        <option value="">All Cuisines</option>
-                        {areas.map(area => (
-                            <option key={area.strArea} value={area.strArea}>
-                                {area.strArea}
-                            </option>
-                        ))}
-                    </select>
                     <button type="submit">Search</button>
                 </form>
                 {showDropdown && (
