@@ -103,7 +103,6 @@ const Header = ({
             {user ? (
                 <>
                     <span>{user.displayName}</span>
-                    <button onClick={handleLogout} title="Logout">Logout</button>
                 </>
             ) : (
                 <>

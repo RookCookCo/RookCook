@@ -11,6 +11,7 @@ import IngredientPanel from './IngredientPanel';
 import LoginPanel from './LoginPanel';
 import SignUpPanel from './SignUpPanel';
 import RecipePopup from './RecipePopup';
+import UserProfile from './UserProfile';
 import DiscussionForum from './DiscussionForum';
 import { auth, provider, signInWithPopup, signOut } from './firebase';
 import axios from 'axios';
@@ -316,7 +317,7 @@ function App() {
     };
 
     return (
-        <div className="App" style={appStyle}>
+        <div className="App" style={{...appStyle, position: 'relative' }}>
             {/* Header component for top section including search and user actions */}
             <Header
                 user={user}
@@ -332,6 +333,7 @@ function App() {
                 setDietaryFilter={setDietaryFilter}
                 setEthnicFilter={setEthnicFilter}
             />
+            <UserProfile user = {user} handleLogout = {handleLogout} />
             {/* Button to add new ingredient */}
             <button className="add-ingredient-button" title="Add Ingredients" onClick={() => { setShowPanel(true); setPanelMode('add'); }}>+</button>
             {/* Ingredient panel to manage ingredients */}
