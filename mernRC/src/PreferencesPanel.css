@@ -1,0 +1,148 @@
+.preferences-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 530px;
+    height: 525px;
+    max-width: 90%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+}
+
+.panel-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+}
+
+.exit-button {
+    width: 30px;
+    height: 30px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.3s;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
+
+.exit-button:hover {
+    background-color: #c82333;
+    transform: scale(1.1);
+}
+
+.panel-header h3 {
+    margin: 0;
+    font-size: 18px;
+    padding-left: 60px;
+}
+
+.preferences-search {
+    position: relative;
+    padding: 15px;
+}
+
+.preferences-search-input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.preferences-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px; /* Consistent with the panel's border radius */
+    max-height: 400px; /* Set a fixed height to enable scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    z-index: 1000;
+    box-sizing: border-box;
+    margin-top: 5px;
+    padding: 5px 0; /* Add padding to the top and bottom */
+    list-style: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+}
+
+.preferences-dropdown::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+.preferences-dropdown::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color of the scrollbar thumb */
+    border-radius: 4px;
+}
+
+.preferences-dropdown::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Darker color on hover */
+}
+
+.preferences-dropdown li {
+    padding: 10px 15px; /* Padding consistent with the ingredient panel list items */
+    cursor: pointer;
+    border-bottom: 1px solid #ddd; /* Divider between items */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+}
+
+.preferences-dropdown li:hover {
+    background-color: #f9f9f9; /* Light background on hover */
+    color: #333; /* Change text color on hover if desired */
+}
+
+.selected-preferences {
+    padding: 15px;
+    max-height: 300px; /* Set a maximum height for the scrollable area */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.selected-preferences h3 {
+    margin-top: 0;
+}
+
+.selected-preferences ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.selected-preferences li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.selected-preferences button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.selected-preferences button:hover {
+    background-color: #c82333;
+}

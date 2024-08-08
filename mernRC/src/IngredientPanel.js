@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PreferencesPanel from './PreferencesPanel'; // Import the PreferencesPanel component
 
 const IngredientPanel = ({
     panelMode,
@@ -15,6 +16,8 @@ const IngredientPanel = ({
     inventory,
     handleDeleteIngredient
 }) => {
+    const [showPreferencesPanel, setShowPreferencesPanel] = useState(false);
+
     console.log('Filtered Ingredients:', filteredIngredients); // Debugging log
     console.log('Show Ingredient List:', showIngredientList); // Debugging log
 
@@ -35,11 +38,54 @@ const IngredientPanel = ({
                 <div>
                     <button className="exit-button" onClick={() => setShowPanel(false)}>X</button>
                 </div>
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                     {panelMode === 'edit' ? (
-                        <button onClick={() => setPanelMode('add')}>Add</button>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                            <button
+                                style={{
+                                    width: '100px',
+                                    height: '40px',
+                                    fontSize: '16px',
+                                    backgroundColor: '#007bff', // Blue background
+                                    color: '#fff', // White text
+                                    border: 'none', // Remove default border
+                                    borderRadius: '4px', // Rounded corners
+                                    cursor: 'pointer', // Pointer cursor
+                                    outline: 'none' // Remove outline
+                                }}
+                                onClick={() => setPanelMode('add')}
+                            >
+                                Add
+                            </button>
+                            <button
+                                className="preferences-button"
+                                style={{
+                                    width: '100px',
+                                    height: '40px',
+                                    fontSize: '16px',
+                                }}
+                                onClick={() => setShowPreferencesPanel(true)}
+                            >
+                                Preferences
+                            </button>
+                        </div>
                     ) : (
-                        <button onClick={() => setPanelMode('edit')}>Edit</button>
+                        <button
+                            style={{
+                                width: '100px',
+                                height: '40px',
+                                fontSize: '16px',
+                                backgroundColor: '#007bff', // Blue background
+                                color: '#fff', // White text
+                                border: 'none', // Remove default border
+                                borderRadius: '4px', // Rounded corners
+                                cursor: 'pointer', // Pointer cursor
+                                outline: 'none' // Remove outline
+                            }}
+                            onClick={() => setPanelMode('edit')}
+                        >
+                            Edit
+                        </button>
                     )}
                 </div>
             </div>
@@ -195,6 +241,9 @@ const IngredientPanel = ({
                         </div>
                     )}
                 </div>
+            )}
+            {showPreferencesPanel && (
+                <PreferencesPanel setShowPreferencesPanel={setShowPreferencesPanel} />
             )}
         </div>
     );
