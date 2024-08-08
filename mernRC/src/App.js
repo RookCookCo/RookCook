@@ -95,18 +95,111 @@ function App() {
         height: '97vh',
     };
 
+    // handle for communiate with the backend inventory to add
+    // argument: string, the element that need to be added into backend inventory
+    const handleAddItemToInventory = (item) => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+
+        if (!token) {
+            console.error('User not authenticated');
+            return;
+        }
+
+        // Send the item to the backend to add it to the inventory
+        axios.post('http://localhost:5001/inventory', {
+            item: item // Pass the item as part of the request body
+        }, {
+            headers: {
+                'x-auth-token': token // Include the token in the request headers
+            }
+        })
+        .then(response => {
+            console.log('Item added successfully:', response.data);
+        })
+        .catch(error => {
+            console.error('Error adding item to inventory:', error);
+        });
+    };
+
     // Add ingredient to inventory
     const handleAddIngredient = (ingredient) => {
         if (ingredient && !inventory.includes(ingredient)) { // Check if ingredient is valid and not already in inventory
             setInventory([...inventory, ingredient]); // Add to inventory
+            handleAddItemToInventory(ingredient);
             setSelectedIngredient(''); // Clear selected ingredient
             setShowIngredientList(false); // Hide ingredient list
         }
     };
 
+    // handle for communiate with the backend inventory to delete
+    // argument: string, the element that need to be added into backend inventory
+    const handleDeleteItemFromInventory = (item) => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+
+    if (!token) {
+        console.error('User not authenticated');
+        return;
+    }
+
+    // Send the delete request to the backend to remove the item from the inventory
+    axios.delete('http://localhost:5001/inventory', {
+        headers: {
+            'x-auth-token': token // Include the token in the request headers
+        },
+        data: {
+            item: item // Pass the item as part of the request body
+        }
+    })
+    .then(response => {
+        console.log('Item deleted successfully:', response.data);
+    })
+    .catch(error => {
+        console.error('Error deleting item from inventory:', error);
+    });
+};
+
     // Remove ingredient from inventory
     const handleDeleteIngredient = (ingredient) => {
         setInventory(inventory.filter(item => item !== ingredient)); // Remove from inventory
+        handleDeleteItemFromInventory(ingredient);
+    };
+
+    // handle to load inventory from backend
+
+    const loadInventoryFromBackend = async () => {
+        try {
+            console.log('x-auth-token', localStorage.getItem('token'));
+            // add a empty things
+            await axios.post('http://localhost:5001/inventory', {}, {
+                headers: { 'x-auth-token': localStorage.getItem('token') }
+            });
+            // Fetch the inventory from your backend with proper error handling
+            const response = await axios.get('http://localhost:5001/inventory', {
+                headers: {
+                    'x-auth-token': localStorage.getItem('token') // Pass token for authentication
+                }
+            });
+
+            if (response.status !== 200) {
+                throw new Error(Failed to load inventory, status code: ${response.status});
+            }
+            console.log('respond from backend',response);
+
+            const inventoryData = response.data;
+
+            if (!Array.isArray(inventoryData.items)) {
+                throw new Error('Invalid inventory data format received');
+            }
+
+            // Safely set the inventory state
+            setInventory(inventoryData.items); 
+            console.log('Inventory loaded successfully:', inventoryData.items);
+            console.log('element in:', inventory);// might takes time
+
+        } catch (error) {
+            console.error('Error loading inventory:', error);
+            // Optionally handle the error more gracefully, like displaying a message to the user
+        }
     };
 
     // Handle recipe search form submission
@@ -191,11 +284,17 @@ function App() {
         try {
             const result = await signInWithPopup(auth, provider); // Sign in with Google
             setUser(result.user); // Set user
+            console.log('User Info:', result.user); // Debugging: Log user info
+            //Call the backend handler; no need to pass user since it's in state
+            await handleGoogleLoginWithBackend(result.user);
+            //Load the inventory from the backend
+            await loadInventoryFromBackend(); // Directly call your inventory loading function
+
         } catch (error) { // Handle sign-in error
             console.error('Error during sign-in:', error);
         }
     };
-
+    
     // Handle logout
     const handleLogout = async () => {
         try {
@@ -206,6 +305,49 @@ function App() {
         }
     };
 
+    // Handle Google login Backend
+    const handleGoogleLoginWithBackend = async (Tuser) => {
+        try {
+            if (!Tuser) {
+                throw new Error('No user is logged in with Google.');}
+            // Extract necessary information from the user object
+            const username = Tuser.displayName;// use name
+            const email = Tuser.email;// email
+            const password = Tuser.uid;  // Using uid as the password for backend
+
+            // Step 1: Try to register the user with the backend
+            try {
+                await axios.post('http://localhost:5001/register', {
+                    username,
+                    email,
+                    password,
+                });
+                console.log('User registered successfully.');
+            } catch (registerError) {
+                if (registerError.response && registerError.response.status === 400) {
+                    // User already exists, proceed to login
+                    console.log('User already exists, logging in...');
+                } else {
+                    throw new Error('Registration failed.');
+                }
+            }
+            // Step 2: Log the user in with the backend
+            const loginResponse = await axios.post('http://localhost:5001/login', {
+                username,
+                password,
+            });
+
+            // Store JWT token received from backend in localStorage
+            localStorage.setItem('token', loginResponse.data.token);
+
+            // Optionally update your application's state with the user info
+            //setUser(user);
+            console.log('User logged in successfully:');
+
+        } catch (error) {
+            console.error('Error during backend communication:', error);
+        }
+    };
     // Generate recipe based on inventory ingredients
     const generateRecipe = async () => {
         try {
