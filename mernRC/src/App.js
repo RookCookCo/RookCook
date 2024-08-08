@@ -355,36 +355,29 @@ function App() {
             let ingredientList = inventory.join(','); // Join inventory ingredients
             let response = await axios.get(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${ingredientList}`);
             let data = response.data.meals || []; // Fetch recipes based on ingredients
-
+    
             if (data.length === 0) { // If no recipes found
                 const userConfirmed = window.confirm("No recipes found with all ingredients. Would you like to see less specific recipes?");
                 if (userConfirmed) { // If user agrees to see less specific recipes
                     let foundRecipes = new Map();
-
-                    for (let i = inventory.length; i > 0; i--) { // Loop through all combinations of inventory ingredients
-                        let combinations = getCombinations(inventory, i);
-                        for (let combination of combinations) {
-                            ingredientList = combination.join(',');
-                            response = await axios.get(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${ingredientList}`);
-                            data = response.data.meals || [];
-
-                            data.forEach(meal => {
-                                if (!foundRecipes.has(meal.idMeal)) { // Add recipe if not already in found recipes
-                                    foundRecipes.set(meal.idMeal, meal);
-                                }
-                            });
-
-                            if (foundRecipes.size > 0) break; // Break if recipes found
-                        }
-                        if (foundRecipes.size > 0) break; // Break if recipes found
+    
+                    for (let ingredient of inventory) { // Loop through each ingredient in inventory
+                        response = await axios.get(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`);
+                        data = response.data.meals || [];
+    
+                        data.forEach(meal => {
+                            if (!foundRecipes.has(meal.idMeal)) { // Add recipe if not already in found recipes
+                                foundRecipes.set(meal.idMeal, meal);
+                            }
+                        });
                     }
-
+    
                     setPopupSearchResults(Array.from(foundRecipes.values())); // Set popup search results
                 }
             } else {
                 setPopupSearchResults(data); // Set popup search results
             }
-
+    
             setShowPopup(true); // Show popup
         } catch (error) { // Handle error
             console.error('Error generating recipe:', error);
