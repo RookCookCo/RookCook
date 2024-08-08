@@ -102,7 +102,6 @@ const Header = ({
         <div className="auth-buttons">
             {user ? (
                 <>
-                    <span>{user.displayName}</span>
                 </>
             ) : (
                 <>
