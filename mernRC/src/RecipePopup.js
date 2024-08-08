@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 
 // Utility function to fetch data from an API endpoint
 const fetchFromApi = async (url) => {
@@ -52,6 +52,12 @@ const RecipePopup = ({
             setHover(0);
         }
     };
+
+    const averageRating = useMemo(() => {
+    if (reviews.length === 0) return 0;
+        const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+        return parseFloat((totalRating / reviews.length).toFixed(1));
+    }, [reviews]);
 
     // Scroll to reviews section
     const scrollToReviews = () => {
@@ -197,24 +203,52 @@ const RecipePopup = ({
                             <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                                 {[...Array(5)].map((star, index) => {
                                     index += 1;
+                                    const fullStar = '\u2605'; // Unicode for solid star
+                                    const halfStar = '\u272F'; // Unicode for half star
+
+                                    // Determine whether to display a full, half, or empty star
+                                    let starColor = "#e4e5e9"; // Default color for empty star
+                                    let isHalfStar = false;
+
+                                    if (index <= Math.floor(averageRating)) {
+                                        starColor = "#ffc107"; // Full star color
+                                    } else if (index === Math.ceil(averageRating) && averageRating % 1 !== 0) {
+                                        starColor = "#e4e5e9"; // Half star color
+                                        isHalfStar = true;
+                                    }
+
                                     return (
-                                        <button
-                                            type="button"
+                                        <span
                                             key={index}
-                                            className={index <= (hover || rating) ? "on" : "off"}
-                                            onClick={() => setRating(index)}
-                                            onMouseEnter={() => setHover(index)}
-                                            onMouseLeave={() => setHover(rating)}
                                             style={{
-                                                backgroundColor: 'transparent',
-                                                border: 'none',
-                                                cursor: 'pointer',
                                                 fontSize: '1.5rem',
-                                                color: index <= (hover || rating) ? "#ffc107" : "#e4e5e9",
+                                                color: starColor,
+                                                position: 'relative',
+                                                display: 'inline-block',
                                             }}
                                         >
-                                            <span className="star">&#9733;</span>
-                                        </button>
+                                            {/* Full star */}
+                                            <span>
+                                                {fullStar}
+                                            </span>
+                                            {/* Half star */}
+                                            {isHalfStar && (
+                                                <span
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        left: 0,
+                                                        width: '50%',
+                                                        overflow: 'hidden',
+                                                        color: '#ffc107',
+                                                        fontSize: '1.5rem',
+                                                        pointerEvents: 'none',
+                                                    }}
+                                                >
+                                                    {fullStar}
+                                                </span>
+                                            )}
+                                        </span>
                                     );
                                 })}
                                 <span
@@ -286,6 +320,32 @@ const RecipePopup = ({
                             ) : (
                                 <p>No reviews yet.</p>
                             )}
+                            <div style={{ display: 'flex', alignItems: 'marginLeft', justifyContent: 'marginLeft' }}>
+                                <div style={{ display: 'flex', alignItems: 'marginLeft', gap: '10px' }}>
+                                    {[...Array(5)].map((star, index) => {
+                                        index += 1;
+                                        return (
+                                            <button
+                                                type="button"
+                                                key={index}
+                                                className={index <= (hover || rating) ? "on" : "off"}
+                                                onClick={() => setRating(index)}
+                                                onMouseEnter={() => setHover(index)}
+                                                onMouseLeave={() => setHover(rating)}
+                                                style={{
+                                                    backgroundColor: 'transparent',
+                                                    border: 'none',
+                                                    cursor: 'pointer',
+                                                    fontSize: '1.5rem',
+                                                    color: index <= (hover || rating) ? "#ffc107" : "#e4e5e9",
+                                                }}
+                                            >
+                                                <span className="star">&#9733;</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
                             <textarea
                                 value={reviewText}
                                 onChange={(e) => setReviewText(e.target.value)}
