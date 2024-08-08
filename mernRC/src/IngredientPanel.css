@@ -43,8 +43,7 @@
 .ingredient-panel {
     position: absolute;
     top: 20%; /* Adjust this value to position the panel lower */
-    left: 20%;
-    right: 15%;
+    left: 10%;
     bottom: 20%;
     background-color: white;
     border: 2px solid #ccc;
