@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import background from './background.png';
 import './App.css';
+import './Header.css';
+import './IngredientPanel.css';
+import './LoginPanel.css';
+import './Popup.css';
+import './DiscussionForum.css';
 import Header from './Header';
 import IngredientPanel from './IngredientPanel';
 import LoginPanel from './LoginPanel';
@@ -10,6 +15,7 @@ import DiscussionForum from './DiscussionForum';
 import { auth, provider, signInWithPopup, signOut } from './firebase';
 import axios from 'axios';
 import RecipeBookImage from './RecipeBook.png';
+import PhoneImage from './phone.png';
 
 function App() {
     // State variables for UI panels, user inputs, and data
@@ -327,7 +333,7 @@ function App() {
                 setEthnicFilter={setEthnicFilter}
             />
             {/* Button to add new ingredient */}
-            <button className="add-ingredient-button" onClick={() => { setShowPanel(true); setPanelMode('add'); }}>+</button>
+            <button className="add-ingredient-button" title="Add Ingredients" onClick={() => { setShowPanel(true); setPanelMode('add'); }}>+</button>
             {/* Ingredient panel to manage ingredients */}
             {showPanel && (
                 <IngredientPanel
@@ -375,7 +381,7 @@ function App() {
             )}
             {/* Button to generate recipes */}
             <button className="generate-recipe-button" onClick={generateRecipe}>
-                <img src={RecipeBookImage} alt="Generate Recipes" style={{ width: '100%', height: '100%' }} />
+                <img src={RecipeBookImage} alt="Generate Recipes" title="Generate Recipes" style={{ width: '100%', height: '100%' }} />
             </button>
             {/* Popup for displaying recipe details */}
             {showPopup && (
@@ -388,8 +394,8 @@ function App() {
                 />
             )}
             {/* Discussion Forum button */}
-            <button className="discussion-forum-button" onClick={toggleDiscussionForum}>
-                Discussion Forum
+            <button className="discussion-forum-button" title="Discussion Forum" onClick={toggleDiscussionForum}>
+                <img src={PhoneImage} alt="Discussion Forum" title="Discussion Forum" style={{ width: '100%', height: '100%' }} />
             </button>
             {/* Popup for discussion forum */}
             {showDiscussionForum && (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const IngredientPanel = ({
     panelMode,
@@ -21,45 +21,76 @@ const IngredientPanel = ({
     // Sort the inventory alphabetically
     const sortedInventory = [...inventory].sort();
 
+    // Image URL base for ingredients
+    const imageUrlBase = 'https://www.themealdb.com/images/ingredients/';
+
+    // Function to get the image URL for a given ingredient
+    const getImageUrl = (ingredient) => {
+        return `${imageUrlBase}${ingredient}.png`;
+    };
+
     return (
         <div className="ingredient-panel">
             <div className="panel-header">
                 <div>
-                    <button
-                        onClick={() => setShowPanel(false)}
-                        style={{
-                            backgroundColor: 'red',
-                            color: 'white',
-                            padding: '10px',
-                            border: 'none',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                            transition: 'background-color 0.3s, color 0.3s, transform 0.3s',
-                            fontFamily: 'Arial, sans-serif',
-                            fontWeight: 'bold',
-                            fontSize: '14px',
-                            letterSpacing: '0.5px',
-                            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-                            outline: 'none',
-                        }}
-                        onMouseEnter={(e) => {
-                            e.target.style.backgroundColor = '#D50606';
-                            e.target.style.transform = 'scale(1.05)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.target.style.backgroundColor = 'red';
-                            e.target.style.transform = 'scale(1)';
-                        }}
-                    >
-                        Close
-                    </button>
+                    <button className="exit-button" onClick={() => setShowPanel(false)}>X</button>
                 </div>
                 <div>
-                    <button onClick={() => setPanelMode('add')}>Add</button>
+                    {panelMode === 'edit' ? (
+                        <button onClick={() => setPanelMode('add')}>Add</button>
+                    ) : (
+                        <button onClick={() => setPanelMode('edit')}>Edit</button>
+                    )}
                 </div>
-                <div>
-                    <button onClick={() => setPanelMode('edit')}>Edit</button>
-                </div>
+            </div>
+            <div className="inventory-list-container">
+                {panelMode === 'edit' ? (
+                    <div className="inventory-grid">
+                        <h3>Inventory</h3>
+                        {sortedInventory.length === 0 ? (
+                            <p>No Ingredients Added</p>
+                        ) : (
+                            <div className="grid-container">
+                                {sortedInventory.map((ingredient) => (
+                                    <div key={ingredient} className="grid-item">
+                                        <img
+                                            src={getImageUrl(ingredient)}
+                                            alt={ingredient}
+                                            className="ingredient-image"
+                                        />
+                                        <div className="ingredient-name">
+                                            {ingredient}
+                                        </div>
+                                        <button
+                                            className="ingredient-delete-button"
+                                            onClick={() => handleDeleteIngredient(ingredient)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className="inventory-list">
+                        <h3>Inventory</h3>
+                        {sortedInventory.length === 0 ? (
+                            <p>No Ingredients Added</p>
+                        ) : (
+                            <ul>
+                                {sortedInventory.map((ingredient) => (
+                                    <li key={ingredient}>
+                                        {ingredient}
+                                        {panelMode === 'edit' && (
+                                            <button onClick={() => handleDeleteIngredient(ingredient)}>Delete</button>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                )}
             </div>
             {panelMode === 'add' && (
                 <div className="add-section ingredient-search">
@@ -70,7 +101,7 @@ const IngredientPanel = ({
                         onClick={() => setShowIngredientList(true)}
                         onChange={(e) => setIngredientSearchQuery(e.target.value)}
                         className="ingredient-search-input"
-                        style={{ width: '152px', marginLeft: '90px' }}
+                        style={{ width: '160px', marginRight: '50px' }}
                     />
                     {showIngredientList && filteredIngredients.length > 0 && (
                         <div>
@@ -78,9 +109,10 @@ const IngredientPanel = ({
                                 <ul
                                     className="ingredient-dropdown"
                                     style={{
-                                        maxHeight: '200px',
+                                        maxHeight: '280px',
                                         overflowY: 'auto',
-                                        marginLeft: '90px',
+                                        marginRight: '50px',
+                                        width: '160px',
                                         border: '1px solid #ccc',
                                         borderRadius: '4px',
                                         backgroundColor: '#fff',
@@ -94,7 +126,9 @@ const IngredientPanel = ({
                                             value={ingredient}
                                             onClick={() => {
                                                 setSelectedIngredient(ingredient);
-                                                handleAddIngredient(ingredient);
+                                                if (panelMode === 'add') {
+                                                    handleAddIngredient(ingredient);
+                                                }
                                                 setShowIngredientList(false);
                                             }}
                                             style={{
@@ -119,7 +153,9 @@ const IngredientPanel = ({
                                         onClick={() => {
                                             const ingredient = filteredIngredients[0];
                                             setSelectedIngredient(ingredient);
-                                            handleAddIngredient(ingredient);
+                                            if (panelMode === 'add') {
+                                                handleAddIngredient(ingredient);
+                                            }
                                             setShowIngredientList(false);
                                         }}
                                         className="single-ingredient"
@@ -160,19 +196,6 @@ const IngredientPanel = ({
                     )}
                 </div>
             )}
-            <div className="inventory-list" style={{ maxHeight: '500px', overflowY: 'auto', width: '200px' }}>
-                <h3>Inventory</h3>
-                <ul>
-                    {sortedInventory.map((ingredient) => (
-                        <li key={ingredient}>
-                            {ingredient}
-                            {panelMode === 'edit' && (
-                                <button onClick={() => handleDeleteIngredient(ingredient)}>Delete</button>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            </div>
         </div>
     );
 };

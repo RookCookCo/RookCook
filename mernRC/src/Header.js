@@ -1,28 +1,43 @@
 import React, { useState, useEffect } from 'react';
 
 const Header = ({
-                    user,
-                    searchQuery,
-                    setSearchQuery,
-                    handleSearch,
-                    handleGoogleLogin,
-                    handleLogout,
-                    setShowLogin,
-                    setShowSignUp,
-                    handlePopupMealClick,
-                    filteredRecipes,
-                    setDietaryFilter,
-                    setEthnicFilter
-                }) => {
+    user,
+    searchQuery,
+    setSearchQuery,
+    handleSearch,
+    handleGoogleLogin,
+    handleLogout,
+    setShowLogin,
+    setShowSignUp,
+    handlePopupMealClick
+}) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [filteredSearchResults, setFilteredSearchResults] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [areas, setAreas] = useState([]);
 
     useEffect(() => {
-        const filtered = filteredRecipes.filter(recipe =>
-            recipe.strMeal.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        setFilteredSearchResults(filtered);
-    }, [searchQuery, filteredRecipes]);
+        // Fetch categories
+        fetch('https://www.themealdb.com/api/json/v2/9973533/categories.php')
+            .then(response => response.json())
+            .then(data => setCategories(data.categories));
+
+        // Fetch areas
+        fetch('https://www.themealdb.com/api/json/v2/9973533/list.php?a=list')
+            .then(response => response.json())
+            .then(data => setAreas(data.meals));
+    }, []);
+
+    useEffect(() => {
+        // Build URL for search
+        const url = `https://www.themealdb.com/api/json/v2/9973533/search.php?s=${searchQuery}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                setFilteredSearchResults(data.meals || []);
+            });
+    }, [searchQuery]);
 
     const handleInputChange = (e) => {
         setSearchQuery(e.target.value);
@@ -40,75 +55,65 @@ const Header = ({
     };
 
     const handleInputBlur = () => {
-        // Delay hiding dropdown to allow click event to be registered
         setTimeout(() => setShowDropdown(false), 100);
     };
 
     return (
-        <header className="App-header">
-            <div className="search-box">
-                <img src="logo.png" alt="RookCook Logo" className="site-logo" />
-                <form onSubmit={handleSearch}>
-                    <label htmlFor="search">Quick recipe search: </label>
+       <header className="App-header">
+        <div className="search-box">
+            <img src="logo.png" alt="RookCook Logo" title="RookCook" className="site-logo" />
+            <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                <label htmlFor="search" style={{ marginRight: '10px' }}>Quick Recipe Search:</label>
+                <div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
                     <input
                         type="text"
+                        title="Enter Recipe or Ingredient"
                         id="search"
                         name="search"
                         value={searchQuery}
                         onChange={handleInputChange}
                         onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
+                        style={{ width: 250, paddingLeft: '10px', marginRight: '5px' }} // Adjust width to accommodate button
                     />
-                    <select onChange={(e) => setDietaryFilter(e.target.value)}>
-                        <option value="">All Diets</option>
-                        <option value="Vegetarian">Vegetarian</option>
-                        <option value="Vegan">Vegan</option>
-                        <option value="Gluten-Free">Gluten-Free</option>
-                        {/* Add more dietary options as needed */}
-                    </select>
-                    <select onChange={(e) => setEthnicFilter(e.target.value)}>
-                        <option value="">All Cuisines</option>
-                        <option value="Canadian">Canadian</option>
-                        <option value="Chinese">Chinese</option>
-                        <option value="Italian">Italian</option>
-                        <option value="Mexican">Mexican</option>
-                        {/* Add more cuisine options as needed */}
-                    </select>
-                    <button type="submit">Search</button>
-                </form>
-                {showDropdown && (
-                    <div className="recipe-dropdown">
-                        {filteredSearchResults.length > 0 ? (
-                            <ul>
-                                {filteredSearchResults.map((recipe) => (
-                                    <li
-                                        key={recipe.idMeal}
-                                        onClick={() => handleRecipeClick(recipe.idMeal, recipe.strMeal)}
-                                    >
-                                        {recipe.strMeal}
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <div>No recipes found</div>
-                        )}
-                    </div>
-                )}
-            </div>
-            <div className="auth-buttons">
-                {user ? (
-                    <>
-                        <span>{user.displayName}</span>
-                        <button onClick={handleLogout}>Logout</button>
-                    </>
-                ) : (
-                    <>
-                        <button onClick={() => setShowLogin(true)}>Login</button>
-                        <button onClick={() => setShowSignUp(true)}>Sign up</button>
-                    </>
-                )}
-            </div>
-        </header>
+                <button type="submit" title="Search" style={{ cursor: 'pointer' }}>Search</button>
+                </div>
+            </form>
+
+            {showDropdown && (
+                <div className="recipe-dropdown">
+                    {filteredSearchResults.length > 0 ? (
+                        <ul>
+                            {filteredSearchResults.map((recipe) => (
+                                <li
+                                    key={recipe.idMeal}
+                                    onClick={() => handleRecipeClick(recipe.idMeal, recipe.strMeal)}
+                                >
+                                    {recipe.strMeal}
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <div>No recipes found</div>
+                    )}
+                </div>
+            )}
+        </div>
+        <div className="auth-buttons">
+            {user ? (
+                <>
+                    <span>{user.displayName}</span>
+                    <button onClick={handleLogout} title="Logout">Logout</button>
+                </>
+            ) : (
+                <>
+                    <button onClick={() => setShowLogin(true)} title="Login">Login</button>
+                    <button onClick={() => setShowSignUp(true)} title="Sign Up">Sign up</button>
+                </>
+            )}
+        </div>
+    </header>
+
     );
 };
 
