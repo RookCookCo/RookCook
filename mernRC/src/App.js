@@ -180,9 +180,9 @@ function App() {
                 }
             });
 
-            if (response.status !== 200) {
-                throw new Error(Failed to load inventory, status code: ${response.status});
-            }
+            // if (response.status !== 200) {
+            //     throw new Error(Failed to load inventory, status code: ${response.status});
+            // }
             console.log('respond from backend',response);
 
             const inventoryData = response.data;
