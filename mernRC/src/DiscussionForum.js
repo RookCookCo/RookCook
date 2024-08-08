@@ -11,26 +11,31 @@ const saveTopics = (topics) => {
     localStorage.setItem('topics', JSON.stringify(topics));
 };
 
+// Styles for the discussion forum background
 const style = {
     background: 'linear-gradient(270deg, rgba(255,255,255,1) 0%, rgba(184,217,242,1) 35%, rgba(61,143,208,1) 100%)'
 };
 
+// Component to display and manage a single discussion topic
 const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
-    const [replyText, setReplyText] = useState('');
-    const [replyParentId, setReplyParentId] = useState(null);
+    const [replyText, setReplyText] = useState(''); // State for holding the reply text
+    const [replyParentId, setReplyParentId] = useState(null); // State to track which reply the new reply is a child of
 
+    // Handle changes to the reply input
     const handleReplyChange = (e) => {
         setReplyText(e.target.value);
     };
 
+    // Handle submission of a new reply
     const handleReplySubmit = (parentId = null) => {
         if (replyText.trim()) {
             onReply(topic.id, replyText, parentId);
-            setReplyText('');
-            setReplyParentId(null);
+            setReplyText(''); // Clear the reply text
+            setReplyParentId(null); // Reset the parent ID
         }
     };
 
+    // Recursively render replies to create a threaded structure
     const renderReplies = (replies, parentId = null, level = 0) => {
         return replies
             .filter(reply => reply.parentId === parentId)
@@ -63,7 +68,7 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
             <button className="discussion-delete-button" onClick={() => onDeleteTopic(topic.id)}>Delete Topic</button>
             <div className="replies">
                 {topic.replies.length > 0 ? (
-                    renderReplies(topic.replies)
+                    renderReplies(topic.replies) // Render replies if any
                 ) : (
                     <p>No replies yet.</p>
                 )}
@@ -78,23 +83,27 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
     );
 };
 
+// Component for the form to add a new topic
 const NewTopicForm = ({ onAddTopic }) => {
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
+    const [title, setTitle] = useState(''); // State for the topic title
+    const [content, setContent] = useState(''); // State for the topic content
 
+    // Handle changes to the topic title input
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
     };
 
+    // Handle changes to the topic content input
     const handleContentChange = (e) => {
         setContent(e.target.value);
     };
 
+    // Handle the submission of the new topic form
     const handleSubmit = () => {
         if (title.trim() && content.trim()) {
             onAddTopic(title, content);
-            setTitle('');
-            setContent('');
+            setTitle(''); // Clear the title
+            setContent(''); // Clear the content
         }
     };
 
@@ -116,21 +125,25 @@ const NewTopicForm = ({ onAddTopic }) => {
     );
 };
 
+// Main component for the discussion forum
 const DiscussionForum = ({ setShowDiscussionForum }) => {
-    const [topics, setTopics] = useState(getStoredTopics());
-    const [showNewTopicForm, setShowNewTopicForm] = useState(false);
-    const [selectedTopic, setSelectedTopic] = useState(null);
+    const [topics, setTopics] = useState(getStoredTopics()); // State for the list of topics
+    const [showNewTopicForm, setShowNewTopicForm] = useState(false); // State to control visibility of the new topic form
+    const [selectedTopic, setSelectedTopic] = useState(null); // State for the currently selected topic
 
+    // Save topics to localStorage whenever the topics state changes
     useEffect(() => {
         saveTopics(topics);
     }, [topics]);
 
+    // Handle adding a new topic
     const handleAddTopic = (title, content) => {
         const newTopic = { id: Date.now(), title, content, replies: [] };
         setTopics(prevTopics => [...prevTopics, newTopic]);
-        setShowNewTopicForm(false);
+        setShowNewTopicForm(false); // Hide the new topic form
     };
 
+    // Handle adding a reply to a topic
     const handleReply = (topicId, replyText, parentId) => {
         const newReply = { id: Date.now(), text: replyText, parentId, deleted: false };
         setTopics(prevTopics =>
@@ -147,13 +160,15 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
         );
     };
 
+    // Handle deleting a topic
     const handleDeleteTopic = (topicId) => {
         setTopics(prevTopics => prevTopics.filter(topic => topic.id !== topicId));
         if (selectedTopic && selectedTopic.id === topicId) {
-            setSelectedTopic(null);
+            setSelectedTopic(null); // Clear the selected topic if it was deleted
         }
     };
 
+    // Handle deleting a reply
     const handleDeleteReply = (topicId, replyId) => {
         setTopics(prevTopics =>
             prevTopics.map(topic =>
@@ -179,6 +194,7 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
         );
     };
 
+    // Handle selecting a topic to view
     const handleViewTopic = (topic) => {
         setSelectedTopic(topic);
     };
