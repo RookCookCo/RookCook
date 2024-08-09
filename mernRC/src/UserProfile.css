@@ -105,6 +105,56 @@
     cursor: pointer;
 }
 
+.overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 500px;
+    border-radius: 8px;
+    z-index: 1000;
+}
+
+.uploadPanel {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    z-index: 1001;
+}
+
+.uploadPanel input[type="file"] {
+    margin-bottom: 10px; /* Space between the input field and the buttons */
+    display: block;       /* Ensure the input takes full width */
+    width: 100%;          /* Full width for the file input */
+    padding: 10px;         /* Padding inside the input field */
+}
+
+.uploadPanel button {
+    background-color: #57AD68; /* Primary button color */
+    color: white;              /* White text for contrast */
+    border: none;              /* No border */
+    padding: 10px 20px;        /* Space inside the button */
+    border-radius: 5px;        /* Slightly rounded corners */
+    cursor: pointer;           /* Pointer cursor on hover */
+    margin: 5px;               /* Space between buttons */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.uploadPanel button:hover {
+    background-color: #006d77; /* Darker shade on hover */
+}
+
+.uploadPanel button:nth-child(2) {
+    background-color: #ff6b6b; /* Red color for cancel button */
+}
+
+.uploadPanel button:nth-child(2):hover {
+    background-color: #d9534f; /* Darker red on hover */
+}
+
 .redButton {
     position: absolute;
     left: 50%;
