@@ -204,7 +204,6 @@ const RecipePopup = ({
                                 {[...Array(5)].map((star, index) => {
                                     index += 1;
                                     const fullStar = '\u2605'; // Unicode for solid star
-                                    const halfStar = '\u272F'; // Unicode for half star
 
                                     // Determine whether to display a full, half, or empty star
                                     let starColor = "#e4e5e9"; // Default color for empty star
