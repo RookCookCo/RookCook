@@ -17,8 +17,6 @@ import { auth, provider, signInWithPopup, signOut } from './firebase';
 import axios from 'axios';
 import RecipeBookImage from './RecipeBook.png';
 import PhoneImage from './phone.png';
-import Tutorial from './Tutorial';
-
 
 function App() {
     // State variables for UI panels, user inputs, and data
@@ -470,14 +468,9 @@ function App() {
                 setDietaryFilter={setDietaryFilter}
                 setEthnicFilter={setEthnicFilter}
             />
-            <UserProfile user={user} handleLogout={handleLogout} />
-
+            <UserProfile user = {user} handleLogout = {handleLogout} />
             {/* Button to add new ingredient */}
             <button className="add-ingredient-button" title="Add Ingredients" onClick={() => { setShowPanel(true); setPanelMode('add'); }}>+</button>
-
-            {/* Tutorial button */}
-            <Tutorial />
-
             {/* Ingredient panel to manage ingredients */}
             {showPanel && (
                 <IngredientPanel
@@ -496,7 +489,6 @@ function App() {
                     handleDeleteIngredient={handleDeleteIngredient}
                 />
             )}
-
             {/* Login panel for user login */}
             {showLogin && (
                 <LoginPanel
@@ -509,7 +501,6 @@ function App() {
                     handleGoogleLogin={handleGoogleLogin}
                 />
             )}
-
             {/* Sign-up panel for new user registration */}
             {showSignUp && (
                 <SignUpPanel
@@ -525,12 +516,10 @@ function App() {
                     setShowSignUp={setShowSignUp}
                 />
             )}
-
             {/* Button to generate recipes */}
             <button className="generate-recipe-button" onClick={generateRecipe}>
                 <img src={RecipeBookImage} alt="Generate Recipes" title="Generate Recipes" style={{ width: '100%', height: '100%' }} />
             </button>
-
             {/* Popup for displaying recipe details */}
             {showPopup && (
                 <RecipePopup
@@ -541,19 +530,16 @@ function App() {
                     handlePopupMealClick={handlePopupMealClick}
                 />
             )}
-
             {/* Discussion Forum button */}
             <button className="discussion-forum-button" title="Discussion Forum" onClick={toggleDiscussionForum}>
                 <img src={PhoneImage} alt="Discussion Forum" title="Discussion Forum" style={{ width: '100%', height: '100%' }} />
             </button>
-
             {/* Popup for discussion forum */}
             {showDiscussionForum && (
                 <DiscussionForum setShowDiscussionForum={setShowDiscussionForum} />
             )}
         </div>
     );
-
 }
 
 export default App;
