@@ -146,17 +146,3 @@
 .selected-preferences button:hover {
     background-color: #c82333;
 }
-
-.preferences-footer {
-    margin-top: 20px;
-    padding: 10px;
-    border-top: 1px solid #ddd;
-    text-align: center;
-    color: #555;
-}
-
-.preferences-footer p {
-    font-size: 14px;
-    line-height: 1.5;
-    margin: 0;
-}
