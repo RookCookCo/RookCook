@@ -1,22 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Parser from 'rss-parser';
-
-const parser = new Parser();
-
-// Retrieve topics from localStorage
-const getStoredTopics = () => {
-    const storedTopics = localStorage.getItem('topics');
-    return storedTopics ? JSON.parse(storedTopics) : [];
-};
-
-// Save topics to localStorage
-const saveTopics = (topics) => {
-    localStorage.setItem('topics', JSON.stringify(topics));
-};
-
-const style = {
-    background: 'linear-gradient(270deg, rgba(255,255,255,1) 0%, rgba(184,217,242,1) 35%, rgba(61,143,208,1) 100%)'
-};
+import axios from 'axios';
 
 const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
     const [replyText, setReplyText] = useState('');
@@ -26,9 +9,9 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
         setReplyText(e.target.value);
     };
 
-    const handleReplySubmit = (parentId = null) => {
+    const handleReplySubmit = () => {
         if (replyText.trim()) {
-            onReply(topic.id, replyText, parentId);
+            onReply(topic._id, { text: replyText, parentId: replyParentId, deleted: false });
             setReplyText('');
             setReplyParentId(null);
         }
@@ -38,7 +21,7 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
         return replies
             .filter(reply => reply.parentId === parentId)
             .map((reply) => (
-                <div key={reply.id} className={`reply reply-level-${level % 2 === 0 ? 'even' : 'odd'}`}>
+                <div key={reply._id} className={`reply reply-level-${level % 2 === 0 ? 'even' : 'odd'}`}>
                     <div className="reply-content">
                         <p className={reply.deleted ? 'deleted-reply' : ''}>
                             {reply.deleted ? 'This reply has been deleted' : reply.text}
@@ -47,14 +30,14 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
                     <div className="reply-buttons">
                         {!reply.deleted && (
                             <>
-                                <button className="trash-button" onClick={() => onDeleteReply(topic.id, reply.id)}>
+                                <button className="trash-button" onClick={() => onDeleteReply(topic._id, reply._id)}>
                                     <i className="fas fa-trash"></i>
                                 </button>
-                                <button className="reply-button" onClick={() => setReplyParentId(reply.id)}>Reply</button>
+                                <button className="reply-button" onClick={() => setReplyParentId(reply._id)}>Reply</button>
                             </>
                         )}
                     </div>
-                    {renderReplies(replies, reply.id, level + 1)}
+                    {renderReplies(replies, reply._id, level + 1)}
                 </div>
             ));
     };
@@ -63,7 +46,7 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
         <div className="discussion-topic">
             <h3>{topic.title}</h3>
             <p>{topic.content}</p>
-            <button className="discussion-delete-button" onClick={() => onDeleteTopic(topic.id)}>Delete Topic</button>
+            <button className="discussion-delete-button" onClick={() => onDeleteTopic(topic._id)}>Delete Topic</button>
             <div className="replies">
                 {topic.replies.length > 0 ? (
                     renderReplies(topic.replies)
@@ -76,7 +59,7 @@ const DiscussionTopic = ({ topic, onReply, onDeleteTopic, onDeleteReply }) => {
                 onChange={handleReplyChange}
                 placeholder={replyParentId ? "Write a reply..." : "Write a comment..."}
             />
-            <button className="reply-button" onClick={() => handleReplySubmit(replyParentId)}>Comment</button>
+            <button className="reply-button" onClick={handleReplySubmit}>Comment</button>
         </div>
     );
 };
@@ -93,9 +76,10 @@ const NewTopicForm = ({ onAddTopic }) => {
         setContent(e.target.value);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (title.trim() && content.trim()) {
-            onAddTopic(title, content);
+            await axios.post('http://localhost:5000/api/topics', { title, content, replies: [] });
+            onAddTopic();
             setTitle('');
             setContent('');
         }
@@ -120,14 +104,19 @@ const NewTopicForm = ({ onAddTopic }) => {
 };
 
 const DiscussionForum = ({ setShowDiscussionForum }) => {
-    const [topics, setTopics] = useState(getStoredTopics());
+    const [topics, setTopics] = useState([]);
     const [showNewTopicForm, setShowNewTopicForm] = useState(false);
     const [selectedTopic, setSelectedTopic] = useState(null);
     const [rssFeed, setRssFeed] = useState([]);
 
     useEffect(() => {
-        saveTopics(topics);
-    }, [topics]);
+        const fetchTopics = async () => {
+            const response = await axios.get('http://localhost:5000/api/topics');
+            setTopics(response.data);
+        };
+
+        fetchTopics();
+    }, []);
 
     useEffect(() => {
         const fetchRssFeed = async () => {
@@ -142,54 +131,42 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
         fetchRssFeed();
     }, []);
 
-    const handleAddTopic = (title, content) => {
-        const newTopic = { id: Date.now(), title, content, replies: [] };
-        setTopics(prevTopics => [...prevTopics, newTopic]);
+    const handleAddTopic = async () => {
+        const response = await axios.get('http://localhost:5000/api/topics');
+        setTopics(response.data);
         setShowNewTopicForm(false);
     };
 
-    const handleReply = (topicId, replyText, parentId) => {
-        const newReply = { id: Date.now(), text: replyText, parentId, deleted: false };
-        setTopics(prevTopics =>
-            prevTopics.map(topic =>
-                topic.id === topicId
-                    ? { ...topic, replies: [...topic.replies, newReply] }
-                    : topic
-            )
-        );
+    const handleReply = async (topicId, reply) => {
+        await axios.post(`http://localhost:5000/api/topics/${topicId}/replies`, reply);
+        const response = await axios.get('http://localhost:5000/api/topics');
+        setTopics(response.data);
         setSelectedTopic(prevTopic =>
-            prevTopic && prevTopic.id === topicId
-                ? { ...prevTopic, replies: [...prevTopic.replies, newReply] }
+            prevTopic && prevTopic._id === topicId
+                ? { ...prevTopic, replies: [...prevTopic.replies, reply] }
                 : prevTopic
         );
     };
 
-    const handleDeleteTopic = (topicId) => {
-        setTopics(prevTopics => prevTopics.filter(topic => topic.id !== topicId));
-        if (selectedTopic && selectedTopic.id === topicId) {
+    const handleDeleteTopic = async (topicId) => {
+        await axios.delete(`http://localhost:5000/api/topics/${topicId}`);
+        const response = await axios.get('http://localhost:5000/api/topics');
+        setTopics(response.data);
+        if (selectedTopic && selectedTopic._id === topicId) {
             setSelectedTopic(null);
         }
     };
 
-    const handleDeleteReply = (topicId, replyId) => {
-        setTopics(prevTopics =>
-            prevTopics.map(topic =>
-                topic.id === topicId
-                    ? {
-                        ...topic,
-                        replies: topic.replies.map(reply =>
-                            reply.id === replyId ? { ...reply, deleted: true } : reply
-                        )
-                    }
-                    : topic
-            )
-        );
+    const handleDeleteReply = async (topicId, replyId) => {
+        await axios.delete(`http://localhost:5000/api/topics/${topicId}/replies/${replyId}`);
+        const response = await axios.get('http://localhost:5000/api/topics');
+        setTopics(response.data);
         setSelectedTopic(prevTopic =>
-            prevTopic && prevTopic.id === topicId
+            prevTopic && prevTopic._id === topicId
                 ? {
                     ...prevTopic,
                     replies: prevTopic.replies.map(reply =>
-                        reply.id === replyId ? { ...reply, deleted: true } : reply
+                        reply._id === replyId ? { ...reply, deleted: true } : reply
                     )
                 }
                 : prevTopic
@@ -205,26 +182,14 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
             <button className="discussion-exit-button" onClick={() => setShowDiscussionForum(false)}>X</button>
             <div className="discussion-popup-content">
                 {topics.length > 0 ? (
-                    <div className="topics-container">
-                        <div className="topics-list">
-                            {topics.map(topic => (
-                                <div key={topic.id} className="topic-preview" onClick={() => handleViewTopic(topic)}>
-                                    <h3>{topic.title}</h3>
-                                    <p>{topic.content.substring(0, 100)}...</p>
-                                </div>
-                            ))}
+                    topics.map(topic => (
+                        <div key={topic._id} className="topic-preview" onClick={() => handleViewTopic(topic)}>
+                            <h3>{topic.title}</h3>
+                            <p>{topic.content.substring(0, 100)}...</p>
                         </div>
-                        {selectedTopic && (
-                            <DiscussionTopic
-                                topic={selectedTopic}
-                                onReply={handleReply}
-                                onDeleteTopic={handleDeleteTopic}
-                                onDeleteReply={handleDeleteReply}
-                            />
-                        )}
-                    </div>
+                    ))
                 ) : (
-                    <div className="no-topics" style={style}>
+                    <div className="topic-preview" style={style}>
                         <h3>Discussion Forum</h3>
                         <p>No topics available. Start by adding a new topic!</p>
                     </div>
@@ -232,23 +197,34 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
                 <button className="new-topic-button" onClick={() => setShowNewTopicForm(true)}>New Topic</button>
                 {showNewTopicForm && <NewTopicForm onAddTopic={handleAddTopic} />}
             </div>
-            {topics.length === 0 && (
-                <div className="rss-feed">
-                    <h3>Latest Food News</h3>
-                    {rssFeed.length === 0 ? (
-                        <p>Loading RSS feed...</p>
-                    ) : (
-                        rssFeed.map(item => (
-                            <div key={item.guid} className="rss-item">
-                                <h4><a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a></h4>
-                                <p>{item.contentSnippet}</p>
-                            </div>
-                        ))
-                    )}
-                </div>
+            {selectedTopic ? (
+                <DiscussionTopic
+                    topic={selectedTopic}
+                    onReply={handleReply}
+                    onDeleteTopic={handleDeleteTopic}
+                    onDeleteReply={handleDeleteReply}
+                />
+            ) : (
+                topics.length === 0 && (
+                    <div className="rss-feed">
+                        <h3>RSS Feed</h3>
+                        {rssFeed.length === 0 ? (
+                            <p>Loading RSS feed...</p>
+                        ) : (
+                            rssFeed.map(item => (
+                                <div key={item.guid} className="rss-item">
+                                    <h4><a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a></h4>
+                                    <p>{item.contentSnippet}</p>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                )
             )}
         </div>
     );
 };
 
 export default DiscussionForum;
+
+//https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/food/rss.xml
