@@ -17,6 +17,8 @@ import { auth, provider, signInWithPopup, signOut } from './firebase';
 import axios from 'axios';
 import RecipeBookImage from './RecipeBook.png';
 import PhoneImage from './phone.png';
+import Tutorial from './Tutorial';
+
 
 function App() {
     // State variables for UI panels, user inputs, and data
@@ -114,12 +116,12 @@ function App() {
                 'x-auth-token': token // Include the token in the request headers
             }
         })
-        .then(response => {
-            console.log('Item added successfully:', response.data);
-        })
-        .catch(error => {
-            console.error('Error adding item to inventory:', error);
-        });
+            .then(response => {
+                console.log('Item added successfully:', response.data);
+            })
+            .catch(error => {
+                console.error('Error adding item to inventory:', error);
+            });
     };
 
     // Add ingredient to inventory
@@ -135,29 +137,29 @@ function App() {
     // handle for communiate with the backend inventory to delete
     // argument: string, the element that need to be added into backend inventory
     const handleDeleteItemFromInventory = (item) => {
-    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
 
-    if (!token) {
-        console.error('User not authenticated');
-        return;
-    }
-
-    // Send the delete request to the backend to remove the item from the inventory
-    axios.delete('http://localhost:5001/inventory', {
-        headers: {
-            'x-auth-token': token // Include the token in the request headers
-        },
-        data: {
-            item: item // Pass the item as part of the request body
+        if (!token) {
+            console.error('User not authenticated');
+            return;
         }
-    })
-    .then(response => {
-        console.log('Item deleted successfully:', response.data);
-    })
-    .catch(error => {
-        console.error('Error deleting item from inventory:', error);
-    });
-};
+
+        // Send the delete request to the backend to remove the item from the inventory
+        axios.delete('http://localhost:5001/inventory', {
+            headers: {
+                'x-auth-token': token // Include the token in the request headers
+            },
+            data: {
+                item: item // Pass the item as part of the request body
+            }
+        })
+            .then(response => {
+                console.log('Item deleted successfully:', response.data);
+            })
+            .catch(error => {
+                console.error('Error deleting item from inventory:', error);
+            });
+    };
 
     // Remove ingredient from inventory
     const handleDeleteIngredient = (ingredient) => {
@@ -193,7 +195,7 @@ function App() {
             }
 
             // Safely set the inventory state
-            setInventory(inventoryData.items); 
+            setInventory(inventoryData.items);
             console.log('Inventory loaded successfully:', inventoryData.items);
             console.log('element in:', inventory);// might takes time
 
@@ -295,7 +297,7 @@ function App() {
             console.error('Error during sign-in:', error);
         }
     };
-    
+
     // Handle logout
     const handleLogout = async () => {
         try {
@@ -355,29 +357,29 @@ function App() {
             let ingredientList = inventory.join(','); // Join inventory ingredients
             let response = await axios.get(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${ingredientList}`);
             let data = response.data.meals || []; // Fetch recipes based on ingredients
-    
+
             if (data.length === 0) { // If no recipes found
                 const userConfirmed = window.confirm("No recipes found with all ingredients. Would you like to see less specific recipes?");
                 if (userConfirmed) { // If user agrees to see less specific recipes
                     let foundRecipes = new Map();
-    
+
                     for (let ingredient of inventory) { // Loop through each ingredient in inventory
                         response = await axios.get(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`);
                         data = response.data.meals || [];
-    
+
                         data.forEach(meal => {
                             if (!foundRecipes.has(meal.idMeal)) { // Add recipe if not already in found recipes
                                 foundRecipes.set(meal.idMeal, meal);
                             }
                         });
                     }
-    
+
                     setPopupSearchResults(Array.from(foundRecipes.values())); // Set popup search results
                 }
             } else {
                 setPopupSearchResults(data); // Set popup search results
             }
-    
+
             setShowPopup(true); // Show popup
         } catch (error) { // Handle error
             console.error('Error generating recipe:', error);
@@ -445,7 +447,7 @@ function App() {
             ingredient.toLowerCase().startsWith(ingredientSearchQuery.toLowerCase()) // Match search query
     );
     console.log('Filtered Ingredients:', filteredIngredients); // Debugging log
-    
+
     // Function to toggle DiscussionForum visibility
     const toggleDiscussionForum = () => {
         setShowDiscussionForum(!showDiscussionForum);
@@ -468,9 +470,14 @@ function App() {
                 setDietaryFilter={setDietaryFilter}
                 setEthnicFilter={setEthnicFilter}
             />
-            <UserProfile user = {user} handleLogout = {handleLogout} />
+            <UserProfile user={user} handleLogout={handleLogout} />
+
             {/* Button to add new ingredient */}
             <button className="add-ingredient-button" title="Add Ingredients" onClick={() => { setShowPanel(true); setPanelMode('add'); }}>+</button>
+
+            {/* Tutorial button */}
+            <Tutorial />
+
             {/* Ingredient panel to manage ingredients */}
             {showPanel && (
                 <IngredientPanel
@@ -489,6 +496,7 @@ function App() {
                     handleDeleteIngredient={handleDeleteIngredient}
                 />
             )}
+
             {/* Login panel for user login */}
             {showLogin && (
                 <LoginPanel
@@ -501,6 +509,7 @@ function App() {
                     handleGoogleLogin={handleGoogleLogin}
                 />
             )}
+
             {/* Sign-up panel for new user registration */}
             {showSignUp && (
                 <SignUpPanel
@@ -516,10 +525,12 @@ function App() {
                     setShowSignUp={setShowSignUp}
                 />
             )}
+
             {/* Button to generate recipes */}
             <button className="generate-recipe-button" onClick={generateRecipe}>
                 <img src={RecipeBookImage} alt="Generate Recipes" title="Generate Recipes" style={{ width: '100%', height: '100%' }} />
             </button>
+
             {/* Popup for displaying recipe details */}
             {showPopup && (
                 <RecipePopup
@@ -530,16 +541,19 @@ function App() {
                     handlePopupMealClick={handlePopupMealClick}
                 />
             )}
+
             {/* Discussion Forum button */}
             <button className="discussion-forum-button" title="Discussion Forum" onClick={toggleDiscussionForum}>
                 <img src={PhoneImage} alt="Discussion Forum" title="Discussion Forum" style={{ width: '100%', height: '100%' }} />
             </button>
+
             {/* Popup for discussion forum */}
             {showDiscussionForum && (
                 <DiscussionForum setShowDiscussionForum={setShowDiscussionForum} />
             )}
         </div>
     );
+
 }
 
 export default App;
