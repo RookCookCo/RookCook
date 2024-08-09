@@ -28,13 +28,13 @@
 .exit-button {
     width: 30px;
     height: 30px;
-    background-color: #dc3545;
+    background-color: #e0162b;
     color: #fff;
     border: none;
-    font-size: 20px;
+    font-size: 15px;
     cursor: pointer;
     padding: 0;
-    border-radius: 50%;
+    border-radius: 20%;
     display: flex;
     align-items: center;
     justify-content: center;

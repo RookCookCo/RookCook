@@ -39,55 +39,72 @@ const IngredientPanel = ({
                     <button className="exit-button" onClick={() => setShowPanel(false)}>X</button>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {panelMode === 'edit' ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                            <button
-                                style={{
-                                    width: '100px',
-                                    height: '40px',
-                                    fontSize: '16px',
-                                    backgroundColor: '#007bff', // Blue background
-                                    color: '#fff', // White text
-                                    border: 'none', // Remove default border
-                                    borderRadius: '4px', // Rounded corners
-                                    cursor: 'pointer', // Pointer cursor
-                                    outline: 'none' // Remove outline
-                                }}
-                                onClick={() => setPanelMode('add')}
-                            >
-                                Add
-                            </button>
-                            <button
-                                className="preferences-button"
-                                style={{
-                                    width: '100px',
-                                    height: '40px',
-                                    fontSize: '16px',
-                                }}
-                                onClick={() => setShowPreferencesPanel(true)}
-                            >
-                                Preferences
-                            </button>
-                        </div>
-                    ) : (
-                        <button
-                            style={{
-                                width: '100px',
-                                height: '40px',
-                                fontSize: '16px',
-                                backgroundColor: '#007bff', // Blue background
-                                color: '#fff', // White text
-                                border: 'none', // Remove default border
-                                borderRadius: '4px', // Rounded corners
-                                cursor: 'pointer', // Pointer cursor
-                                outline: 'none' // Remove outline
-                            }}
-                            onClick={() => setPanelMode('edit')}
-                        >
-                            Edit
-                        </button>
-                    )}
-                </div>
+    {panelMode === 'edit' ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <button
+                style={{
+                    width: '100px',
+                    height: '40px',
+                    fontSize: '16px',
+                    backgroundColor: '#A1002D', 
+                    color: '#fff',
+                    fontWeight: 'bold',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    outline: 'none',
+                    transition: 'transform 0.3s ease', // Smooth transition
+                }}
+                onClick={() => setPanelMode('add')}
+                onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'} // Scale up on hover
+                onMouseLeave={(e) => e.target.style.transform = 'scale(1)'} // Scale back down
+            >
+                Add
+            </button>
+            <button
+                style={{
+                    width: '100px',
+                    height: '40px',
+                    fontSize: '15px',
+                    backgroundColor: '#A1002D', 
+                    color: '#fff',
+                    fontWeight: 'bold',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    outline: 'none',
+                    transition: 'transform 0.3s ease', // Smooth transition
+                }}
+                onClick={() => setShowPreferencesPanel(true)}
+                onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'} // Scale up on hover
+                onMouseLeave={(e) => e.target.style.transform = 'scale(1)'} // Scale back down
+            >
+                Preferences
+            </button>
+        </div>
+    ) : (
+        <button
+            style={{
+                width: '100px',
+                height: '40px',
+                fontSize: '16px',
+                backgroundColor: '#A1002D', 
+                color: '#fff',
+                fontWeight: 'bold',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                outline: 'none',
+                transition: 'transform 0.3s ease', // Smooth transition
+            }}
+            onClick={() => setPanelMode('edit')}
+            onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'} // Scale up on hover
+            onMouseLeave={(e) => e.target.style.transform = 'scale(1)'} // Scale back down
+        >
+            Edit
+        </button>
+    )}
+</div>
             </div>
             <div className="inventory-list-container">
                 {panelMode === 'edit' ? (
