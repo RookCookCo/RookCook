@@ -1,7 +1,7 @@
 .tutorial-button {
     position: absolute;
-    top: 50%; /* Adjust the position as needed */
-    left: 50%; /* Adjust the position as needed */
+    top: 5%; /* Adjust as needed */
+    left: 90%; /* Adjust as needed */
     cursor: pointer;
     background-color: #007bff;
     color: #fff;
