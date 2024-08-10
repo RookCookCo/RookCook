@@ -194,9 +194,9 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     margin-top: 15px;
-    width: auto;
-    max-width: 200px; /* Adjust as needed */
-    margin-left: 90px;
+    max-width: 200px;
+    margin-left: 0px; /* Reduced to bring it closer to the left */
+    margin-right: 50px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
     text-align: center;
