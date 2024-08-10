@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PreferencesPanel from './PreferencesPanel'; // Import the PreferencesPanel component
 
 // IngredientPanel component definition
 const IngredientPanel = ({
@@ -70,26 +69,6 @@ const IngredientPanel = ({
                                 Add
                             </button>
                             {/* Button to open the PreferencesPanel */}
-                            <button
-                                style={{
-                                    width: '100px',
-                                    height: '40px',
-                                    fontSize: '15px',
-                                    backgroundColor: '#A1002D', 
-                                    color: '#fff',
-                                    fontWeight: 'bold',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer',
-                                    outline: 'none',
-                                    transition: 'transform 0.3s ease', 
-                                }}
-                                onClick={() => setShowPreferencesPanel(true)}
-                                onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
-                                onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
-                            >
-                                Preferences
-                            </button>
                         </div>
                     ) : (
                         // Button to switch back to 'edit' mode
@@ -264,9 +243,6 @@ const IngredientPanel = ({
                         </div>
                     )}
                 </div>
-            )}
-            {showPreferencesPanel && (
-                <PreferencesPanel setShowPreferencesPanel={setShowPreferencesPanel} />
             )}
         </div>
     );

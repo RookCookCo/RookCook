@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './UserProfile.css'; // Import the CSS file
 import defaultProfilePic from './default profile.png'; // Ensure this path is correct
+import PreferencesPanel from './PreferencesPanel'; // Import the PreferencesPanel component
 
 const UserProfile = ({ user, handleLogout }) => {
     const [isOpen, setIsOpen] = useState(false); // State to manage panel visibility
@@ -8,6 +9,7 @@ const UserProfile = ({ user, handleLogout }) => {
     const [profilePic, setProfilePic] = useState(defaultProfilePic);
     const [showUploadPanel, setShowUploadPanel] = useState(false); // State to manage upload panel visibility
     const [newProfilePic, setNewProfilePic] = useState(null); // State to manage the new profile picture
+    const [showPreferencesPanel, setShowPreferencesPanel] = useState(false); // State to manage PreferencesPanel visibility
 
     if (!user) return null; // Don't render if no user is logged in
 
@@ -88,6 +90,31 @@ const UserProfile = ({ user, handleLogout }) => {
                                 Manage Profile
                             </button>
                             <button 
+                                className="preferencesButton" 
+                                style={{
+                                    width: '100px',
+                                    height: '40px',
+                                    fontSize: '16px',
+                                    backgroundColor: '#A1002D', 
+                                    color: '#fff',
+                                    fontWeight: 'bold',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    outline: 'none',
+                                    transition: 'transform 0.3s ease',
+                                    position: 'relative', // Allow the button to be moved within its container
+                                    left: '174px', // Move the button to the right
+                                    top:'-65px',
+                                    // right: '20px', // Use this instead of left to move the button to the left
+                                }}
+                                onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'} 
+                                onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                                onClick={() => setShowPreferencesPanel(true)}>
+                                
+                                Preferences
+                            </button>
+                            <button 
                                 className="redButton" 
                                 onClick={handleLogout}>
                                 Logout
@@ -112,6 +139,9 @@ const UserProfile = ({ user, handleLogout }) => {
                         </button>
                     </div>
                 </div>
+            )}
+            {showPreferencesPanel && (
+                <PreferencesPanel setShowPreferencesPanel={setShowPreferencesPanel} />
             )}
         </div>
     );
