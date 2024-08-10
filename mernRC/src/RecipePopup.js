@@ -7,28 +7,29 @@ const fetchFromApi = async (url) => {
     return data;
 };
 
+// RecipePopup component that displays recipes, filters, and reviews
 const RecipePopup = ({
-                         setShowPopup,
-                         selectedMealDetails,
-                         setSelectedMealDetails,
-                         popupSearchResults,
-                         handlePopupMealClick
+                         setShowPopup, // Function to control the visibility of the popup
+                         selectedMealDetails, // Details of the currently selected meal
+                         setSelectedMealDetails, // Function to update the selected meal details
+                         popupSearchResults, // List of search results to be displayed in the popup
+                         handlePopupMealClick // Function to handle meal selection from search results
                      }) => {
-    const [rating, setRating] = useState(0);
-    const [hover, setHover] = useState(0);
-    const [reviews, setReviews] = useState([]);
-    const [reviewText, setReviewText] = useState('');
-    const [filtersVisible, setFiltersVisible] = useState(false);
-    const [categories, setCategories] = useState([]);
-    const [areas, setAreas] = useState([]);
-    const [ingredients, setIngredients] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const [selectedArea, setSelectedArea] = useState('');
-    const [selectedIngredient, setSelectedIngredient] = useState('');
-    const [filteredResults, setFilteredResults] = useState([]); // State for filtered search results
-    const reviewsRef = useRef(null);
+    const [rating, setRating] = useState(0); // State for storing the current rating
+    const [hover, setHover] = useState(0); // State for storing the hover state over the rating stars
+    const [reviews, setReviews] = useState([]); // State for storing the list of reviews
+    const [reviewText, setReviewText] = useState(''); // State for storing the text of the current review
+    const [filtersVisible, setFiltersVisible] = useState(false); // State to toggle the visibility of filters
+    const [categories, setCategories] = useState([]); // State for storing meal categories
+    const [areas, setAreas] = useState([]); // State for storing meal areas (regions)
+    const [ingredients, setIngredients] = useState([]); // State for storing meal ingredients
+    const [selectedCategory, setSelectedCategory] = useState(''); // State for the selected category filter
+    const [selectedArea, setSelectedArea] = useState(''); // State for the selected area filter
+    const [selectedIngredient, setSelectedIngredient] = useState(''); // State for the selected ingredient filter
+    const [filteredResults, setFilteredResults] = useState([]); // State for storing filtered search results
+    const reviewsRef = useRef(null); // Reference to the reviews section for scrolling
 
-    // Fetch filter data when the component mounts
+    // Fetch filter data (categories, areas, ingredients) when the component mounts
     useEffect(() => {
         const fetchFilterData = async () => {
             const categoriesData = await fetchFromApi('https://www.themealdb.com/api/json/v2/9973533/categories.php');
@@ -46,25 +47,26 @@ const RecipePopup = ({
     // Handle adding a review
     const handleAddReview = () => {
         if (reviewText.trim() !== '') {
-            setReviews([...reviews, { rating, text: reviewText }]);
-            setReviewText('');
-            setRating(0);
-            setHover(0);
+            setReviews([...reviews, { rating, text: reviewText }]); // Add new review to the list
+            setReviewText(''); // Clear the review text field
+            setRating(0); // Reset the rating
+            setHover(0); // Reset the hover state
         }
     };
 
+    // Calculate the average rating using useMemo to optimize performance
     const averageRating = useMemo(() => {
-    if (reviews.length === 0) return 0;
+        if (reviews.length === 0) return 0;
         const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
         return parseFloat((totalRating / reviews.length).toFixed(1));
     }, [reviews]);
 
-    // Scroll to reviews section
+    // Scroll to the reviews section when called
     const scrollToReviews = () => {
         reviewsRef.current.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // Fetch meals based on selected filters
+    // Fetch meals based on the selected filters (category, area, ingredient)
     useEffect(() => {
         const fetchFilteredMeals = async () => {
             let categoryMeals = [];
@@ -72,22 +74,25 @@ const RecipePopup = ({
             let ingredientMeals = [];
             let combinedMeals = [];
 
+            // Fetch meals for selected category
             if (selectedCategory) {
                 const categoryData = await fetchFromApi(`https://www.themealdb.com/api/json/v2/9973533/filter.php?c=${selectedCategory}`);
                 categoryMeals = categoryData.meals || [];
             }
 
+            // Fetch meals for selected area
             if (selectedArea) {
                 const areaData = await fetchFromApi(`https://www.themealdb.com/api/json/v2/9973533/filter.php?a=${selectedArea}`);
                 areaMeals = areaData.meals || [];
             }
 
+            // Fetch meals for selected ingredient
             if (selectedIngredient) {
                 const ingredientData = await fetchFromApi(`https://www.themealdb.com/api/json/v2/9973533/filter.php?i=${selectedIngredient}`);
                 ingredientMeals = ingredientData.meals || [];
             }
 
-            // Combine the results locally
+            // Combine results based on selected filters
             if (selectedCategory && selectedArea && selectedIngredient) {
                 combinedMeals = categoryMeals.filter(meal =>
                     areaMeals.some(areaMeal => areaMeal.idMeal === meal.idMeal) &&
@@ -109,25 +114,26 @@ const RecipePopup = ({
                 combinedMeals = categoryMeals.concat(areaMeals, ingredientMeals);
             }
 
-            setFilteredResults(combinedMeals);
+            setFilteredResults(combinedMeals); // Update the state with filtered results
         };
 
         fetchFilteredMeals();
     }, [selectedCategory, selectedArea, selectedIngredient]);
 
-    // Function to reset filters
+    // Function to reset all filters and clear the filtered results
     const resetFilters = () => {
         setSelectedCategory('');
         setSelectedArea('');
         setSelectedIngredient('');
-        setFilteredResults([]); // Clear filtered results
+        setFilteredResults([]); // Clear the filtered results
     };
 
     return (
         <div className="popup">
+            {/* Button to close the popup */}
             <button className="exit-button" onClick={() => setShowPopup(false)}>X</button>
             <h2>Recipes</h2>
-            {/* Show filter button only when `selectedMealDetails` is null */}
+            {/* Button to toggle filter visibility */}
             {!selectedMealDetails && (
                 <button
                     className="show-filters-button"
@@ -137,6 +143,7 @@ const RecipePopup = ({
                     {filtersVisible ? 'Hide Filters' : 'Show Filters'}
                 </button>
             )}
+            {/* Filter section for selecting categories, areas, and ingredients */}
             {filtersVisible && !selectedMealDetails && (
                 <div className="filters-section" style={{ marginBottom: '20px' }}>
                     <h4>Filters</h4>
@@ -191,14 +198,16 @@ const RecipePopup = ({
                 </div>
             )}
             <div className="popup-content">
+                {/* Display selected meal details if available */}
                 {selectedMealDetails ? (
                     <div className="meal-details-popup">
                         <button onClick={() => {
-                            setSelectedMealDetails(null);
-                            setRating(0); // Reset rating when going back to search results
-                            setHover(0);
+                            setSelectedMealDetails(null); // Clear selected meal details
+                            setRating(0); // Reset rating
+                            setHover(0); // Reset hover state
                         }}>Back</button>
                         <h3>{selectedMealDetails.strMeal}</h3>
+                        {/* Display the average rating with stars */}
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                                 {[...Array(5)].map((star, index) => {
@@ -250,6 +259,7 @@ const RecipePopup = ({
                                         </span>
                                     );
                                 })}
+                                {/* Link to scroll to the reviews section */}
                                 <span
                                     style={{ cursor: 'pointer', color: '#007bff', marginLeft: '10px' }}
                                     onClick={scrollToReviews}
@@ -279,6 +289,7 @@ const RecipePopup = ({
                         </div>
                         <h4>Instructions</h4>
                         <p>{selectedMealDetails.strInstructions}</p>
+                        {/* Embed YouTube video if available */}
                         {selectedMealDetails.strYoutube && (
                             <div className="video-container">
                                 <h4>Video Instructions</h4>
@@ -293,6 +304,7 @@ const RecipePopup = ({
                                 ></iframe>
                             </div>
                         )}
+                        {/* Reviews section */}
                         <div ref={reviewsRef} style={{ marginTop: '20px' }}>
                             <h4>Reviews</h4>
                             {reviews.length > 0 ? (
@@ -319,6 +331,7 @@ const RecipePopup = ({
                             ) : (
                                 <p>No reviews yet.</p>
                             )}
+                            {/* Input for adding a new review */}
                             <div style={{ display: 'flex', alignItems: 'marginLeft', justifyContent: 'marginLeft' }}>
                                 <div style={{ display: 'flex', alignItems: 'marginLeft', gap: '10px' }}>
                                     {[...Array(5)].map((star, index) => {
@@ -357,6 +370,7 @@ const RecipePopup = ({
                     </div>
                 ) : (
                     <div className="search-results">
+                        {/* Display filtered results if available */}
                         {filteredResults.length > 0 && (
                             <div className="recipe-grid">
                                 {filteredResults.map((meal) => (
@@ -367,6 +381,7 @@ const RecipePopup = ({
                                 ))}
                             </div>
                         )}
+                        {/* Display popup search results if no filtered results */}
                         {filteredResults.length === 0 && popupSearchResults.length > 0 && (
                             <div className="recipe-grid">
                                 {popupSearchResults.map((meal) => (
