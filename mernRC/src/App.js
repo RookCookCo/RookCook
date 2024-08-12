@@ -7,17 +7,17 @@ import './LoginPanel.css';
 import './Popup.css';
 import './DiscussionForum.css';
 import Header from './Header';
-import IngredientPanel from './Components/IngredientPanel';
-import LoginPanel from './Components/LoginPanel';
-import SignUpPanel from './Components/SignUpPanel';
-import RecipePopup from './Components/RecipePopup';
-import UserProfile from './Components/UserProfile';
-import DiscussionForum from './Components/DiscussionForum';
+import IngredientPanel from './IngredientPanel';
+import LoginPanel from './LoginPanel';
+import SignUpPanel from './SignUpPanel';
+import RecipePopup from './RecipePopup';
+import UserProfile from './UserProfile';
+import DiscussionForum from './DiscussionForum';
 import { auth, provider, signInWithPopup, signOut } from './firebase';
 import axios from 'axios';
 import RecipeBookImage from './RecipeBook.png';
 import PhoneImage from './phone.png';
-import Tutorial from './Components/Tutorial';
+import Tutorial from './Tutorial';
 
 
 function App() {
