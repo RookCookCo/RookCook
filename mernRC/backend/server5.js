@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const User = require('./models/User');
 const Inventory = require('./models/Inventory');
+const Recipe = require('./models/Recipe');
+const Preference = require('./models/Preference');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -96,9 +98,11 @@ app.post('/inventory', async (req, res) => {
 
         let inventory = await Inventory.findOne({ userId });
         if (!inventory) {
-            inventory = new Inventory({ userId, items: [item] });
+            inventory = new Inventory({ userId, items: [] });
         } else {
-            inventory.items.push(item);
+            if (item){
+                inventory.items.push(item);
+            }
         }
         await inventory.save();
 
@@ -127,6 +131,135 @@ app.delete('/inventory', async (req, res) => {
         await inventory.save();
 
         res.json(inventory);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+// load the all the comments of a recipe
+
+app.get('/recipes/:recipeId/comments', async (req, res) => {
+    try {
+        const { recipeId } = req.params;
+
+        // Check if the recipe exists
+        let recipe = await Recipe.findById(recipeId);
+        if (!recipe) {
+            // If not, create a new recipe document with no comments
+            recipe = new Recipe({ _id: recipeId, title: `Recipe ${recipeId}`, comments: [] });
+            await recipe.save();
+        }
+
+        res.json(recipe.comments);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+// add comments to a recipe
+
+app.post('/recipes/:recipeId/comments', async (req, res) => {
+    try {
+        const { text, rating } = req.body;
+        const { recipeId } = req.params;
+
+        if (!text || rating == null) {
+            return res.status(400).json({ msg: 'Text and rating are required' });
+        }
+
+        const recipe = await Recipe.findById(recipeId);
+        if (!recipe) {
+            return res.status(404).json({ msg: 'Recipe not found' });
+        }
+
+        const newComment = {
+            text: text,
+            rating: rating
+        };
+
+        recipe.comments.push(newComment);
+        await recipe.save();
+
+        res.json(recipe.comments);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+// Load or initialize preference list
+app.get('/preferences', async (req, res) => {
+    const token = req.header('x-auth-token');
+    if (!token) return res.status(401).json({ msg: 'No token, authorization denied' });
+
+    try {
+        const decoded = jwt.verify(token, 'yourSecretKey');
+        const userId = decoded.userId;
+
+        let preference = await Preference.findOne({ userId });
+        if (!preference) {
+            // Initialize a new preference list if it doesn't exist
+            preference = new Preference({ userId, preferences: [] });
+            await preference.save();
+        }
+
+        res.json(preference);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+
+// Add a preference to the list
+app.post('/preferences', async (req, res) => {
+    const token = req.header('x-auth-token');
+    if (!token) return res.status(401).json({ msg: 'No token, authorization denied' });
+
+    try {
+        const decoded = jwt.verify(token, 'yourSecretKey');
+        const userId = decoded.userId;
+        const { preference } = req.body;
+
+        if (!preference) return res.status(400).json({ msg: 'Preference is required' });
+
+        let userPreference = await Preference.findOne({ userId });
+        if (!userPreference) {
+            userPreference = new Preference({ userId, preferences: [preference] });
+        } else {
+            if (!userPreference.preferences.includes(preference)) {
+                userPreference.preferences.push(preference);
+            }
+        }
+        await userPreference.save();
+
+        res.json(userPreference);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+
+// Delete a preference from the list
+app.delete('/preferences', async (req, res) => {
+    const token = req.header('x-auth-token');
+    if (!token) return res.status(401).json({ msg: 'No token, authorization denied' });
+
+    try {
+        const decoded = jwt.verify(token, 'yourSecretKey');
+        const userId = decoded.userId;
+        const { preference } = req.body;
+
+        let userPreference = await Preference.findOne({ userId });
+        if (!userPreference) return res.status(404).json({ msg: 'No preferences found' });
+
+        userPreference.preferences = userPreference.preferences.filter(p => p !== preference);
+        await userPreference.save();
+
+        res.json(userPreference);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');

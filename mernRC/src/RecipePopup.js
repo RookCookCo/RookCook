@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import axios from 'axios';
 
 // Utility function to fetch data from an API endpoint
 const fetchFromApi = async (url) => {
@@ -9,6 +10,7 @@ const fetchFromApi = async (url) => {
 
 // RecipePopup component that displays recipes, filters, and reviews
 const RecipePopup = ({
+                         showPopup,// Show/hide recipe popup
                          setShowPopup, // Function to control the visibility of the popup
                          selectedMealDetails, // Details of the currently selected meal
                          setSelectedMealDetails, // Function to update the selected meal details
@@ -35,23 +37,73 @@ const RecipePopup = ({
             const categoriesData = await fetchFromApi('https://www.themealdb.com/api/json/v2/9973533/categories.php');
             const areasData = await fetchFromApi('https://www.themealdb.com/api/json/v2/9973533/list.php?a=list');
             const ingredientsData = await fetchFromApi('https://www.themealdb.com/api/json/v2/9973533/list.php?i=list');
-
+            //console.log("Current reviews:", reviews);
             setCategories(categoriesData.categories);
             setAreas(areasData.meals);
             setIngredients(ingredientsData.meals);
         };
 
         fetchFilterData();
-    }, []);
+        // operate load the comment 
+        // load the detail from the backend
 
+        if (selectedMealDetails) {
+        console.log("Selected meal details are displayed:", selectedMealDetails);
+
+        // Fetch comments/reviews for the selected meal from the backend
+        const fetchReviews = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5001/recipes/${selectedMealDetails.idMeal}/comments`);
+                setReviews(response.data); // Assuming the response is an array of comments
+            } catch (error) {
+                console.error('Error loading comments:', error);
+            }
+        };
+
+        fetchReviews();
+    } else {
+        console.log("closed");
+    }
+
+
+
+    }, [selectedMealDetails]);
+
+    // Function to handle adding a comment to a specific recipe only use to communicate with backend
+    const handleAddComment = async (recipeId, rating, text) => {
+        try {
+            // Send the review to the backend
+            const response = await axios.post(`http://localhost:5001/recipes/${recipeId}/comments`, {
+                text: text,
+                rating: rating
+            });
+
+            return response.data; // Return the updated list of comments
+        } catch (error) {
+            console.error('Error adding review:', error);
+            throw error; // Rethrow the error so it can be handled by the calling function
+            }
+        };
     // Handle adding a review
     const handleAddReview = () => {
         if (reviewText.trim() !== '') {
             setReviews([...reviews, { rating, text: reviewText }]); // Add new review to the list
+            try {
+            // call the backend handel to add comments
+            handleAddComment(selectedMealDetails.idMeal, rating, reviewText);
+            } catch (error) {
+            console.error('Failed to add review:', error);
+            // Optionally handle the error by showing a message to the user
+            }
+
             setReviewText(''); // Clear the review text field
             setRating(0); // Reset the rating
             setHover(0); // Reset the hover state
+
         }
+        console.log("Selected meal details are displayed:", rating, reviewText);
+        console.log("Selected meal details are displayed:", reviews);
+        // put it into the backened
     };
 
     // Calculate the average rating using useMemo to optimize performance

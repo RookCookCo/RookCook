@@ -17,10 +17,28 @@ const PreferencesPanel = ({ setShowPreferencesPanel }) => {
 
   // Load saved preferences from localStorage when the component mounts
   useEffect(() => {
-    const savedPreferences = JSON.parse(localStorage.getItem('selectedPreferences')) || [];
-    if (Array.isArray(savedPreferences)) {
-      setSelectedPreferences(savedPreferences);
-    }
+    // load the previous preference
+    const loadPreferencesFromBackend = async () => {
+      try {
+        // Replace with your actual backend URL and token
+        const response = await axios.get('http://localhost:5001/preferences', {
+          headers: {
+            'x-auth-token': localStorage.getItem('token') // Use the token stored in localStorage
+          }
+        });
+
+        if (response.status === 200) {
+          const preferencesData = response.data;
+          setSelectedPreferences(preferencesData.preferences || []);
+        } else {
+          console.error(`Failed to load preferences, status code: ${response.status}`);
+        }
+      } catch (error) {
+        console.error('Error loading preferences from backend:', error);
+      }
+    };
+
+    loadPreferencesFromBackend();
   }, []);
 
   // Function to handle closing the panel, saving preferences to localStorage
@@ -81,18 +99,57 @@ const PreferencesPanel = ({ setShowPreferencesPanel }) => {
     };
   }, []);
 
+  // Function to add a preference to the backend
+  const addPreferenceToBackend = (preference) => {
+  return axios.post('http://localhost:5001/preferences', {
+      preference: preference
+    }, {
+      headers: {
+        'x-auth-token': localStorage.getItem('token')
+      }
+    })
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.error('Error adding preference to backend:', error);
+      throw error;
+    });
+};
+
   // Function to add a preference to the selected list
   const handleAddPreference = (preference) => {
     if (preference && !selectedPreferences.includes(preference)) {
       const updatedPreferences = [...selectedPreferences, preference];
+      addPreferenceToBackend(preference)
       setSelectedPreferences(updatedPreferences);
       setSearchQuery('');
       setShowDropdown(false);
     }
   };
 
+  // Function to delete a preference from the backend
+const deletePreferenceFromBackend = (preference) => {
+  return axios.delete('http://localhost:5001/preferences', {
+      headers: {
+        'x-auth-token': localStorage.getItem('token')
+      },
+      data: {
+        preference: preference
+      }
+    })
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      console.error('Error deleting preference from backend:', error);
+      throw error;
+    });
+};
+
   // Function to delete a preference from the selected list
   const handleDeletePreference = (preference) => {
+    deletePreferenceFromBackend(preference)
     const updatedPreferences = selectedPreferences.filter(pref => pref !== preference);
     setSelectedPreferences(updatedPreferences);
   };

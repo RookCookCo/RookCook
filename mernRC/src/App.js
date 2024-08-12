@@ -534,6 +534,7 @@ function App() {
             {/* Popup for displaying recipe details */}
             {showPopup && (
                 <RecipePopup
+                    showPopup={showPopup} 
                     setShowPopup={setShowPopup}
                     selectedMealDetails={selectedMealDetails}
                     setSelectedMealDetails={setSelectedMealDetails}
