@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import './UserProfile.css'; // Import the CSS file
-import defaultProfilePic from './default profile.png'; // Ensure this path is correct
+import defaultProfilePic from '../Images/default profile.png'; // Ensure this path is correct
 import PreferencesPanel from './PreferencesPanel'; // Import the PreferencesPanel component
 
 const UserProfile = ({ user, handleLogout }) => {

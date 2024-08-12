@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import background from './background.png';
+import background from './Images/background.png';
 import './App.css';
-import './Header.css';
-import './IngredientPanel.css';
-import './LoginPanel.css';
-import './Popup.css';
-import './DiscussionForum.css';
-import Header from './Header';
+import './Component CSS/Header.css';
+import './Component CSS/IngredientPanel.css';
+import './Component CSS/LoginPanel.css';
+import './Component CSS/UserProfile.css';
+import './Component CSS/Popup.css';
+import './Component CSS/DiscussionForum.css';
+import './Component CSS/PreferencesPanel.css';
+import './Component CSS/Tutorial.css';
+import Header from './Components/Header';
 import IngredientPanel from './Components/IngredientPanel';
 import LoginPanel from './Components/LoginPanel';
 import SignUpPanel from './Components/SignUpPanel';
 import RecipePopup from './Components/RecipePopup';
 import UserProfile from './Components/UserProfile';
 import DiscussionForum from './Components/DiscussionForum';
-import { auth, provider, signInWithPopup, signOut } from './firebase';
+import { auth, provider, signInWithPopup, signOut } from './Components/firebase';
 import axios from 'axios';
-import RecipeBookImage from './RecipeBook.png';
-import PhoneImage from './phone.png';
+import RecipeBookImage from './Images/RecipeBook.png';
+import PhoneImage from './Images/phone.png';
 import Tutorial from './Components/Tutorial';
 
 

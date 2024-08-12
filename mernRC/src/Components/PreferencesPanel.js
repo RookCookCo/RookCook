@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import './PreferencesPanel.css';
 
 const PreferencesPanel = ({ setShowPreferencesPanel }) => {
   // State to hold categories, areas, search query, filtered preferences, and selected preferences

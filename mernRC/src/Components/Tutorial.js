@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './Tutorial.css'; // Import the associated CSS file for styling
 
 const Tutorial = () => {
     // useState hook to manage the state of whether the tutorial popup is visible
