@@ -93,6 +93,18 @@
     font-weight: bold;
 }
 
+.preferencesButton {
+    position: absolute;
+    left: 20px;
+    top: 190px; /* Adjust this to position the button correctly under the profile pic */
+    background-color: #A1002D;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
 .changePicButton {
     position: absolute;
     left: 260px;
