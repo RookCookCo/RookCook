@@ -90,27 +90,7 @@ const UserProfile = ({ user, handleLogout }) => {
                             </button>
                             <button 
                                 className="preferencesButton" 
-                                style={{
-                                    width: '100px',
-                                    height: '40px',
-                                    fontSize: '16px',
-                                    backgroundColor: '#A1002D', 
-                                    color: '#fff',
-                                    fontWeight: 'bold',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer',
-                                    outline: 'none',
-                                    transition: 'transform 0.3s ease',
-                                    position: 'relative', // Allow the button to be moved within its container
-                                    left: '174px', // Move the button to the right
-                                    top:'-65px',
-                                    // right: '20px', // Use this instead of left to move the button to the left
-                                }}
-                                onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'} 
-                                onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
                                 onClick={() => setShowPreferencesPanel(true)}>
-                                
                                 Preferences
                             </button>
                             <button 
