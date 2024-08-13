@@ -7,6 +7,8 @@ const User = require('./models/User');
 const Inventory = require('./models/Inventory');
 const Recipe = require('./models/Recipe');
 const Preference = require('./models/Preference');
+const SimpleString = require('./models/SimpleString');
+
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -260,6 +262,42 @@ app.delete('/preferences', async (req, res) => {
         await userPreference.save();
 
         res.json(userPreference);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+app.post('/string', async (req, res) => {
+    const { value } = req.body;
+
+    try {
+        let stringDoc = await SimpleString.findOne({});
+        if (!stringDoc) {
+            stringDoc = new SimpleString({ value });
+        } else {
+            stringDoc.value = value;
+        }
+
+        await stringDoc.save();
+        res.json(stringDoc);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+
+app.get('/string', async (req, res) => {
+    try {
+        const stringDoc = await SimpleString.findOne({});
+        
+        // If no stringDoc is found, return null
+        if (!stringDoc) {
+            return res.json({ value: null });
+        }
+
+        res.json(stringDoc);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');

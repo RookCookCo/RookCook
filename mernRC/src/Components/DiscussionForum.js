@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Import axios at the top of your file
+
 
 // Retrieve topics from localStorage
 const getStoredTopics = () => {
     const storedTopics = localStorage.getItem('topics');
+    console.log('loading data to topic1',storedTopics);
+    console.log('loading data to topic2',JSON.parse(storedTopics));
     return storedTopics ? JSON.parse(storedTopics) : [];
 };
 
 // Save topics to localStorage
 const saveTopics = (topics) => {
+    console.log('saving data to topic1',topics);
+    console.log('saving data to topic2',JSON.stringify(topics));
     localStorage.setItem('topics', JSON.stringify(topics));
 };
 
@@ -127,25 +133,99 @@ const NewTopicForm = ({ onAddTopic }) => {
 
 // Main component for the discussion forum
 const DiscussionForum = ({ setShowDiscussionForum }) => {
-    const [topics, setTopics] = useState(getStoredTopics()); // State for the list of topics
+    //const [topics, setTopics] = useState(getStoredTopics()); // State for the list of topics
+    const [topics, setTopics] = useState([]); // State for the list of topics
     const [showNewTopicForm, setShowNewTopicForm] = useState(false); // State to control visibility of the new topic form
     const [selectedTopic, setSelectedTopic] = useState(null); // State for the currently selected topic
 
     // Save topics to localStorage whenever the topics state changes
+    //useEffect(() => {
+    //    saveTopics(topics);
+    //}, [topics]);
     useEffect(() => {
-        saveTopics(topics);
-    }, [topics]);
+        if (!topics || topics.length === 0) {
+            console.log('should load from backend:', topics);
+            // Fetch comments/reviews for the selected meal from the backend
+            const fetchdiscuession = async () => {
+                try {
+                    //const response = await axios.get(`http://localhost:5001/recipes/${selectedMealDetails.idMeal}/comments`);
+                    //setReviews(response.data); // Assuming the response is an array of comments
+                    const response = await axios.get('http://localhost:5001/string');
+                    const storedString = response.data.value;
+                    console.log('loading data to topic1', storedString);
+
+                    // If storedString is null, initialize it with an empty array
+                    const parsedTopics = storedString ? JSON.parse(storedString) : [];
+                    console.log('loading data to topic2', parsedTopics);
+                    setTopics(parsedTopics);
+                } catch (error) {
+                    console.error('Error loading discuession:', error);
+                }
+        };
+
+        fetchdiscuession();
+        }else{
+            console.log('should update the current forum to backend:', topics);
+        }
+    }, [setShowDiscussionForum]);
 
     // Handle adding a new topic
     const handleAddTopic = (title, content) => {
         const newTopic = { id: Date.now(), title, content, replies: [] };
+
+        console.log("adding a new topic", newTopic);
+        const result =  [...topics, newTopic];
+        console.log("result for adding a new topic", result);
+        const stringifiedTopics = JSON.stringify(result);
+        console.log('Saving topics2 to backend:', stringifiedTopics);
+
+        axios.post('http://localhost:5001/string', { value: stringifiedTopics })
+        .then(response => {
+            if (response.status === 200) {
+                console.log('Topics saved successfully');
+            } else {
+                console.error(`Failed to save topics, status code: ${response.status}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error saving topics to backend:', error);
+        });
+
         setTopics(prevTopics => [...prevTopics, newTopic]);
         setShowNewTopicForm(false); // Hide the new topic form
+
     };
 
     // Handle adding a reply to a topic
     const handleReply = (topicId, replyText, parentId) => {
         const newReply = { id: Date.now(), text: replyText, parentId, deleted: false };
+
+        // Manually generate a new result array with the updated topics
+        const updatedReplys = topics.map(topic =>
+        topic.id === topicId
+            ? { ...topic, replies: [...topic.replies, newReply] }
+            : topic
+        );
+        // Log the updated result array
+        console.log("Updated topics array:", updatedReplys);
+        const stringifiedTopics = JSON.stringify(updatedReplys);
+        console.log('Saving topics2 to backend:', stringifiedTopics);
+
+
+        axios.post('http://localhost:5001/string', { value: stringifiedTopics })
+        .then(response => {
+            if (response.status === 200) {
+                console.log('Replys saved successfully');
+            } else {
+                console.error(`Failed to save replys, status code: ${response.status}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error saving replys to backend:', error);
+        });
+
+
+
         setTopics(prevTopics =>
             prevTopics.map(topic =>
                 topic.id === topicId
@@ -153,11 +233,13 @@ const DiscussionForum = ({ setShowDiscussionForum }) => {
                     : topic
             )
         );
+
         setSelectedTopic(prevTopic =>
             prevTopic && prevTopic.id === topicId
                 ? { ...prevTopic, replies: [...prevTopic.replies, newReply] }
                 : prevTopic
         );
+        //console.log("adding a new reply", topics);
     };
 
     // Handle deleting a topic
