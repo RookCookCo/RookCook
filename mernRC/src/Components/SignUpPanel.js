@@ -1,18 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // SignUpPanel component to handle the user sign-up process
 const SignUpPanel = ({
-                         email, // State variable for email
-                         setEmail, // Function to update the email state
-                         username, // State variable for username
-                         setUsername, // Function to update the username state
-                         password, // State variable for password
-                         setPassword, // Function to update the password state
-                         confirmPassword, // State variable for confirming password
-                         setConfirmPassword, // Function to update the confirm password state
-                         handleSignUp, // Function to handle the sign-up process
-                         setShowSignUp // Function to toggle the visibility of the sign-up panel
-                     }) => {
+        handleSignUp,
+        setShowSignUp, // Function to toggle the visibility of the sign-up panel
+    }) => {
+
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [user, setUser] = useState(null); // State to hold the user data after sign-up
+
+    const SigningUp = async (e) => {
+        e.preventDefault();
+
+        if (password !== confirmPassword) {
+            alert('Passwords do not match!');
+            return;
+        }
+
+        const newUser = {
+            username: username,
+            email: email,
+        };
+        
+        handleSignUp(newUser);
+    };
+
     return (
         <div className="signup-panel">
             {/* Panel header with an exit button to close the sign-up panel */}
@@ -21,7 +36,7 @@ const SignUpPanel = ({
             </div>
             <h1>Sign Up!</h1>
             {/* Sign-up form */}
-            <form onSubmit={handleSignUp}>
+            <form onSubmit={SigningUp}>
                 {/* Email input field */}
                 <div className="signup-field">
                     <label htmlFor="email">Email:</label>
