@@ -415,13 +415,12 @@ function App() {
     };
 
     // Handle sign-up form submission
-    const handleSignUp = async (e) => {
-        e.preventDefault(); // Prevent form submission
-        console.log("Email:", email);
-        console.log("Username:", username);
-        console.log("Password:", password);
-        console.log("Confirm Password:", confirmPassword);
-        setShowSignUp(false); // Hide sign-up panel
+    const handleSignUp = async (Tuser) => {
+        // Set up user data
+        setUser(Tuser);
+
+        // Close the sign-up panel after registration
+        setShowSignUp(false);
     };
 
     // Handle clicks outside the ingredient search list to hide it
