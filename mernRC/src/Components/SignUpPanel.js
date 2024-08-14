@@ -23,6 +23,7 @@ const SignUpPanel = ({
         const newUser = {
             username: username,
             email: email,
+            uid: password,
         };
         
         handleSignUp(newUser);
