@@ -416,8 +416,13 @@ function App() {
 
     // Handle sign-up form submission
     const handleSignUp = async (Tuser) => {
+        console.log("information for sign up:", Tuser);
         // Set up user data
         setUser(Tuser);
+        console.log("Email:", email);
+        console.log("Username:", username);
+        console.log("Password:", password);
+        console.log("Confirm Password:", confirmPassword);
 
         // Close the sign-up panel after registration
         setShowSignUp(false);
@@ -472,7 +477,7 @@ function App() {
                 setDietaryFilter={setDietaryFilter}
                 setEthnicFilter={setEthnicFilter}
             />
-            <UserProfile user={user} handleLogout={handleLogout} />
+            <UserProfile user={user} handleLogout={handleLogout} showSignUp = {showSignUp } showLogin = {showLogin}/>
 
             {/* Button to add new ingredient */}
             <button className="add-ingredient-button" title="Add Ingredients" onClick={() => { setShowPanel(true); setPanelMode('add'); }}>+</button>
