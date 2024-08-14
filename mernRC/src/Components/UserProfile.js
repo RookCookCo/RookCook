@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import defaultProfilePic from '../Images/default profile.png'; // Default profile picture
 import PreferencesPanel from './PreferencesPanel'; // Import the PreferencesPanel component
+import axios from 'axios'; // Add this line at the top of your file
+
 
 // UserProfile component that manages and displays the user's profile
-const UserProfile = ({ user, handleLogout }) => {
+const UserProfile = ({ user, handleLogout, showSignUp, showLogin}) => {
     // State to manage the visibility of the user profile panel
     const [isOpen, setIsOpen] = useState(false); 
     
@@ -21,6 +23,35 @@ const UserProfile = ({ user, handleLogout }) => {
     
     // State to manage the visibility of the PreferencesPanel
     const [showPreferencesPanel, setShowPreferencesPanel] = useState(false); 
+
+    // UseEffect to trigger when isOpen changes
+    useEffect(() => {
+        if (isOpen) {
+            console.log('User profile panel opened');
+            const token = localStorage.getItem('token');
+            //console.log('User the user token are', token);
+            axios.get('http://localhost:5001/profile-pic', {
+                headers: { 'x-auth-token': token }
+                })
+                .then(response => {
+                    console.log('response', response);
+                    setProfilePic(response.data.imageData);
+                    console.log('success load the photo');
+                })
+                .catch(error => {
+                    if (error.response && error.response.status === 404) {
+                        console.log('No photo found.');
+                    } else {
+                        console.error('Error loading profile picture:', error);
+                    }
+                });
+
+            // Add any additional actions you want to perform when the panel opens
+        } else {
+            console.log('User profile panel closed');
+            // Add any actions to perform when the panel closes, if necessary
+        }
+    }, [showSignUp,showLogin,isOpen]); // Dependency array containing isOpen
 
     // If no user is logged in, do not render the component
     if (!user) return null; 
@@ -42,14 +73,30 @@ const UserProfile = ({ user, handleLogout }) => {
             };
             reader.readAsDataURL(file); // Read the file as a data URL
         }
+        console.log('file is upload into the website');
     };
 
     // Function to save the new profile picture
     const handleSavePic = () => {
         if (newProfilePic) {
             setProfilePic(newProfilePic); // Update the profile picture with the new one
+            console.log('file is saved',newProfilePic);
             setShowUploadPanel(false); // Hide the upload panel
+            // operate lsave the file to backend
+            const token = localStorage.getItem('token');
+    
+            axios.post('http://localhost:5001/profile-pic', { imageData: newProfilePic }, {
+            headers: { 'x-auth-token': token }
+            })
+            .then(response => {
+                console.log('Profile picture saved:', response.data);
+                //setProfilePic(newProfilePic); // Update local state
+            })
+            .catch(error => {
+                console.error('Error saving profile picture:', error);
+            });
         }
+        console.log('file is saved');
     };
 
     return (

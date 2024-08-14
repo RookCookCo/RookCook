@@ -8,15 +8,18 @@ const Inventory = require('./models/Inventory');
 const Recipe = require('./models/Recipe');
 const Preference = require('./models/Preference');
 const SimpleString = require('./models/SimpleString');
+const ProfilePic = require('./models/UserProfilePic');
 
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
 // Middleware
-app.use(express.json());
+//app.use(express.json());
 app.use(cors());
-
+// Middleware
+app.use(express.json({ limit: '10mb' })); // Increase the limit to 10MB or more
+app.use(express.urlencoded({ limit: '10mb', extended: true })); // Increase for URL-encoded data
 // MongoDB connection URI from MongoDB Atlas
 const uri = "mongodb+srv://Cluster12425:RookCook@cluster0.isn6pzj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
@@ -298,6 +301,49 @@ app.get('/string', async (req, res) => {
         }
 
         res.json(stringDoc);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+// Load the profile picture
+app.get('/profile-pic', async (req, res) => {
+    const token = req.header('x-auth-token');
+    if (!token) return res.status(401).json({ msg: 'No token, authorization denied' });
+
+    try {
+        const decoded = jwt.verify(token, 'yourSecretKey');
+        const userId = decoded.userId;
+
+        const profilePic = await ProfilePic.findOne({ userId });
+        if (!profilePic) return res.status(404).json({ msg: 'No profile picture found' });
+
+        res.json(profilePic);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+// Save or update the profile picture
+app.post('/profile-pic', async (req, res) => {
+    const token = req.header('x-auth-token');
+    if (!token) return res.status(401).json({ msg: 'No token, authorization denied' });
+
+    try {
+        const decoded = jwt.verify(token, 'yourSecretKey');
+        const userId = decoded.userId;
+        const { imageData } = req.body;
+
+        let profilePic = await ProfilePic.findOne({ userId });
+        if (!profilePic) {
+            profilePic = new ProfilePic({ userId, imageData });
+        } else {
+            profilePic.imageData = imageData; // Update the existing image data
+        }
+        await profilePic.save();
+        res.json({ msg: 'Profile picture saved successfully', profilePic });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
