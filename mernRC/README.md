@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+# RookCook mernRC
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This folder contains the core components of the RookCook application, built on the MERN stack (MongoDB, Express, React, Node.js). The `mernRC` directory is organized into separate sections for frontend and backend development, providing a structured approach to building and maintaining the application.
 
-## Available Scripts
+## Structure
 
-In the project directory, you can run:
+- **Frontend (`src` folder)**: Contains all the components, styles, and assets needed to build the user interface of the application.
+- **Backend (`backend` folder)**: Includes server setup and database models, handling data processing and storage.
 
-### `npm start`
+## Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+To set up the RookCook application locally, follow these steps:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. **Navigate to the mernRC Directory**:
+   ```bash
+   cd /[path to project]/RookCook/mernRC
+   ```
 
-### `npm test`
+2. **Install Dependencies and Build Assets**:
+   ```bash
+   npm install
+   npm run build
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. **Start Local Server**:
+   ```bash
+   npm start
+   ```
 
-### `npm run build`
+## Frontend Development
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The frontend code is located in the `src` folder. This directory includes:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Components**: React components that define the UI elements.
+- **Styles**: CSS files for styling the application.
+- **Assets**: Images and other static files used in the UI.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Backend Development
 
-### `npm run eject`
+The backend logic is housed in the `backend` folder. This directory includes:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Server Setup**: Configuration for running the Node.js server.
+- **Database Models**: Mongoose models for interacting with MongoDB.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Database Setup
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Navigate to the backend directory:
+   ```bash
+   cd /[path to project]/RookCook/mernRC/backend
+   ```
+2. Install backend dependencies:
+   ```bash
+   npm install
+   ```
+   - If a dependency is missing, such as `mongoose`, install it separately:
+     ```bash
+     npm install mongoose
+     ```
+3. Start the backend server:
+   ```bash
+   node server.js
+   ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Notes
 
-## Learn More
+- Please refer only to the `src` and `backend` folders for development. Other directories were part of the initial MERN stack installation and have not been modified.
+- The application is configured to use a single server setup in the backend for simplicity and efficiency.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Contributing
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+We welcome contributions to improve RookCook. Please ensure your code follows our coding standards and is well-documented.
 
-### Code Splitting
+## Contact
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+For questions or support, please contact us at rookcookco@gmail.com.
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Thank you for contributing to RookCook!
