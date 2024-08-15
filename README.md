@@ -64,7 +64,7 @@ To set up RookCook locally, follow these steps:
 
 - **Frontend**: The frontend code is located in the `mernRC/src` folder. This directory contains all the components, styles, and assets needed to build the user interface of the application. You can explore this folder to understand how the UI is structured and where specific components are implemented.
 
-- **Backend**: The backend logic is housed in the mernRC/backend folder. This directory includes server setup and database models. Navigate through this folder to see how the server is configured and how it interacts with the database.
+- **Backend**: The backend logic is housed in the `mernRC/backend` folder. This directory includes server setup and database models. Navigate through this folder to see how the server is configured and how it interacts with the database.
 
 ## Usage
 
