@@ -1,43 +1,89 @@
 # RookCook
-Rookie Cookbook
 
-Overview:
-RookCook is an innovative online platform designed to revolutionize home cooking by providing personalized recipe suggestions based on the ingredients and kitchen tools users have available. Our mission is to make cooking more accessible, efficient, and enjoyable for everyone, regardless of their culinary expertise or dietary preferences.
+Welcome to **RookCook**, a comprehensive cooking application designed to make your culinary experience enjoyable and efficient. This application provides a variety of recipes, cooking tips, and meal planning features to cater to both novice and experienced cooks.
 
-Semester Goals:
-Develop precise ingredient matching algorithms to streamline recipe suggestions based on available resources.
-Fine-tune kitchen tool integration to optimize recipe preparation and enhance user experience. 
-Provide a wide array of recipes catering to various diets and skill levels to ensure inclusivity and accessibility.
-Cultivate user engagement by enriching profiles and facilitating the saving of favorite recipes. 
-Foster a vibrant community by facilitating recipe reviews, offering forums for culinary discussions, and delivering comprehensive nutritional information to promote informed cooking choices.
+## Features
 
-Stack: JavaScript, HTML, CSS, Node, React, MongoDB
+- **Interactive Kitchen Environment**: Enjoy a realistic kitchen background with subtle animations. Interactive elements, like a recipe book on the counter, allow you to open a search interface with options for categorized browsing or keyword search.
+  
+- **Ingredients Manager**: Add and remove ingredients to narrow down your search results to recipes that include items you already have in your fridge.
 
-Milestones:
-June 2024:
-Establish the project GitHub repository and structure. (Rita)
-Implement task assignments and ensure all team members have local setups. (Collaborative amongst all members)
-Begin preliminary website design mockups. (Collaborative amongst all members)
-Start creating basic HTML, CSS, and JavaScript templates for the website. (Nicole, Rita)
-Develop initial database schema for recipes, ingredients, and user profiles. (Andrew, Jimmy, Ricky)
-Implement a simple landing page with basic navigation. (Nicole, Rita)
-Begin backend development with PHP and SQL for user authentication and data storage. (Rita)
+- **Search and Filter**: Search for recipes by name, ingredients, or categories, and filter results based on dietary preferences or cooking time.
 
-July 2024:
-Develop the ingredient matching algorithm and start testing it with a small set of recipes. (Andrew)
-Enhance the user interface to allow users to specify available kitchen tools and appliances. (Nicole)
-Create a categorization system for recipes, including tags for difficulty level, cooking time, and dietary preferences. (Jimmy, Ricky)
-Begin implementing user profile features, including account creation and management. (Nicole, Rita)
-Develop additional user interface components for saving favorite recipes and updating preferences. (Nicole, Rita)
+- **Review System**: Rate recipes after trying them and share your experiences with other users.
 
-August 2024:
-Test the recipe categorization and tagging system with a larger dataset. (Andrew)
-Implement the review system for users to rate and provide feedback on recipes. (Jimmy, Ricky)
-Officially launch the application on the web platform, making it accessible to users. (Collaborative amongst all members)
-Project Presentation  (Collaborative amongst all members)
+- **Discussion Forum**: Interact with other users, ask or answer questions regarding recipes, and share tips and suggestions for better cooking experiences.
 
-Future Development:
-Possibly set up discussion forums for culinary discussions and knowledge sharing.
-Enable users to submit their own recipes, promoting community involvement and recipe diversity.
-Display nutritional information alongside recipes and within user profiles to facilitate easy tracking and meal planning.
-Develop a mobile-responsive version of the application
+- **User Profiles**: Manage your profile, adjust your username, change your profile picture, store ingredients, and manage preferences.
+
+## Local Installation Instructions
+
+To set up RookCook locally, follow these steps:
+
+1. **Clone the Project**:
+   ```bash
+   git clone https://github.com/RookCookCo/RookCook.git
+   ```
+
+2. **Navigate to Your RookCook Project mernRC Directory**:
+   ```bash
+   cd /[path to project]/RookCook/mernRC
+   ```
+
+3. **Install Dependencies and Build Assets**:
+   ```bash
+   npm install
+   npm run build
+   ```
+
+4. **Start Local Server**:
+   ```bash
+   npm start
+   ```
+
+## Database Setup
+
+1. Navigate to the backend directory:
+   ```bash
+   cd /[path to project]/RookCook/mernRC/backend
+   ```
+2. Install dependencies and build assets:
+   ```bash
+   npm install
+   ```
+   - If a dependency is missing, such as `mongoose`, install it separately:
+     ```bash
+     npm install mongoose
+     ```
+3. Start the local server:
+   ```bash
+   node server.js
+   ```
+
+## Repository Navigation
+
+- **Frontend**: The frontend code is located in the `mernRC/src` folder. This directory contains all the components, styles, and assets needed to build the user interface of the application. You can explore this folder to understand how the UI is structured and where specific components are implemented.
+
+- **Backend**: The backend logic is housed in the mernRC/backend folder. This directory includes server setup and database models. Navigate through this folder to see how the server is configured and how it interacts with the database.
+
+## Usage
+
+Once the application is running, you can:
+
+- **Browse and Search for Recipes**: Discover a wide variety of recipes by searching through ingredients, cuisines, or meal types to find the perfect dish for any occasion.
+- **Set Preferences in the User Profile**: Customize your experience by adjusting your profile settings, including dietary preferences and ingredient availability, to receive tailored recipe recommendations.
+- **Participate in the Discussion Forum**: Engage with a community of fellow cooking enthusiasts by asking questions, sharing tips, and exchanging ideas to enhance your culinary skills.
+
+## Contributing
+
+We welcome contributions to RookCook! If you have ideas for new features or improvements, please submit a pull request. Ensure your code follows our coding standards and is well-documented.
+
+## License
+
+RookCook is licensed under the MIT License. See the `LICENSE` file for more information.
+
+## Contact
+
+For questions or support, please contact us at rookcookco@gmail.com.
+
+Thank you for using RookCook! We hope it enhances your cooking experience.
