@@ -321,6 +321,10 @@ function App() {
             const email = Tuser.email;// email
             const password = Tuser.uid;  // Using uid as the password for backend
 
+            console.log("the_Email:", email);
+            console.log("the_Username:", username);
+            console.log("the_Password:", password);
+
             // Step 1: Try to register the user with the backend
             try {
                 await axios.post('http://localhost:5001/register', {
@@ -354,6 +358,7 @@ function App() {
             console.error('Error during backend communication:', error);
         }
     };
+
     // Generate recipe based on inventory ingredients
     const generateRecipe = async () => {
         try {
@@ -408,9 +413,11 @@ function App() {
 
     // Handle login form submission
     const handleLogin = (e) => {
-        e.preventDefault(); // Prevent form submission
+        console.log("triggered:");
+        //e.preventDefault(); // Prevent form submission
         console.log("Username:", username);
         console.log("Password:", password);
+        //setShowSignUp(false);
         setShowLogin(false); // Hide login panel
     };
 
@@ -419,6 +426,13 @@ function App() {
         console.log("information for sign up:", Tuser);
         // Set up user data
         setUser(Tuser);
+        //Call the backend handler; no need to pass user since it's in state
+        await handlregisrationWithBackend(Tuser);
+        console.log("Email:", Tuser.email);
+        console.log("Username:", Tuser.username);
+        console.log("Password:", Tuser.uid);
+        //Load the inventory from the backend
+        await loadInventoryFromBackend(); // Directly call your inventory loading function
         console.log("Email:", email);
         console.log("Username:", username);
         console.log("Password:", password);
@@ -426,6 +440,54 @@ function App() {
 
         // Close the sign-up panel after registration
         setShowSignUp(false);
+    };
+
+    // Handle Google login Backend
+    const handlregisrationWithBackend = async (Tuser) => {
+        try {
+            if (!Tuser) {
+                throw new Error('No user is logged in with Google.');}
+            // Extract necessary information from the user object
+            const username = Tuser.username;// use name
+            const email = Tuser.email;// email
+            const password = Tuser.uid;  // Using uid as the password for backend
+
+            console.log("the_Email:", email);
+            console.log("the_Username:", username);
+            console.log("the_Password:", password);
+
+            // Step 1: Try to register the user with the backend
+            try {
+                await axios.post('http://localhost:5001/register', {
+                    username,
+                    email,
+                    password,
+                });
+                console.log('User registered successfully.');
+            } catch (registerError) {
+                if (registerError.response && registerError.response.status === 400) {
+                    // User already exists, proceed to login
+                    console.log('User already exists, logging in...');
+                } else {
+                    throw new Error('Registration failed.');
+                }
+            }
+            // Step 2: Log the user in with the backend
+            const loginResponse = await axios.post('http://localhost:5001/login', {
+                username,
+                password,
+            });
+
+            // Store JWT token received from backend in localStorage
+            localStorage.setItem('token', loginResponse.data.token);
+
+            // Optionally update your application's state with the user info
+            //setUser(user);
+            console.log('User logged in successfully:');
+
+        } catch (error) {
+            console.error('Error during backend communication:', error);
+        }
     };
 
     // Handle clicks outside the ingredient search list to hide it
