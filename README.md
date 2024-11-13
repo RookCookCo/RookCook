@@ -1,4 +1,4 @@
-[Visit our Application]([https://rookcookco.github.io/RookCook/mernRc])
+Visit our Application: https://rookcookco.github.io/RookCook/mernRc
 
 # RookCook
 
